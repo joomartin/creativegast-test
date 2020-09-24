@@ -62,8 +62,8 @@ class Test(unittest.TestCase):
         self.driver.switch_to.default_content()
         self.driver.refresh()
         sleep(2)
-        uj = self.driver.find_element_by_xpath("//*[@id='components']/tbody//tr[1]/td[6]").text
-        self.assertEqual('1 010.00', uj)
+        new = self.driver.find_element_by_xpath("//*[@id='components']/tbody//tr[1]/td[6]").text
+        self.assertEqual('1 010.00', new)
 
         #törlés
         self.driver.find_element_by_xpath("//td[contains(., 'Abszint')]//following::a").click()

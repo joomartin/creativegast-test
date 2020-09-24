@@ -59,25 +59,25 @@ class Test2(unittest.TestCase):
         self.driver.refresh()
         # számított mezők értékeinek ellenőrzése
         sleep(2)
-        mennyiseg = self.driver.find_element_by_xpath("//*[@id='components']/tbody//tr[1]/td[3]").text
-        self.assertEqual("10.00",mennyiseg)
-        nettoar = self.driver.find_element_by_xpath("//*[@id='components']/tbody//tr[1]/td[5]").text
-        self.assertEqual(nettoar,"787.40")
-        nettoertek=self.driver.find_element_by_xpath("//*[@id='components']/tbody//tr[1]/td[7]").text
-        self.assertEqual(nettoertek,"7 874.02")
+        quantity = self.driver.find_element_by_xpath("//*[@id='components']/tbody//tr[1]/td[3]").text
+        self.assertEqual("10.00",quantity)
+        netprice = self.driver.find_element_by_xpath("//*[@id='components']/tbody//tr[1]/td[5]").text
+        self.assertEqual(netprice,"787.40")
+        nettvalue=self.driver.find_element_by_xpath("//*[@id='components']/tbody//tr[1]/td[7]").text
+        self.assertEqual(nettvalue,"7 874.02")
         #raktarak ellenörés
 
         self.driver.find_element_by_xpath("//td[contains(., 'Abszint')]//following::a").click()
         self.driver.find_element_by_class_name("storages").click()
         self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
-        raktar = self.driver.find_element_by_xpath("/html/body/div[2]/table/tbody/tr[2]/td[2]").text
-        self.assertEqual(raktar,"Pult")
-        brutBesz = self.driver.find_element_by_xpath("/html/body/div[2]/table/tbody/tr[2]/td[3]").text
-        self.assertEqual(brutBesz,"1000")
-        menny =self.driver.find_element_by_xpath("/html/body/div[2]/table/tbody/tr[2]/td[4]").text
-        self.assertEqual(menny,"10")
-        raktErtek = self.driver.find_element_by_xpath("//html/body/div[2]/table/tbody/tr[2]/td[5]").text
-        self.assertEqual(raktErtek,"10000")
+        whause = self.driver.find_element_by_xpath("/html/body/div[2]/table/tbody/tr[2]/td[2]").text
+        self.assertEqual(whause,"Pult")
+        grossPrice = self.driver.find_element_by_xpath("/html/body/div[2]/table/tbody/tr[2]/td[3]").text
+        self.assertEqual(grossPrice,"1000")
+        qty =self.driver.find_element_by_xpath("/html/body/div[2]/table/tbody/tr[2]/td[4]").text
+        self.assertEqual(qty,"10")
+        whValue = self.driver.find_element_by_xpath("//html/body/div[2]/table/tbody/tr[2]/td[5]").text
+        self.assertEqual(whValue,"10000")
         self.driver.find_element_by_tag_name("body").send_keys(Keys.ESCAPE)
         self.driver.switch_to.default_content()
         self.driver.find_element_by_xpath("/html/body/section/div/a[3]/span").click()
