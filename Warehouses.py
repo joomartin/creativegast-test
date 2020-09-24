@@ -29,8 +29,22 @@ class Test(unittest.TestCase):
         # destination URL
         self.driver.get("https://jani-test.creativegast.hu/login")
 
+        self.driver.find_element_by_name("username").send_keys("admin")
+        # password textfield and type 'admin'
+        self.driver.find_element_by_name("pass").send_keys("admin")
 
-    def test_1(self):
+        # click 'Belépés' button
+        self.driver.find_element_by_xpath("//button[. = 'Belépés']").click()
+        #self.assertEqual(self.driver.title, "Felhasználó váltás | CreativeGAST")
+
+        self.driver.find_element_by_name("id_code").send_keys("admin")
+        # Keys.ENTER
+        self.driver.find_element_by_xpath("//button[. = 'Belépés']").click()
+        self.driver.implicitly_wait(10)
+        #self.assertEqual(self.driver.title, "Főoldal | CreativeGAST")
+
+
+    def test_login(self):
         #sleep(2)
         title = self.driver.title
         print('sitename')
@@ -41,26 +55,6 @@ class Test(unittest.TestCase):
         print('logo')
         self.assertTrue(self.driver.find_element_by_xpath("//img").is_displayed())
 
-    def test_3(self):
-        #sleep(2)
-        print('logfirst')
-        # username textfield and type 'admin'
-        self.driver.find_element_by_name("username").send_keys("admin")
-        # password textfield and type 'admin'
-        self.driver.find_element_by_name("pass").send_keys("admin")
-
-        # click 'Belépés' button
-        self.driver.find_element_by_xpath("//button[. = 'Belépés']").click()
-        self.assertEqual(self.driver.title, "Felhasználó váltás | CreativeGAST")
-
-    def test_4(self):
-        #sleep(2)
-        print('logsecond')
-        self.driver.find_element_by_name("id_code").send_keys("admin")
-        #Keys.ENTER
-        self.driver.find_element_by_xpath("//button[. = 'Belépés']").click()
-        self.driver.implicitly_wait(10)
-        self.assertEqual(self.driver.title, "Főoldal | CreativeGAST")
 
     def test_5(self):
         self.driver.implicitly_wait(10)
