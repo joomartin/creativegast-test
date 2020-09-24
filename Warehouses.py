@@ -43,38 +43,18 @@ class Test(unittest.TestCase):
         self.driver.implicitly_wait(10)
         #self.assertEqual(self.driver.title, "Főoldal | CreativeGAST")
 
-
-    def test_login(self):
-        #sleep(2)
-        title = self.driver.title
-        print('sitename')
-        self.assertEqual(title, "login | CreativeGAST")
-
-    def test_2(self):
-        #sleep(2)
-        print('logo')
-        self.assertTrue(self.driver.find_element_by_xpath("//img").is_displayed())
-
-
-    def test_5(self):
         self.driver.implicitly_wait(10)
         self.driver.find_element_by_xpath('/html/body/section/div/a[3]').click()
-        self.assertEqual(self.driver.title, "Raktárkészlet | CreativeGAST")
 
+        sleep(1)
         self.driver.find_element_by_xpath('//a[contains(., "Raktárak")]').click()
 
 
-    @unittest.SkipTest
-    def test_6(self):
-        #self.driver.find_element_by_id("83").click()
 
 
-        self.driver.implicitly_wait(10)
-        self.assertEqual(self.driver.title, "Asztal1 | CreativeGAST")
 
 
-    def test_7(self):
-
+    def createWarehouse(self):
 
         self.driver.implicitly_wait(10)
         self.driver.find_element_by_xpath('//*[@id="newStorage"]').click()
@@ -86,9 +66,6 @@ class Test(unittest.TestCase):
         self.driver.switch_to.default_content()
         self.driver.refresh()
         self.driver.implicitly_wait(10)
-
-        print("ASDASDDAS")
-
 
         sleep(2)
         '''
