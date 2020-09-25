@@ -13,9 +13,31 @@ import os
 
 
 class Test(unittest.TestCase):
-    #dir = os.getcwd()
 
     name = "0newWH"
+
+    def createWarehouse(self, warehouseName):
+        self.driver.implicitly_wait(10)
+        self.driver.find_element_by_xpath('//*[@id="newStorage"]').click()
+        self.driver.implicitly_wait(10)
+        self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
+        self.driver.find_element_by_xpath('//*[@id="st_name"]').send_keys(warehouseName)
+        self.driver.find_element_by_xpath('//*[@id="save"]').click()
+        self.driver.implicitly_wait(10)
+        self.driver.switch_to.default_content()
+        self.driver.refresh()
+        self.driver.implicitly_wait(10)
+
+        sleep(2)
+
+    def deleteWarehouse(self, warehouseName):
+        sleep(2)
+        self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '" + warehouseName + "']//following::a").click()
+        sleep(2)
+        self.driver.find_element_by_xpath('//button[contains(., "Igen")]').click()
+        sleep(2)
+
+
 
     @classmethod
     def setUpClass(self):
@@ -56,26 +78,11 @@ class Test(unittest.TestCase):
 
     def test001_create_warehouse(self):
 
-        self.driver.implicitly_wait(10)
-        self.driver.find_element_by_xpath('//*[@id="newStorage"]').click()
-        self.driver.implicitly_wait(10)
-        self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
-        self.driver.find_element_by_xpath('//*[@id="st_name"]').send_keys(self.name)
-        self.driver.find_element_by_xpath('//*[@id="save"]').click()
-        self.driver.implicitly_wait(10)
-        self.driver.switch_to.default_content()
-        self.driver.refresh()
-        self.driver.implicitly_wait(10)
+        self.createWarehouse("1newWH")
 
-        sleep(2)
-        '''
-        var = self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '0newWH']")
-        print(var.text)
-        var = self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '0newWH']")
-        print(var.text)
-        '''
+        self.assertTrue(self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']".format("1newWH")).is_displayed())
 
-        self.assertTrue(self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']".format(self.name)).is_displayed())
+        self.deleteWarehouse("1newWH")
 
         #self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '0newWH']//following::a").click()
 
@@ -83,11 +90,13 @@ class Test(unittest.TestCase):
     #@unittest.skip("ez most skip")
     def test002_cant_create(self):
 
+        self.createWarehouse("2newWH")
+
         self.driver.implicitly_wait(10)
         self.driver.find_element_by_xpath('//*[@id="newStorage"]').click()
         self.driver.implicitly_wait(10)
         self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
-        self.driver.find_element_by_xpath('//*[@id="st_name"]').send_keys(self.name)
+        self.driver.find_element_by_xpath('//*[@id="st_name"]').send_keys("2newWH")
         self.driver.find_element_by_xpath('//*[@id="save"]').click()
         self.driver.implicitly_wait(10)
 
@@ -97,15 +106,19 @@ class Test(unittest.TestCase):
         self.driver.find_element_by_xpath('//*[@id="st_name"]').clear()
         self.driver.find_element_by_xpath('//*[@id="cancel"]').click()
 
+        self.deleteWarehouse("2newWH")
+
     # szerkeszt
     def test003_edit(self):
+        self.createWarehouse("3newWH")
+
         newName = "11newWH"
         sleep(2)
-        self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']//following::a//following::a".format(self.name)).click()
+        self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']//following::a//following::a".format("3newWH")).click()
         self.driver.implicitly_wait(10)
         self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
         self.driver.find_element_by_xpath('//*[@id="st_name"]').clear()
-        self.driver.find_element_by_xpath('//*[@id="st_name"]').send_keys(newName)
+        self.driver.find_element_by_xpath('//*[@id="st_name"]').send_keys("33newWH")
         self.name = newName
         print(hex(id(self.name)))
         print(self.name)
@@ -116,22 +129,26 @@ class Test(unittest.TestCase):
         self.driver.refresh()
 
         sleep(2)
-        self.assertTrue(self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']".format(self.name)).is_displayed())
+        self.assertTrue(self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']".format("33newWH")).is_displayed())
 
+        self.deleteWarehouse("33newWH")
 
     # törlés
     def test004_delete(self):
+
+        self.createWarehouse("4newWH")
+
         print(hex(id(self.name)))
         print(self.name)
         sleep(2)
-        self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '11newWH']//following::a").click()
+        self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '4newWH']//following::a").click()
         sleep(2)
         self.driver.find_element_by_xpath('//button[contains(., "Igen")]').click()
         sleep(2)
 
         sleep(2)
         with self.assertRaises(NoSuchElementException):
-            self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '11newWH']//following::a")
+            self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '4newWH']//following::a")
 
 
 
@@ -156,7 +173,12 @@ if __name__ == "__main__":
 
 
 
-
+'''
+var = self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '0newWH']")
+print(var.text)
+var = self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '0newWH']")
+print(var.text)
+'''
 
 
 
