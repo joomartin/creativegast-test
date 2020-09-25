@@ -5,8 +5,10 @@ from selenium.common.exceptions import NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 import unittest
+#unittest.TestLoader.sortTestMethodsUsing = lambda self, a, b: (a < b) - (a > b)
 import HTMLTestRunner
 import os
+
 
 
 
@@ -27,60 +29,32 @@ class Test(unittest.TestCase):
         # waiting to server response
         self.driver.implicitly_wait(10)
         # destination URL
-        self.driver.get("https://jani-test.creativegast.hu/login")
+        self.driver.get("https://adrian.creativegast.hu/login")
 
-
-    def test_1(self):
-        #sleep(2)
-        title = self.driver.title
-        print('sitename')
-        self.assertEqual(title, "login | CreativeGAST")
-
-    def test_2(self):
-        #sleep(2)
-        print('logo')
-        self.assertTrue(self.driver.find_element_by_xpath("//img").is_displayed())
-
-    def test_3(self):
-        #sleep(2)
-        print('logfirst')
-        # username textfield and type 'admin'
         self.driver.find_element_by_name("username").send_keys("admin")
         # password textfield and type 'admin'
         self.driver.find_element_by_name("pass").send_keys("admin")
 
         # click 'Belépés' button
         self.driver.find_element_by_xpath("//button[. = 'Belépés']").click()
-        self.assertEqual(self.driver.title, "Felhasználó váltás | CreativeGAST")
+        #self.assertEqual(self.driver.title, "Felhasználó váltás | CreativeGAST")
 
-    def test_4(self):
-        #sleep(2)
-        print('logsecond')
         self.driver.find_element_by_name("id_code").send_keys("admin")
-        #Keys.ENTER
+        # Keys.ENTER
         self.driver.find_element_by_xpath("//button[. = 'Belépés']").click()
         self.driver.implicitly_wait(10)
-        self.assertEqual(self.driver.title, "Főoldal | CreativeGAST")
+        #self.assertEqual(self.driver.title, "Főoldal | CreativeGAST")
 
-    def test_5(self):
         self.driver.implicitly_wait(10)
         self.driver.find_element_by_xpath('/html/body/section/div/a[3]').click()
-        self.assertEqual(self.driver.title, "Raktárkészlet | CreativeGAST")
 
+        sleep(1)
         self.driver.find_element_by_xpath('//a[contains(., "Raktárak")]').click()
 
 
-    @unittest.SkipTest
-    def test_6(self):
-        #self.driver.find_element_by_id("83").click()
 
 
-        self.driver.implicitly_wait(10)
-        self.assertEqual(self.driver.title, "Asztal1 | CreativeGAST")
-
-
-    def test_7(self):
-
+    def test001_create_warehouse(self):
 
         self.driver.implicitly_wait(10)
         self.driver.find_element_by_xpath('//*[@id="newStorage"]').click()
@@ -92,9 +66,6 @@ class Test(unittest.TestCase):
         self.driver.switch_to.default_content()
         self.driver.refresh()
         self.driver.implicitly_wait(10)
-
-        print("ASDASDDAS")
-
 
         sleep(2)
         '''
@@ -110,7 +81,7 @@ class Test(unittest.TestCase):
 
     # megegy azonos nevu raktar nem johet letre
     #@unittest.skip("ez most skip")
-    def test_8(self):
+    def test002_cant_create(self):
 
         self.driver.implicitly_wait(10)
         self.driver.find_element_by_xpath('//*[@id="newStorage"]').click()
@@ -126,7 +97,8 @@ class Test(unittest.TestCase):
         self.driver.find_element_by_xpath('//*[@id="st_name"]').clear()
         self.driver.find_element_by_xpath('//*[@id="cancel"]').click()
 
-    def test_9(self):
+    # szerkeszt
+    def test003_edit(self):
         newName = "11newWH"
         sleep(2)
         self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']//following::a//following::a".format(self.name)).click()
@@ -148,7 +120,7 @@ class Test(unittest.TestCase):
 
 
     # törlés
-    def test_95(self):
+    def test004_delete(self):
         print(hex(id(self.name)))
         print(self.name)
         sleep(2)
@@ -173,6 +145,8 @@ class Test(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    #suite = unittest.TestLoader().loadTestsFromTestCase(Test)
+    #unittest.TextTestRunner(verbosity=2).run(suite)
     unittest.main()
 
 

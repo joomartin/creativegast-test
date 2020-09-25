@@ -11,12 +11,12 @@ dir = os.getcwd()
 driver = webdriver
 
 # get all tests from SearchText and HomePageTest class
-raktarak = unittest.TestLoader().loadTestsFromTestCase(Test)
+warehouses = unittest.TestLoader().loadTestsFromTestCase(Test)
 #test1 = unittest.TestLoader().loadTestsFromTestCase(Test)
 #test2 = unittest.TestLoader().loadTestsFromTestCase(Test2)
 
 # create a test suite combining search_text and home_page_test
-test_suite = unittest.TestSuite([raktarak])
+test_suite = unittest.TestSuite([warehouses])
 
 # run the suite
 #unittest.TextTestRunner(verbosity=2).run(test_suite)
