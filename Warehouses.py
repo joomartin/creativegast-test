@@ -5,8 +5,10 @@ from selenium.common.exceptions import NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 import unittest
+#unittest.TestLoader.sortTestMethodsUsing = lambda self, a, b: (a < b) - (a > b)
 import HTMLTestRunner
 import os
+
 
 
 
@@ -27,7 +29,7 @@ class Test(unittest.TestCase):
         # waiting to server response
         self.driver.implicitly_wait(10)
         # destination URL
-        self.driver.get("https://jani-test.creativegast.hu/login")
+        self.driver.get("https://adrian.creativegast.hu/login")
 
         self.driver.find_element_by_name("username").send_keys("admin")
         # password textfield and type 'admin'
@@ -52,9 +54,7 @@ class Test(unittest.TestCase):
 
 
 
-
-
-    def createWarehouse(self):
+    def test001_create_warehouse(self):
 
         self.driver.implicitly_wait(10)
         self.driver.find_element_by_xpath('//*[@id="newStorage"]').click()
@@ -81,7 +81,7 @@ class Test(unittest.TestCase):
 
     # megegy azonos nevu raktar nem johet letre
     #@unittest.skip("ez most skip")
-    def test_8(self):
+    def test002_cant_create(self):
 
         self.driver.implicitly_wait(10)
         self.driver.find_element_by_xpath('//*[@id="newStorage"]').click()
@@ -97,7 +97,8 @@ class Test(unittest.TestCase):
         self.driver.find_element_by_xpath('//*[@id="st_name"]').clear()
         self.driver.find_element_by_xpath('//*[@id="cancel"]').click()
 
-    def test_9(self):
+    # szerkeszt
+    def test003_edit(self):
         newName = "11newWH"
         sleep(2)
         self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']//following::a//following::a".format(self.name)).click()
@@ -119,7 +120,7 @@ class Test(unittest.TestCase):
 
 
     # törlés
-    def test_95(self):
+    def test004_delete(self):
         print(hex(id(self.name)))
         print(self.name)
         sleep(2)
@@ -144,6 +145,8 @@ class Test(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    #suite = unittest.TestLoader().loadTestsFromTestCase(Test)
+    #unittest.TextTestRunner(verbosity=2).run(suite)
     unittest.main()
 
 
