@@ -9,16 +9,18 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
 class Test(unittest.TestCase):
-    options = webdriver.ChromeOptions()
-    options.add_argument("--auto-open-devtools-for-tabs")
-    driver = webdriver.Chrome()
+
+    @classmethod
+    def setUpClass(self):
+        self.driver = webdriver.Chrome()
 
     def test_firstTest(self):
         login = "admin"
         # Felhasznalonev és jelszo megadasa
 
-        self.driver.get("https://ricsi.creativegast.hu/login")
+        #self.driver.get("https://ricsi.creativegast.hu/login")
         self.driver.maximize_window()
+        '''
         self.element = self.driver.find_element_by_xpath("//*[@id='req']")
         self.element.send_keys(login)
         self.element = self.driver.find_element_by_xpath("//*[@id='pass']")
@@ -28,8 +30,9 @@ class Test(unittest.TestCase):
         # Belepesi kod megadas
         element = self.driver.find_element_by_xpath("//*[@id='pass']")
         element.send_keys(login)
+        
         element = self.driver.find_element_by_xpath('//*[@id="login"]/button').click()
-
+        
         #Raktarkészlet menüpont megnyitasa
         self.driver.find_element_by_xpath("/html/body/section/div/a[3]/span").click()
         #Uj nyersanyag gomb
@@ -52,8 +55,13 @@ class Test(unittest.TestCase):
         #visszaváltunk a böngészőre az iframe-ről
         self.driver.switch_to.default_content()
         self.assertTrue(self.driver.find_element_by_xpath("//td[contains(., 'Abszint')]").is_displayed())
+        
+        print(hex(id(self.driver)), "osztaly")
+        crm.CreateRawMaterial(self.driver)
 
         #szerkesztés
+        self.driver.refresh()
+        sleep(2)
         self.driver.find_element_by_xpath("//td[contains(., 'Abszint')]//following::a").click()
         self.driver.find_element_by_class_name("edit").click()
         self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
@@ -72,3 +80,4 @@ class Test(unittest.TestCase):
         self.driver.find_element_by_xpath("//button[contains(.,'Igen')]").click()
 
         self.driver.close()
+        '''
