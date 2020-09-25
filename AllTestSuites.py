@@ -25,7 +25,7 @@ test_suite = unittest.TestSuite([raktarak])
 outfile = open(dir + "\SeleniumPythonTestSummary.html", "w")
 
 # configure HTMLTestRunner options
-runner = HTMLTestRunner.HTMLTestRunner(stream=outfile,title='Test Report', description='Acceptance Tests')
+runner = HTMLTestRunner.HTMLTestRunner(stream=outfile, title='Test Report', description='Acceptance Tests')
 
 # run the suite using HTMLTestRunner
 runner.run(test_suite)

@@ -32,6 +32,14 @@ class Test(unittest.TestCase):
 
         # Raktarkészlet menüpont megnyitasa
         self.driver.find_element_by_xpath("/html/body/section/div/a[3]/span").click()
+        #selejtezes lista meretenek ellenorzese
+        self.driver.find_element_by_xpath("/html/body/section/div/div[2]/div/ul/li[6]/a").click()
+        sleep(2)
+        self.driver.find_element_by_xpath("//*[@id='component_waste_length']/label/div/button").click()
+        self.driver.find_element_by_xpath("//*[@id='component_waste_length']/label/div/div/ul/li[4]/label").click()
+        rows = self.driver.find_elements_by_xpath("//table/tbody/tr")
+        self.driver.find_element_by_xpath("/html/body/section/div/div[2]/div/ul/li[1]/a").click()
+        sleep(2)
         # Uj nyersanyag gomb
         self.driver.find_element_by_xpath("//*[@id='newComponent']").click()
         # Termék létrehozása nyitókészlettel
@@ -71,4 +79,21 @@ class Test(unittest.TestCase):
         new = self.driver.find_element_by_xpath("//*[@id='components']/tbody//tr[1]/td[3]").text
         self.assertEqual(new, "5.00")
 
-        self.driver.close()
+        self.driver.find_element_by_xpath("/html/body/section/div/div[2]/div/ul/li[6]/a").click()
+        sleep(2)
+        self.driver.find_element_by_xpath("//*[@id='component_waste_length']/label/div/button").click()
+        self.driver.find_element_by_xpath("//*[@id='component_waste_length']/label/div/div/ul/li[4]/label").click()
+        rows2 = self.driver.find_elements_by_xpath("//table/tbody/tr")
+        self.assertNotEqual(rows, rows2)
+        # Törlés
+        self.driver.find_element_by_xpath("/html/body/section/div/div[2]/div/ul/li[1]/a").click()
+        sleep(2)
+        self.driver.implicitly_wait(5)
+        self.driver.implicitly_wait(5)
+        self.driver.find_element_by_xpath("//td[contains(., 'Abszint')]//following::a").click()
+        self.driver.find_element_by_class_name("del").click()
+
+        self.driver.find_element_by_xpath("//button[contains(.,'Igen')]").click()
+        self.driver.implicitly_wait(2)
+
+        #self.driver.close()
