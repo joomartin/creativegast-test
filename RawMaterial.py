@@ -4,27 +4,28 @@ from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.ui import Select
 
 class RawMaterial(unittest.TestCase):
 
     def CreateRawMaterial(self, materialName):
         # Uj nyersanyag gomb
-        self.driver.find_element_by_xpath("//*[@id='newComponent']").click()
+        self.driver.find_element_by_xpath("//a[contains(.,'Új nyersanyag felvitele')]").click()
         # Termék létrehozása nyitókészlet megadása nélkül
         # nyersanyag adatok kitoltese + váltás iframe-re a böngészőben
         self.driver.implicitly_wait(3)
         self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
         # név
-        self.driver.find_element_by_xpath("//*[@id='c_name']").click()
-        self.driver.find_element_by_xpath("//*[@id='c_name']").send_keys(materialName)
+        self.driver.find_element_by_xpath("//label[contains(.,'Nyersanyag neve')]//following::input").send_keys(materialName)
         # ME
-        self.driver.find_element_by_xpath("//*[@id='tabs-base']/div[1]/div/div/button").click()
-        self.driver.find_element_by_xpath("//*[@id='tabs-base']/div[1]/div/div/div/ul/li[2]").click()
+        self.driver.find_element_by_xpath("//label[contains(.,'ME')]//following::button").click()
+        self.driver.find_element_by_xpath("//label[contains(.,'liter')]").click()
         # Raktar
-        self.driver.find_element_by_xpath("//*[@id='tabs-base']/div[4]/div/button").click()
-        self.driver.find_element_by_xpath("//*[@id='tabs-base']/div[4]/div/div/ul/li[2]/label").click()
+        self.driver.find_element_by_xpath("//label[contains(.,'Raktár')]//following::button").click()
+        self.driver.find_element_by_xpath("//label[contains(.,'Pult')]").click()
+
         # Mentes
-        self.driver.find_element_by_xpath("//*[@id='save']").click()
+        self.driver.find_element_by_xpath("//button[contains(.,'Rögzít')]").click()
         # visszaváltunk a böngészőre az iframe-ről
         self.driver.switch_to.default_content()
         self.driver.refresh()
@@ -34,7 +35,8 @@ class RawMaterial(unittest.TestCase):
 
     def DeleteRawMaterial(self, name):
         self.driver.find_element_by_xpath("//td[contains(., '"+name+"')]//following::a").click()
-        self.driver.find_element_by_class_name("del").click()
+        sleep(2)
+        self.driver.find_element_by_xpath("//a[contains(.,'Törlés')]").click()
         self.driver.find_element_by_xpath("//button[contains(.,'Igen')]").click()
 
     def updateRawMaterial(self,name,purchase_price):
@@ -50,23 +52,22 @@ class RawMaterial(unittest.TestCase):
         self.assertEqual(purchase_price, new)
 
     def createRawMaterialWithOpening(self,name):
-        self.driver.find_element_by_xpath("//*[@id='newComponent']").click()
+        self.driver.find_element_by_xpath("//a[contains(.,'Új nyersanyag felvitele')]").click()
         self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
         # név
-        self.driver.find_element_by_xpath("//*[@id='c_name']").click()
-        self.driver.find_element_by_xpath("//*[@id='c_name']").send_keys(name)
+        self.driver.find_element_by_xpath("//label[contains(.,'Nyersanyag neve')]//following::input").send_keys(name)
         # Brutto beszerzesi egysegar megadasa
-        self.driver.find_element_by_xpath("//*[@id='c_purchase_price']").send_keys("1000")
+        self.driver.find_element_by_xpath("//label[contains(.,'Bruttó beszerzési egységár')]//following::input").send_keys("1000")
         # ME
-        self.driver.find_element_by_xpath("//*[@id='tabs-base']/div[1]/div/div/button").click()
-        self.driver.find_element_by_xpath("//*[@id='tabs-base']/div[1]/div/div/div/ul/li[2]").click()
+        self.driver.find_element_by_xpath("//label[contains(.,'ME')]//following::button").click()
+        self.driver.find_element_by_xpath("//label[contains(.,'liter')]").click()
         # Nyitomennyiseg megadasa
-        self.driver.find_element_by_xpath("//*[@id='c_open_qty']").send_keys("10")
+        self.driver.find_element_by_xpath("//label[contains(.,'Nyitó mennyiség')]//following::input").send_keys("10")
         # Raktar
-        self.driver.find_element_by_xpath("//*[@id='tabs-base']/div[4]/div/button").click()
-        self.driver.find_element_by_xpath("//*[@id='tabs-base']/div[4]/div/div/ul/li[2]/label").click()
+        self.driver.find_element_by_xpath("//label[contains(.,'Raktár')]//following::button").click()
+        self.driver.find_element_by_xpath("//label[contains(.,'Pult')]").click()
         # Mentes
-        self.driver.find_element_by_xpath("//*[@id='save']").click()
+        self.driver.find_element_by_xpath("//button[contains(.,'Rögzít')]").click()
         # visszaváltunk a böngészőre az iframe-ről
         self.driver.switch_to.default_content()
         self.driver.refresh()
@@ -94,6 +95,54 @@ class RawMaterial(unittest.TestCase):
         self.driver.find_element_by_tag_name("body").send_keys(Keys.ESCAPE)
         self.driver.switch_to.default_content()
         self.driver.find_element_by_xpath("/html/body/section/div/a[3]/span").click()
+        sleep(2)
+
+    def duplicateCreateRawMaterial(self,name):
+        # Uj nyersanyag gomb
+        self.driver.find_element_by_xpath("//a[contains(.,'Új nyersanyag felvitele')]").click()
+        # Termék létrehozása nyitókészlet megadása nélkül
+        # nyersanyag adatok kitoltese + váltás iframe-re a böngészőben
+        self.driver.implicitly_wait(3)
+        self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
+        # név
+        self.driver.find_element_by_xpath("//label[contains(.,'Nyersanyag neve')]//following::input").send_keys(name)
+        # ME
+        self.driver.find_element_by_xpath("//label[contains(.,'ME')]//following::button").click()
+        self.driver.find_element_by_xpath("//label[contains(.,'liter')]").click()
+        # Raktar
+        self.driver.find_element_by_xpath("//label[contains(.,'Raktár')]//following::button").click()
+        self.driver.find_element_by_xpath("//label[contains(.,'Pult')]").click()
+        # Mentes
+        self.driver.find_element_by_xpath("//button[contains(.,'Rögzít')]").click()
+        # visszaváltunk a böngészőre az iframe-ről
+        self.driver.switch_to.default_content()
+        self.driver.refresh()
+        sleep(2)
+
+        self.assertTrue(self.driver.find_element_by_xpath("//td[contains(., '" + name + "')]").is_displayed())
+
+        self.driver.find_element_by_xpath("//a[contains(.,'Új nyersanyag felvitele')]").click()
+        # Termék létrehozása nyitókészlet megadása nélkül
+        # nyersanyag adatok kitoltese + váltás iframe-re a böngészőben
+        self.driver.implicitly_wait(3)
+        self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
+        # név
+        self.driver.find_element_by_xpath("//label[contains(.,'Nyersanyag neve')]//following::input").send_keys(name)
+        # ME
+        self.driver.find_element_by_xpath("//label[contains(.,'ME')]//following::button").click()
+        self.driver.find_element_by_xpath("//label[contains(.,'liter')]").click()
+        # Raktar
+        self.driver.find_element_by_xpath("//label[contains(.,'Raktár')]//following::button").click()
+        self.driver.find_element_by_xpath("//label[contains(.,'Pult')]").click()
+        # Mentes
+        self.driver.find_element_by_xpath("//button[contains(.,'Rögzít')]").click()
+
+        self.assertTrue(self.driver.find_element_by_class_name("ui-tabs"))
+        # ezután bezárjuk a mégsem gombbal
+        self.driver.find_element_by_xpath("//button[contains(.,'Mégsem')]").click()
+        self.driver.find_element_by_xpath("//button[contains(.,'Igen')]").click()
+
+
 
     @classmethod
     def setUpClass(self):
@@ -124,10 +173,30 @@ class RawMaterial(unittest.TestCase):
         self.driver.find_element_by_xpath('/html/body/section/div/a[3]').click()
 
 
-    def test_RawMaterial(self):
+    def test_Create(self):
+        testName = "Abszint"
+        self.CreateRawMaterial(testName)
+        self.DeleteRawMaterial(testName)
+
+
+    def test_Update(self):
         testName = "Abszint"
         self.CreateRawMaterial(testName)
         self.updateRawMaterial(testName,'1 010.00')
         self.DeleteRawMaterial(testName)
+    def test_Opening(self):
+        testName = "Abszint"
         self.createRawMaterialWithOpening(testName)
         self.DeleteRawMaterial(testName)
+
+    def test_Duplicate(self):
+        testName = "Abszint"
+        self.duplicateCreateRawMaterial(testName)
+        sleep(2)
+        self.DeleteRawMaterial(testName)
+
+
+    @classmethod
+    def tearDownClass(self):
+        #pass
+        self.driver.quit()
