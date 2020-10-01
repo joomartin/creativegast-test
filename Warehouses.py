@@ -9,29 +9,32 @@ import unittest
 #unittest.TestLoader.sortTestMethodsUsing = lambda self, a, b: (a < b) - (a > b)
 import HTMLTestRunner
 import os
+from HtmlHandler import HtmlHandler
 
 
 
 
 class Test(unittest.TestCase):
-
+    html = None
     name = "0newWH"
 
     def createWarehouse(self, warehouseName):
         self.driver.implicitly_wait(10)
-        #self.driver.find_element_by_xpath('//*[@id="newStorage"]').click()
-        self.driver.find_element_by_xpath('//a[contains(., "Új raktár felvitele")]').click()
+        #self.driver.find_element_by_xpath('//a[contains(., "Új raktár felvitele")]').click()
+        self.html.clickElementByText(text='Új raktár felvitele', tag='a')
         self.driver.implicitly_wait(10)
         self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
         #self.driver.find_element_by_xpath('//*[@id="st_name"]').send_keys(warehouseName)
+
         # textinput kitoltese
-        self.driver.find_element_by_xpath('//label[contains(., "Raktár neve")]//following::input').send_keys(warehouseName)
+        self.html.fillInputFollowing(labelText='Raktár neve', message=warehouseName)
         #self.driver.find_element_by_xpath('//*[@id="save"]').click()
         self.driver.find_element_by_xpath('//button[contains(., "Rögzít")]').click()
         self.driver.implicitly_wait(10)
         self.driver.switch_to.default_content()
         self.driver.refresh()
         self.driver.implicitly_wait(10)
+
 
         sleep(2)
 
@@ -52,9 +55,6 @@ class Test(unittest.TestCase):
         sleep(2)
 
 
-    def click(self, type, text):
-        self.driver.find_element_by_xpath('//"' + type + '"[contains(., "' + text + '")]').click()
-
 
     @classmethod
     def setUpClass(self):
@@ -71,20 +71,24 @@ class Test(unittest.TestCase):
         # destination URL
         self.driver.get("https://adrian.creativegast.hu/login")
 
-        self.driver.find_element_by_name("username").send_keys("admin")
+        self.html = HtmlHandler(self.driver)
+
+        #self.driver.find_element_by_name("username").send_keys("admin")
+        self.html.fillInputByPlaceholder(placeholder='Felhasználónév', message='admin')
         # password textfield and type 'admin'
-        self.driver.find_element_by_name("pass").send_keys("admin")
+        #self.driver.find_element_by_name("pass").send_keys("admin")
+        self.html.fillInputByPlaceholder(placeholder='Jelszó', message='admin')
 
         # click 'Belépés' button
-        self.driver.find_element_by_xpath("//button[. = 'Belépés']").click()
-        #self.click(type='button', text='Belépés')
+        #self.driver.find_element_by_xpath("//button[. = 'Belépés']").click()
+        self.html.clickElementByText(text='Belépés')
         #self.assertEqual(self.driver.title, "Felhasználó váltás | CreativeGAST")
 
-        self.driver.find_element_by_name("id_code").send_keys("admin")
-        # Keys.ENTER
-        self.driver.find_element_by_xpath("//button[. = 'Belépés']").click()
-        #self.click(type='button', text='Belépés')
-        self.driver.implicitly_wait(10)
+        #self.driver.find_element_by_name("id_code").send_keys("admin")
+        self.html.fillInputByPlaceholder(placeholder='Belépési kód', message='admin')
+        #self.driver.find_element_by_xpath("//button[. = 'Belépés']").click()
+        self.html.clickElementByText(text='Belépés')
+
         #self.assertEqual(self.driver.title, "Főoldal | CreativeGAST")
 
         self.driver.implicitly_wait(10)
@@ -92,8 +96,9 @@ class Test(unittest.TestCase):
         #self.driver.find_element_by_xpath('//br[contains(., "Raktárkészlet")]').click()
 
         sleep(1)
-        self.driver.find_element_by_xpath('//a[contains(., "Raktárak")]').click()
-        #self.click(type='a', text='Raktárak')
+        #self.driver.find_element_by_xpath('//a[contains(., "Raktárak")]').click()
+        #self.driver.find_element_by_xpath('//a[. = "Raktárak"]').click()
+        self.html.clickElementByText(text='Raktárak', tag='a')
 
 
     # create warehouse
