@@ -15,14 +15,14 @@ class RawMaterial(unittest.TestCase):
     def ClickElement(self, tag, text):
         self.driver.find_element_by_xpath("//" + str(tag) + "[contains(.,'" + text + "')]").click()
 
-    def DropDownSelect(self, labelTxt, selectValue):
+    def dropDownSelect(self, labelTxt, selectValue):
         self.driver.find_element_by_xpath("//label[contains(.,'" + labelTxt + "')]//following::button").click()
         self.driver.find_element_by_xpath("//label[contains(.,'" + selectValue + "')]").click()
 
-    def FillInput(self, labelTxt, inputTxt):
-        self.driver.find_element_by_xpath("//label[contains(.,'" + labelTxt +"')]//following::input").send_keys(inputTxt)
+    def fillInput(self, labelTxt, inputTxt):
+        self.driver.find_element_by_xpath("//label[contains(.,'" + labelTxt + "')]//following::input").send_keys(inputTxt)
         
-    def SwitchFrame(self,tagName=""):
+    def switchFrame(self, tagName=""):
         if not tagName:
             self.driver.switch_to.default_content()
         else:
@@ -35,18 +35,18 @@ class RawMaterial(unittest.TestCase):
         # create a raw material without an opening stock
         # switch to iframe
         sleep(1)
-        self.SwitchFrame("iframe")
+        self.switchFrame("iframe")
         # name
-        self.FillInput("Nyersanyag neve", materialName)
+        self.fillInput("Nyersanyag neve", materialName)
         # ME
-        self.DropDownSelect("ME", "liter")
+        self.dropDownSelect("ME", "liter")
         # Warehause
-        self.DropDownSelect("Raktár", "Pult")
+        self.dropDownSelect("Raktár", "Pult")
 
         # Save
         self.ClickElement("button", "Rögzít")
         # switch back to the browser
-        self.SwitchFrame()
+        self.switchFrame()
         self.driver.refresh()
         sleep(2)
 
@@ -61,10 +61,10 @@ class RawMaterial(unittest.TestCase):
     def updateRawMaterial(self, name, purchase_price):
         self.driver.find_element_by_xpath("//td[contains(., '" + name + "')]//following::a").click()
         self.driver.find_element_by_class_name("edit").click()
-        self.SwitchFrame("iframe")
+        self.switchFrame("iframe")
         self.driver.find_element_by_xpath("//*[@id='c_purchase_price']").send_keys(purchase_price)
         self.driver.find_element_by_xpath("//*[@id='save']").click()
-        self.SwitchFrame()
+        self.switchFrame()
         self.driver.refresh()
         sleep(2)
         new = self.driver.find_element_by_xpath("//*[@id='components']/tbody//tr[1]/td[6]").text
@@ -72,22 +72,22 @@ class RawMaterial(unittest.TestCase):
 
     def createRawMaterialWithOpening(self, name):
         self.ClickElement("a","Új nyersanyag felvitele")
-        self.SwitchFrame("iframe")
+        self.switchFrame("iframe")
         # név
-        self.FillInput("Nyersanyag neve", name)
+        self.fillInput("Nyersanyag neve", name)
         # gross purchase price
         self.driver.find_element_by_xpath(
             "//label[contains(.,'Bruttó beszerzési egységár')]//following::input").send_keys("1000")
         # ME
-        self.DropDownSelect("ME", "liter")
+        self.dropDownSelect("ME", "liter")
         # setting opening stock
         self.driver.find_element_by_xpath("//label[contains(.,'Nyitó mennyiség')]//following::input").send_keys("10")
         # Warehouse
-        self.DropDownSelect("Raktár", "Pult")
+        self.dropDownSelect("Raktár", "Pult")
         # Save
         self.driver.find_element_by_xpath("//button[contains(.,'Rögzít')]").click()
         # switch back to browser
-        self.SwitchFrame()
+        self.switchFrame()
         self.driver.refresh()
         # checking the counted fields
         sleep(2)
@@ -102,7 +102,7 @@ class RawMaterial(unittest.TestCase):
         self.driver.find_element_by_xpath("//td[contains(., '" + name + "')]//following::a").click()
         #self.driver.find_elements_by_xpath("//a[contains(., 'Raktárak')]")[1].click()
         self.driver.find_element_by_class_name("storages").click()
-        self.SwitchFrame("iframe")
+        self.switchFrame("iframe")
         whause = self.txtFromTable(2, 2)
         self.assertEqual(whause, "Pult")
         grossPrice = self.txtFromTable(2, 3)
@@ -112,7 +112,7 @@ class RawMaterial(unittest.TestCase):
         whValue = self.txtFromTable(2, 5)
         self.assertEqual(whValue, "10000")
         self.driver.find_element_by_tag_name("body").send_keys(Keys.ESCAPE)
-        self.SwitchFrame()
+        self.switchFrame()
         self.driver.find_element_by_xpath("/html/body/section/div/a[3]/span").click()
         sleep(2)
 
@@ -121,18 +121,18 @@ class RawMaterial(unittest.TestCase):
         # create a raw material without an opening stock
         # switch to iframe
         sleep(1)
-        self.SwitchFrame("iframe")
+        self.switchFrame("iframe")
         # name
-        self.FillInput("Nyersanyag neve", name)
+        self.fillInput("Nyersanyag neve", name)
         # ME
-        self.DropDownSelect("ME", "liter")
+        self.dropDownSelect("ME", "liter")
         # Warehause
-        self.DropDownSelect("Raktár", "Pult")
+        self.dropDownSelect("Raktár", "Pult")
 
         # Save
         self.ClickElement("button", "Rögzít")
         # switch back to the browser
-        self.SwitchFrame()
+        self.switchFrame()
         self.driver.refresh()
         sleep(2)
 
@@ -142,13 +142,13 @@ class RawMaterial(unittest.TestCase):
         # Create a new raw material without opening stock
         # switch to iframe and fill upp data
         self.driver.implicitly_wait(3)
-        self.SwitchFrame("iframe")
+        self.switchFrame("iframe")
         # # name
-        self.FillInput("Nyersanyag neve", name)
+        self.fillInput("Nyersanyag neve", name)
         # ME
-        self.DropDownSelect("ME", "liter")
+        self.dropDownSelect("ME", "liter")
         # Warehause
-        self.DropDownSelect("Raktár", "Pult")
+        self.dropDownSelect("Raktár", "Pult")
 
         # Save
         self.ClickElement("button", "Rögzít")
@@ -220,23 +220,23 @@ class RawMaterial(unittest.TestCase):
         self.CreateRawMaterial(testName)
         self.driver.find_element_by_xpath("//td[contains(., 'Abszint')]//following::a").click()
         self.driver.find_element_by_class_name("edit").click()
-        self.SwitchFrame("iframe")
+        self.switchFrame("iframe")
         self.driver.find_element_by_xpath("//label[contains(.,'Nyitó mennyiség')]//following::input").send_keys("10")
         self.driver.find_element_by_xpath("//label[contains(.,'Raktár')]//following::button").click()
         self.driver.find_element_by_xpath("//label[contains(.,'Pult')]").click()
         self.driver.find_element_by_xpath("//button[contains(., 'Rögzít')]").click()
-        self.SwitchFrame()
+        self.switchFrame()
         sleep(2)
         self.driver.find_element_by_xpath("//td[contains(., 'Abszint')]//following::a").click()
         self.driver.find_element_by_class_name("waste").click()
-        self.SwitchFrame("iframe")
+        self.switchFrame("iframe")
         self.driver.find_element_by_xpath("//button[contains(.,'Válassz...')]").click()
         self.driver.find_element_by_xpath("//label[contains(.,'Pult')]").click()
         sleep(1)
         self.driver.find_element_by_xpath("//label[contains(.,'Mennyiség')]//following::input").send_keys("5")
         self.driver.find_element_by_xpath("//button[contains(.,'Üveg összetört')]").click()
         sleep(2)
-        self.SwitchFrame()
+        self.switchFrame()
         self.driver.refresh()
         sleep(2)
         qty = self.txtFromTable(1, 3)
