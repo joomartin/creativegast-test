@@ -12,27 +12,41 @@ class RawMaterial(unittest.TestCase):
     def txtFromTable(self, row, col):
         return self.driver.find_element_by_xpath("//table//tbody//tr[" + str(row) + "]/td[" + str(col) + "]").text
 
+    def ClickElement(self, tag, text):
+        self.driver.find_element_by_xpath("//" + str(tag) + "[contains(.,'" + text + "')]").click()
+
+    def DropDownSelect(self, labelTxt, selectValue):
+        self.driver.find_element_by_xpath("//label[contains(.,'" + labelTxt + "')]//following::button").click()
+        self.driver.find_element_by_xpath("//label[contains(.,'" + selectValue + "')]").click()
+
+    def FillInput(self, labelTxt, inputTxt):
+        self.driver.find_element_by_xpath("//label[contains(.,'" + labelTxt +"')]//following::input").send_keys(inputTxt)
+        
+    def SwitchFrame(self,tagName=""):
+        if not tagName:
+            self.driver.switch_to.default_content()
+        else:
+            self.driver.switch_to.frame(self.driver.find_element_by_tag_name(tagName))
+
+
     def CreateRawMaterial(self, materialName):
         # new raw material button
-        self.driver.find_element_by_xpath("//a[contains(.,'Új nyersanyag felvitele')]").click()
+        self.ClickElement("a","Új nyersanyag felvitele")
         # create a raw material without an opening stock
         # switch to iframe
-        self.driver.implicitly_wait(3)
-        self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
+        sleep(1)
+        self.SwitchFrame("iframe")
         # name
-        self.driver.find_element_by_xpath("//label[contains(.,'Nyersanyag neve')]//following::input").send_keys(
-            materialName)
+        self.FillInput("Nyersanyag neve", materialName)
         # ME
-        self.driver.find_element_by_xpath("//label[contains(.,'ME')]//following::button").click()
-        self.driver.find_element_by_xpath("//label[contains(.,'liter')]").click()
+        self.DropDownSelect("ME", "liter")
         # Warehause
-        self.driver.find_element_by_xpath("//label[contains(.,'Raktár')]//following::button").click()
-        self.driver.find_element_by_xpath("//label[contains(.,'Pult')]").click()
+        self.DropDownSelect("Raktár", "Pult")
 
         # Save
-        self.driver.find_element_by_xpath("//button[contains(.,'Rögzít')]").click()
+        self.ClickElement("button", "Rögzít")
         # switch back to the browser
-        self.driver.switch_to.default_content()
+        self.SwitchFrame()
         self.driver.refresh()
         sleep(2)
 
@@ -41,41 +55,39 @@ class RawMaterial(unittest.TestCase):
     def DeleteRawMaterial(self, name):
         self.driver.find_element_by_xpath("//td[contains(., '" + name + "')]//following::a").click()
         sleep(2)
-        self.driver.find_element_by_xpath("//a[contains(.,'Törlés')]").click()
-        self.driver.find_element_by_xpath("//button[contains(.,'Igen')]").click()
+        self.ClickElement("a", "Törlés")
+        self.ClickElement("button", "Igen")
 
     def updateRawMaterial(self, name, purchase_price):
         self.driver.find_element_by_xpath("//td[contains(., '" + name + "')]//following::a").click()
         self.driver.find_element_by_class_name("edit").click()
-        self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
+        self.SwitchFrame("iframe")
         self.driver.find_element_by_xpath("//*[@id='c_purchase_price']").send_keys(purchase_price)
         self.driver.find_element_by_xpath("//*[@id='save']").click()
-        self.driver.switch_to.default_content()
+        self.SwitchFrame()
         self.driver.refresh()
         sleep(2)
         new = self.driver.find_element_by_xpath("//*[@id='components']/tbody//tr[1]/td[6]").text
         self.assertEqual(purchase_price, new)
 
     def createRawMaterialWithOpening(self, name):
-        self.driver.find_element_by_xpath("//a[contains(.,'Új nyersanyag felvitele')]").click()
-        self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
+        self.ClickElement("a","Új nyersanyag felvitele")
+        self.SwitchFrame("iframe")
         # név
-        self.driver.find_element_by_xpath("//label[contains(.,'Nyersanyag neve')]//following::input").send_keys(name)
+        self.FillInput("Nyersanyag neve", name)
         # gross purchase price
         self.driver.find_element_by_xpath(
             "//label[contains(.,'Bruttó beszerzési egységár')]//following::input").send_keys("1000")
         # ME
-        self.driver.find_element_by_xpath("//label[contains(.,'ME')]//following::button").click()
-        self.driver.find_element_by_xpath("//label[contains(.,'liter')]").click()
+        self.DropDownSelect("ME", "liter")
         # setting opening stock
         self.driver.find_element_by_xpath("//label[contains(.,'Nyitó mennyiség')]//following::input").send_keys("10")
         # Warehouse
-        self.driver.find_element_by_xpath("//label[contains(.,'Raktár')]//following::button").click()
-        self.driver.find_element_by_xpath("//label[contains(.,'Pult')]").click()
+        self.DropDownSelect("Raktár", "Pult")
         # Save
         self.driver.find_element_by_xpath("//button[contains(.,'Rögzít')]").click()
         # switch back to browser
-        self.driver.switch_to.default_content()
+        self.SwitchFrame()
         self.driver.refresh()
         # checking the counted fields
         sleep(2)
@@ -88,8 +100,9 @@ class RawMaterial(unittest.TestCase):
         # checking the warehouses
 
         self.driver.find_element_by_xpath("//td[contains(., '" + name + "')]//following::a").click()
+        #self.driver.find_elements_by_xpath("//a[contains(., 'Raktárak')]")[1].click()
         self.driver.find_element_by_class_name("storages").click()
-        self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
+        self.SwitchFrame("iframe")
         whause = self.txtFromTable(2, 2)
         self.assertEqual(whause, "Pult")
         grossPrice = self.txtFromTable(2, 3)
@@ -99,58 +112,56 @@ class RawMaterial(unittest.TestCase):
         whValue = self.txtFromTable(2, 5)
         self.assertEqual(whValue, "10000")
         self.driver.find_element_by_tag_name("body").send_keys(Keys.ESCAPE)
-        self.driver.switch_to.default_content()
+        self.SwitchFrame()
         self.driver.find_element_by_xpath("/html/body/section/div/a[3]/span").click()
         sleep(2)
 
     def duplicateCreateRawMaterial(self, name):
-        # new raw material button
-        self.driver.find_element_by_xpath("//a[contains(.,'Új nyersanyag felvitele')]").click()
-        # Create a new raw material without opening stock
-        # switch to iframe and fill upp data
-        self.driver.implicitly_wait(3)
-        self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
+        self.ClickElement("a", "Új nyersanyag felvitele")
+        # create a raw material without an opening stock
+        # switch to iframe
+        sleep(1)
+        self.SwitchFrame("iframe")
         # name
-        self.driver.find_element_by_xpath("//label[contains(.,'Nyersanyag neve')]//following::input").send_keys(name)
+        self.FillInput("Nyersanyag neve", name)
         # ME
-        self.driver.find_element_by_xpath("//label[contains(.,'ME')]//following::button").click()
-        self.driver.find_element_by_xpath("//label[contains(.,'liter')]").click()
-        # Warehouse
-        self.driver.find_element_by_xpath("//label[contains(.,'Raktár')]//following::button").click()
-        self.driver.find_element_by_xpath("//label[contains(.,'Pult')]").click()
+        self.DropDownSelect("ME", "liter")
+        # Warehause
+        self.DropDownSelect("Raktár", "Pult")
+
         # Save
-        self.driver.find_element_by_xpath("//button[contains(.,'Rögzít')]").click()
-        # switch back to browser
-        self.driver.switch_to.default_content()
+        self.ClickElement("button", "Rögzít")
+        # switch back to the browser
+        self.SwitchFrame()
         self.driver.refresh()
         sleep(2)
 
         self.assertTrue(self.driver.find_element_by_xpath("//td[contains(., '" + name + "')]").is_displayed())
         # second try to check if we can create duplicate raw materials
-        self.driver.find_element_by_xpath("//a[contains(.,'Új nyersanyag felvitele')]").click()
+        self.ClickElement("a", "Új nyersanyag felvitele")
         # Create a new raw material without opening stock
         # switch to iframe and fill upp data
         self.driver.implicitly_wait(3)
-        self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
-        # Name
-        self.driver.find_element_by_xpath("//label[contains(.,'Nyersanyag neve')]//following::input").send_keys(name)
+        self.SwitchFrame("iframe")
+        # # name
+        self.FillInput("Nyersanyag neve", name)
         # ME
-        self.driver.find_element_by_xpath("//label[contains(.,'ME')]//following::button").click()
-        self.driver.find_element_by_xpath("//label[contains(.,'liter')]").click()
-        # Warehouse
-        self.driver.find_element_by_xpath("//label[contains(.,'Raktár')]//following::button").click()
-        self.driver.find_element_by_xpath("//label[contains(.,'Pult')]").click()
+        self.DropDownSelect("ME", "liter")
+        # Warehause
+        self.DropDownSelect("Raktár", "Pult")
+
         # Save
-        self.driver.find_element_by_xpath("//button[contains(.,'Rögzít')]").click()
+        self.ClickElement("button", "Rögzít")
         # we check if the iframe is still present, because if it is the system didn't let us create duplicate items
         self.assertTrue(self.driver.find_element_by_class_name("ui-tabs"))
         # after that we close it with cancel button
-        self.driver.find_element_by_xpath("//button[contains(.,'Mégsem')]").click()
-        self.driver.find_element_by_xpath("//button[contains(.,'Igen')]").click()
+        self.ClickElement("button", "Mégse")
+        self.ClickElement("button", "Igen")
 
     @classmethod
     def setUpClass(self):
         # On the virtual machines we have to add chromedriver.exe to the Path environmental variable
+        test = RawMaterial()
         self.driver = webdriver.Chrome()
         self.driver.maximize_window()
         self.driver.maximize_window()
@@ -165,12 +176,13 @@ class RawMaterial(unittest.TestCase):
         self.driver.find_element_by_name("pass").send_keys("admin")
 
         # click 'Belépés' button
-        self.driver.find_element_by_xpath("//button[. = 'Belépés']").click()
+        #self.driver.find_element_by_xpath("//button[. = 'Belépés']").click()
+        test.ClickElement(tag="button", text="Belépés")
         # self.assertEqual(self.driver.title, "Felhasználó váltás | CreativeGAST")
 
         self.driver.find_element_by_name("id_code").send_keys("admin")
         # Keys.ENTER
-        self.driver.find_element_by_xpath("//button[. = 'Belépés']").click()
+        test.ClickElement(tag="button", text="Belépés")
         self.driver.implicitly_wait(10)
         # self.assertEqual(self.driver.title, "Főoldal | CreativeGAST")
 
@@ -208,24 +220,23 @@ class RawMaterial(unittest.TestCase):
         self.CreateRawMaterial(testName)
         self.driver.find_element_by_xpath("//td[contains(., 'Abszint')]//following::a").click()
         self.driver.find_element_by_class_name("edit").click()
-        self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
+        self.SwitchFrame("iframe")
         self.driver.find_element_by_xpath("//label[contains(.,'Nyitó mennyiség')]//following::input").send_keys("10")
         self.driver.find_element_by_xpath("//label[contains(.,'Raktár')]//following::button").click()
         self.driver.find_element_by_xpath("//label[contains(.,'Pult')]").click()
         self.driver.find_element_by_xpath("//button[contains(., 'Rögzít')]").click()
-        self.driver.switch_to.default_content()
+        self.SwitchFrame()
         sleep(2)
         self.driver.find_element_by_xpath("//td[contains(., 'Abszint')]//following::a").click()
         self.driver.find_element_by_class_name("waste").click()
-        self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
+        self.SwitchFrame("iframe")
         self.driver.find_element_by_xpath("//button[contains(.,'Válassz...')]").click()
         self.driver.find_element_by_xpath("//label[contains(.,'Pult')]").click()
         sleep(1)
         self.driver.find_element_by_xpath("//label[contains(.,'Mennyiség')]//following::input").send_keys("5")
         self.driver.find_element_by_xpath("//button[contains(.,'Üveg összetört')]").click()
-        self.driver.find_element_by_xpath("//button[contains(.,'Selejtez')]").click()
         sleep(2)
-        self.driver.switch_to.default_content()
+        self.SwitchFrame()
         self.driver.refresh()
         sleep(2)
         qty = self.txtFromTable(1, 3)
