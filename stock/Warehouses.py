@@ -172,8 +172,8 @@ class Test(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        pass
-        #self.driver.quit()
+        #pass
+        self.driver.quit()
 
 
 

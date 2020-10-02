@@ -9,10 +9,10 @@ dir = os.getcwd()
 driver = webdriver
 
 # get all tests from SearchText and HomePageTest class
-warehouses = unittest.TestLoader().loadTestsFromTestCase(Test)
+stock = unittest.TestLoader().loadTestsFromTestCase(StockController)
 
 # create a test suite combining search_text and home_page_test
-test_suite = unittest.TestSuite([warehouses])
+test_suite = unittest.TestSuite([stock])
 
 # run the suite
 #unittest.TextTestRunner(verbosity=2).run(test_suite)
