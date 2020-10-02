@@ -28,6 +28,8 @@ class RawMaterial(unittest.TestCase):
         else:
             self.driver.switch_to.frame(self.driver.find_element_by_tag_name(tagName))
 
+    def foo(self):
+        print("YEE it works !")
 
     def CreateRawMaterial(self, materialName):
         # new raw material button
