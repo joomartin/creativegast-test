@@ -40,18 +40,12 @@ class Test(unittest.TestCase):
 
     def deleteWarehouse(self, warehouseName):
         sleep(2)
-        #self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '" + warehouseName + "']//following::a").click()
-        var = self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '" + warehouseName + "']//following::a")
-        print(var)
-        #print(self.driver.find_element_by_xpath("//td[contains(., '" + warehouseName + "')]"))
-        var2 = self.driver.find_element_by_xpath("//td[contains(text(), '" + warehouseName + "')]//following::a")
-        print(var2)
-        if var != var2:
-            print("nem egyenlő")
 
-        self.driver.find_element_by_xpath("//td[@class='sorting_1'][contains(text(), '" + warehouseName + "')]//following::a").click()
+        #self.driver.find_element_by_xpath("//td[@class='sorting_1'][contains(text(), '" + warehouseName + "')]//following::a").click()
+        self.html.clickElementFollowing(labelText = warehouseName, searchType = 'td',followType = 'a', byClass = 'sorting_1')
         sleep(2)
-        self.driver.find_element_by_xpath('//button[contains(., "Igen")]').click()
+        self.html.clickElementByText(text='Igen', tag='button')
+        #self.driver.find_element_by_xpath('//button[contains(., "Igen")]').click()
         sleep(2)
 
 

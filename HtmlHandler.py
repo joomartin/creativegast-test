@@ -13,9 +13,32 @@ class HtmlHandler:
     def __init__(self, driver):
         self.driver = driver
 
-    def clickElementByText(self, text='', tag='button'):
-        #driver.find_element_by_xpath('//"' + type + '"[contains(., "' + text + '")]').click()
-        self.driver.find_element_by_xpath('//' + tag + '[text() = "' + text + '"]').click()
+    def clickElementByText(self, text='', tag='button', exactMatch=False):
+        """
+
+        :param text:
+        :type text:
+        :param tag:
+        :type tag:
+        :return:
+        :rtype:
+        """
+
+        if not exactMatch:
+            self.driver.find_element_by_xpath('//' + tag + '[contains(., "' + text + '")]').click()
+        else:
+            self.driver.find_element_by_xpath('//' + tag + '[text() = "' + text + '"]').click()
+
+
+    def clickElementFollowing(self, labelText='', searchType='label', followNum=1, followType='input', byClass=''):
+        followString = ''
+        for i in range(followNum):
+            followString += '//following::' + followType
+
+        if byClass == '':
+            self.driver.find_element_by_xpath('//' + searchType + '[text() = "' + labelText + '"]' + followString + '').click()
+        else:
+            self.driver.find_element_by_xpath('//' + searchType + '[@class="' + byClass + '"][text() = "' + labelText + '"]' + followString + '').click()
 
 
     def fillInput(self, attribute='', message='', searchType='name'):
@@ -25,6 +48,9 @@ class HtmlHandler:
         elif searchType == 'id':
             self.driver.find_element_by_id(attribute).clear()
             self.driver.find_element_by_id(attribute).send_keys(message)
+
+
+
 
 
     def fillInputByPlaceholder(self, placeholder='', message=''):
@@ -57,6 +83,18 @@ class HtmlHandler:
             drp.select_by_index(int(searchValue))
         elif method == 'value':
             drp.select_by_value(searchValue)
+
+
+    # Switch to alert message
+    def alertMessage(self, accept=True):
+        """
+        :param accept: If it's True, then we accept the alert
+        :type accept: Boolean
+        """
+        if accept:
+            self.driver.switch_to_alert().accept()
+        else:
+            self.driver.switch_to_alert().dismiss()
 
 
 
