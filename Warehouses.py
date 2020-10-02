@@ -15,19 +15,19 @@ from HtmlHandler import HtmlHandler
 
 
 class Test(unittest.TestCase):
-    html = None
+    #html = None
     name = "0newWH"
 
     def createWarehouse(self, warehouseName):
         self.driver.implicitly_wait(10)
         #self.driver.find_element_by_xpath('//a[contains(., "Új raktár felvitele")]').click()
-        self.html.clickElementByText(text='Új raktár felvitele', tag='a')
+        self.html.clickElement(text='Új raktár felvitele', tag='a')
         self.driver.implicitly_wait(10)
         self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
         #self.driver.find_element_by_xpath('//*[@id="st_name"]').send_keys(warehouseName)
 
         # textinput kitoltese
-        self.html.fillInputFollowing(labelText='Raktár neve', message=warehouseName)
+        self.html.fillInputByLabel(labelText='Raktár neve', message=warehouseName)
         #self.driver.find_element_by_xpath('//*[@id="save"]').click()
         self.driver.find_element_by_xpath('//button[contains(., "Rögzít")]').click()
         self.driver.implicitly_wait(10)
@@ -42,9 +42,9 @@ class Test(unittest.TestCase):
         sleep(2)
 
         #self.driver.find_element_by_xpath("//td[@class='sorting_1'][contains(text(), '" + warehouseName + "')]//following::a").click()
-        self.html.clickElementFollowing(labelText = warehouseName, searchType = 'td',followType = 'a', byClass = 'sorting_1')
+        self.html.clickElementFollowing(labelText = warehouseName, tag = 'td', byClass = 'sorting_1')
         sleep(2)
-        self.html.clickElementByText(text='Igen', tag='button')
+        self.html.clickElement(text='Igen')
         #self.driver.find_element_by_xpath('//button[contains(., "Igen")]').click()
         sleep(2)
 
@@ -75,13 +75,13 @@ class Test(unittest.TestCase):
 
         # click 'Belépés' button
         #self.driver.find_element_by_xpath("//button[. = 'Belépés']").click()
-        self.html.clickElementByText(text='Belépés')
+        self.html.clickElement(text='Belépés')
         #self.assertEqual(self.driver.title, "Felhasználó váltás | CreativeGAST")
 
         #self.driver.find_element_by_name("id_code").send_keys("admin")
         self.html.fillInputByPlaceholder(placeholder='Belépési kód', message='admin')
         #self.driver.find_element_by_xpath("//button[. = 'Belépés']").click()
-        self.html.clickElementByText(text='Belépés')
+        self.html.clickElement(text='Belépés')
 
         #self.assertEqual(self.driver.title, "Főoldal | CreativeGAST")
 
@@ -92,7 +92,7 @@ class Test(unittest.TestCase):
         sleep(1)
         #self.driver.find_element_by_xpath('//a[contains(., "Raktárak")]').click()
         #self.driver.find_element_by_xpath('//a[. = "Raktárak"]').click()
-        self.html.clickElementByText(text='Raktárak', tag='a')
+        self.html.clickElement(text='Raktárak', tag='a')
 
 
     # create warehouse
@@ -185,23 +185,11 @@ class Test(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    #suite = unittest.TestLoader().loadTestsFromTestCase(Test)
-    #unittest.TextTestRunner(verbosity=2).run(suite)
     unittest.main()
 
 
 
 
-
-
-
-
-'''
-var = self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '0newWH']")
-print(var.text)
-var = self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '0newWH']")
-print(var.text)
-'''
 
 
 
