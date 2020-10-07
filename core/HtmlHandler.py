@@ -24,7 +24,7 @@ class HtmlHandler:
 
 
 
-    def clickElementFollowing(self, labelText, tag='label', followNum=1, followType='a', byClass=''):
+    def clickElementFollowing(self, tagText, tag='label', followNum=1, followType='a', byClass=''):
         """
 
         :param labelText: Next to target
@@ -43,11 +43,21 @@ class HtmlHandler:
             followString += '//following::' + followType
 
         if byClass == '':
-            self.driver.find_element_by_xpath('//' + tag + '[text() = "' + labelText + '"]' + followString + '').click()
+            self.driver.find_element_by_xpath('//' + tag + '[text() = "' + tagText + '"]' + followString + '').click()
         else:
-            self.driver.find_element_by_xpath('//' + tag + '[@class="' + byClass + '"][text() = "' + labelText + '"]' + followString + '').click()
+            self.driver.find_element_by_xpath('//' + tag + '[@class="' + byClass + '"][text() = "' + tagText + '"]' + followString + '').click()
 
 
+    def getElement(self, text, tag='button', exactMatch=False):
+
+        returner = None
+
+        if not exactMatch:
+            self.driver.find_element_by_xpath('//' + tag + '[contains(., "' + text + '")]').click()
+        else:
+            self.driver.find_element_by_xpath('//' + tag + '[text() = "' + text + '"]').click()
+
+        return returner
 
     def fillInputByPlaceholder(self, placeholder, message):
         """
