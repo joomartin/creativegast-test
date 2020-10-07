@@ -24,7 +24,7 @@ class HtmlHandler:
 
 
 
-    def clickElementFollowing(self, labelText, tag='label', followNum=1, followType='a', byClass=''):
+    def clickElementFollowing(self, tagText, tag='label', followNum=1, followType='a', byClass=''):
         """
 
         :param labelText: Next to target
@@ -43,9 +43,9 @@ class HtmlHandler:
             followString += '//following::' + followType
 
         if byClass == '':
-            self.driver.find_element_by_xpath('//' + tag + '[text() = "' + labelText + '"]' + followString + '').click()
+            self.driver.find_element_by_xpath('//' + tag + '[text() = "' + tagText + '"]' + followString + '').click()
         else:
-            self.driver.find_element_by_xpath('//' + tag + '[@class="' + byClass + '"][text() = "' + labelText + '"]' + followString + '').click()
+            self.driver.find_element_by_xpath('//' + tag + '[@class="' + byClass + '"][text() = "' + tagText + '"]' + followString + '').click()
 
 
 
@@ -152,8 +152,23 @@ class HtmlHandler:
         else:
             self.driver.switch_to.frame(self.driver.find_element_by_tag_name(tagName))
 
-
-
+    def getElement(self, tag, searchText, exactMatch=False):
+        '''
+        :param tag: Type of tag that includes the text
+        :type tag: String
+        :param searchText: The text to find
+        :type searchText: String
+        :param exactMatch: Specifies if we need an exact match or not
+        :type exactMatch: bool
+        :return: returns the found element
+        :rtype: webelement
+        '''
+        if not exactMatch:
+            element = self.driver.find_element_by_xpath("//" + tag + "[contains(., '" + searchText + "')]")
+            return element
+        else:
+            element = self.driver.find_element_by_xpath("//" + tag + "[text() = '" + searchText + "']")
+            return element
 
     '''
     def fillInput(self, attribute='', message='', searchType='name'):

@@ -13,7 +13,7 @@ class RawMaterial(unittest.TestCase):
     def foo(self):
         print("YEE it works !")
 
-    def CreateRawMaterial(self, materialName):
+    def createRawMaterial(self, materialName):
         # new raw material button
         self.html.clickElement("Új nyersanyag felvitele", tag="a")
         # create a raw material without an opening stock
@@ -33,11 +33,10 @@ class RawMaterial(unittest.TestCase):
         self.html.switchFrame()
         self.driver.refresh()
         sleep(2)
+        self.assertTrue(self.html.getElement(tag="td", searchText=materialName).is_displayed())
 
-        self.assertTrue(self.driver.find_element_by_xpath("//td[contains(., '" + materialName + "')]").is_displayed())
-
-    def DeleteRawMaterial(self, name):
-        self.driver.find_element_by_xpath("//td[contains(., '" + name + "')]//following::a").click()
+    def deleteRawMaterial(self, name):
+        self.html.clickElementFollowing(tag= "td", tagText=name)
         sleep(2)
         self.html.clickElement("Törlés", tag='a')
         self.html.clickElement("Igen")
@@ -62,15 +61,12 @@ class RawMaterial(unittest.TestCase):
         self.driver.find_element_by_name("pass").send_keys("admin")
 
         # click 'Belépés' button
-        #self.driver.find_element_by_xpath("//button[. = 'Belépés']").click()
         self.html.clickElement("Belépés")
-        # self.assertEqual(self.driver.title, "Felhasználó váltás | CreativeGAST")
 
         self.driver.find_element_by_name("id_code").send_keys("admin")
         # Keys.ENTER
         test.html.clickElement("Belépés")
         self.driver.implicitly_wait(10)
-        # self.assertEqual(self.driver.title, "Főoldal | CreativeGAST")
 
         self.driver.implicitly_wait(10)
         self.driver.find_element_by_xpath('/html/body/section/div/a[3]').click()
@@ -78,15 +74,15 @@ class RawMaterial(unittest.TestCase):
     def test_Create(self):
         # This case we simply test the process of creation
         testName = "Abszint"
-        self.CreateRawMaterial(testName)
-        self.DeleteRawMaterial(testName)
+        self.createRawMaterial(testName)
+        self.deleteRawMaterial(testName)
 
     def test_Update(self):
         # here we test the update of a raw material
         testName = "Abszint"
         price = "1 010.00"
-        self.CreateRawMaterial(testName)
-        self.driver.find_element_by_xpath("//td[contains(., '" + testName + "')]//following::a").click()
+        self.createRawMaterial(testName)
+        self.html.clickElementFollowing(tag= "td", tagText=testName)
         self.driver.find_element_by_class_name("edit").click()
         self.html.switchFrame("iframe")
         self.html.fillInputByLabel("Bruttó beszerzési egységár", price)
@@ -96,7 +92,7 @@ class RawMaterial(unittest.TestCase):
         sleep(2)
         new = self.html.getTxtFromTable("1", "6")
         self.assertEqual(price, new)
-        self.DeleteRawMaterial(testName)
+        self.deleteRawMaterial(testName)
 
     def test_Opening(self):
         # Here we test the creation of raw material with opening stock and assert the values
@@ -128,8 +124,7 @@ class RawMaterial(unittest.TestCase):
         self.assertEqual(nettvalue, "7 874.02")
         # checking the warehouses
 
-        self.driver.find_element_by_xpath("//td[contains(., '" + testName + "')]//following::a").click()
-        # self.driver.find_elements_by_xpath("//a[contains(., 'Raktárak')]")[1].click()
+        self.html.clickElementFollowing(tag= "td", tagText=testName)
         self.driver.find_element_by_class_name("storages").click()
         self.html.switchFrame("iframe")
         whause = self.html.getTxtFromTable(2, 2)
@@ -144,7 +139,7 @@ class RawMaterial(unittest.TestCase):
         self.html.switchFrame()
         self.driver.find_element_by_xpath("/html/body/section/div/a[3]/span").click()
         sleep(2)
-        self.DeleteRawMaterial(testName)
+        self.deleteRawMaterial(testName)
 
     def test_Duplicate(self):
         testName = "Abszint"
@@ -168,7 +163,8 @@ class RawMaterial(unittest.TestCase):
         self.driver.refresh()
         sleep(2)
 
-        self.assertTrue(self.driver.find_element_by_xpath("//td[contains(., '" + testName + "')]").is_displayed())
+        #self.assertTrue(self.driver.find_element_by_xpath("//td[contains(., '" + testName + "')]").is_displayed())
+        self.assertTrue(self.html.getElement(tag="td", searchText=testName).is_displayed())
         # second try to check if we can create duplicate raw materials
         self.html.clickElement("Új nyersanyag felvitele", tag="a")
         # Create a new raw material without opening stock
@@ -191,12 +187,12 @@ class RawMaterial(unittest.TestCase):
         self.html.clickElement("Igen")
         self.html.switchFrame()
         sleep(2)
-        self.DeleteRawMaterial(testName)
+        self.deleteRawMaterial(testName)
 
     def test_WastingRawMaterial(self):
         testName = "Abszint"
-        self.CreateRawMaterial(testName)
-        self.driver.find_element_by_xpath("//td[contains(., 'Abszint')]//following::a").click()
+        self.createRawMaterial(testName)
+        self.html.clickElementFollowing(tag= "td", tagText=testName)
         self.driver.find_element_by_class_name("edit").click()
         self.html.switchFrame("iframe")
         self.html.fillInputByLabel("Nyitó mennyiség", "10")
@@ -204,7 +200,7 @@ class RawMaterial(unittest.TestCase):
         self.html.clickElement("Rögzít")
         self.html.switchFrame()
         sleep(2)
-        self.driver.find_element_by_xpath("//td[contains(., 'Abszint')]//following::a").click()
+        self.html.clickElementFollowing(tag= "td", tagText=testName)
         self.driver.find_element_by_class_name("waste").click()
         self.html.switchFrame("iframe")
         self.html.clickDropdown("Raktár", "Pult")
@@ -217,7 +213,7 @@ class RawMaterial(unittest.TestCase):
         sleep(2)
         qty = self.html.getTxtFromTable(1, 3)
         self.assertEqual(qty, "5.00")
-        self.DeleteRawMaterial(testName)
+        self.deleteRawMaterial(testName)
 
     @classmethod
     def tearDownClass(self):
