@@ -91,7 +91,7 @@ class Test(unittest.TestCase):
 
 
     # create warehouse
-    def test001_create_warehouse(self):
+    def test_createWarehouse(self):
         self.createWarehouse("1newWH")
 
         # check it's displayed
@@ -102,7 +102,7 @@ class Test(unittest.TestCase):
 
 
     # megegy azonos nevu raktar nem johet letre
-    def test002_cant_create(self):
+    def test_cantCreate(self):
 
         self.createWarehouse("2newWH")
 
@@ -128,7 +128,7 @@ class Test(unittest.TestCase):
         self.deleteWarehouse("2newWH")
 
     # szerkeszt
-    def test003_edit(self):
+    def test_edit(self):
         self.createWarehouse("3newWH")
 
         newName = "11newWH"
@@ -154,7 +154,7 @@ class Test(unittest.TestCase):
         self.deleteWarehouse("33newWH")
 
     # törlés
-    def test004_delete(self):
+    def test_delete(self):
 
         self.createWarehouse("4newWH")
 
