@@ -1,13 +1,13 @@
 from selenium.webdriver.support.ui import Select
 
 
-class HtmlHandler:
+class HtmlProxy:
 
     def __init__(self, driver):
         self.driver = driver
 
 
-    def clickElement(self, text, tag='button', exactMatch=False):
+    def clickElement(self, text, tag='button', exactMatch=False,):
         """
 
         :param text: Text what we want to find
@@ -21,6 +21,10 @@ class HtmlHandler:
             self.driver.find_element_by_xpath('//' + tag + '[contains(., "' + text + '")]').click()
         else:
             self.driver.find_element_by_xpath('//' + tag + '[text() = "' + text + '"]').click()
+
+
+    def click(self,xpath):
+        self.driver.find_element_by_xpath(xpath).click()
 
 
 
@@ -169,6 +173,8 @@ class HtmlHandler:
         else:
             element = self.driver.find_element_by_xpath("//" + tag + "[text() = '" + searchText + "']")
             return element
+
+
 
     '''
     def fillInput(self, attribute='', message='', searchType='name'):

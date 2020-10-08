@@ -4,7 +4,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 import unittest
 #unittest.TestLoader.sortTestMethodsUsing = lambda self, a, b: (a < b) - (a > b)
-from core.HtmlHandler import HtmlHandler
+from core.HtmlProxy import HtmlProxy
 
 
 
@@ -60,7 +60,7 @@ class Test(unittest.TestCase):
         # destination URL
         self.driver.get("https://adrian.creativegast.hu/login")
 
-        self.html = HtmlHandler(self.driver)
+        self.html = HtmlProxy(self.driver)
 
         #self.driver.find_element_by_name("username").send_keys("admin")
         self.html.fillInputByPlaceholder(placeholder='Felhasználónév', message='admin')

@@ -5,13 +5,9 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
-from core.HtmlHandler import HtmlHandler
+from core.HtmlProxy import HtmlProxy
 
 class RawMaterial(unittest.TestCase):
-    #html = None
-
-    def foo(self):
-        print("YEE it works !")
 
     def createRawMaterial(self, materialName):
         # new raw material button
@@ -47,14 +43,12 @@ class RawMaterial(unittest.TestCase):
         test = RawMaterial()
         self.driver = webdriver.Chrome()
         self.driver.maximize_window()
-        self.driver.maximize_window()
-
         # waiting to server response
         self.driver.implicitly_wait(10)
         # destination URL
         self.driver.get("https://ricsi.creativegast.hu/login")
 
-        self.html = HtmlHandler(self.driver)
+        self.html = HtmlProxy(self.driver)
 
         self.driver.find_element_by_name("username").send_keys("admin")
         # password textfield and type 'admin'
@@ -69,15 +63,15 @@ class RawMaterial(unittest.TestCase):
         self.driver.implicitly_wait(10)
 
         self.driver.implicitly_wait(10)
-        self.driver.find_element_by_xpath('/html/body/section/div/a[3]').click()
+        self.html.click("/html/body/section/div/a[3]")
 
-    def test_Create(self):
+    def testCreate(self):
         # This case we simply test the process of creation
         testName = "Abszint"
         self.createRawMaterial(testName)
         self.deleteRawMaterial(testName)
 
-    def test_Update(self):
+    def testUpdate(self):
         # here we test the update of a raw material
         testName = "Abszint"
         price = "1 010.00"
@@ -94,7 +88,7 @@ class RawMaterial(unittest.TestCase):
         self.assertEqual(price, new)
         self.deleteRawMaterial(testName)
 
-    def test_Opening(self):
+    def testOpening(self):
         # Here we test the creation of raw material with opening stock and assert the values
         testName = "Abszint"
         self.html.clickElement("Új nyersanyag felvitele", tag="a")
@@ -137,11 +131,11 @@ class RawMaterial(unittest.TestCase):
         self.assertEqual(whValue, "10000")
         self.driver.find_element_by_tag_name("body").send_keys(Keys.ESCAPE)
         self.html.switchFrame()
-        self.driver.find_element_by_xpath("/html/body/section/div/a[3]/span").click()
+        self.html.click("/html/body/section/div/a[3]/span")
         sleep(2)
         self.deleteRawMaterial(testName)
 
-    def test_Duplicate(self):
+    def testDuplicate(self):
         testName = "Abszint"
         # Here we check if the system lets us create two raw materials with the same name
         self.html.clickElement("Új nyersanyag felvitele", tag="a")
@@ -189,7 +183,7 @@ class RawMaterial(unittest.TestCase):
         sleep(2)
         self.deleteRawMaterial(testName)
 
-    def test_WastingRawMaterial(self):
+    def testWastingRawMaterial(self):
         testName = "Abszint"
         self.createRawMaterial(testName)
         self.html.clickElementFollowing(tag= "td", tagText=testName)
