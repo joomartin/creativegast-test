@@ -52,6 +52,16 @@ class HtmlProxy:
             self.driver.find_element_by_xpath('//' + tag + '[@class="' + byClass + '"][text() = "' + tagText + '"]' + followString + '').click()
 
 
+    def getElement(self, text, tag='button', exactMatch=False):
+
+        returner = None
+
+        if not exactMatch:
+            self.driver.find_element_by_xpath('//' + tag + '[contains(., "' + text + '")]').click()
+        else:
+            self.driver.find_element_by_xpath('//' + tag + '[text() = "' + text + '"]').click()
+
+        return returner
 
     def fillInputByPlaceholder(self, placeholder, message):
         """

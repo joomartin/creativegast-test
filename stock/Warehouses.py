@@ -18,15 +18,18 @@ class Test(unittest.TestCase):
         #self.driver.find_element_by_xpath('//a[contains(., "Új raktár felvitele")]').click()
         self.html.clickElement(text='Új raktár felvitele', tag='a')
         self.driver.implicitly_wait(10)
-        self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
+        self.html.switchFrame("iframe")
+        #self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
         #self.driver.find_element_by_xpath('//*[@id="st_name"]').send_keys(warehouseName)
 
         # textinput kitoltese
         self.html.fillInputByLabel(labelText='Raktár neve', message=warehouseName)
         #self.driver.find_element_by_xpath('//*[@id="save"]').click()
-        self.driver.find_element_by_xpath('//button[contains(., "Rögzít")]').click()
+        self.html.clickElement("Rögzít")
+        #self.driver.find_element_by_xpath('//button[contains(., "Rögzít")]').click()
         self.driver.implicitly_wait(10)
-        self.driver.switch_to.default_content()
+        self.html.switchFrame()
+        #self.driver.switch_to.default_content()
         self.driver.refresh()
         self.driver.implicitly_wait(10)
 
@@ -37,7 +40,7 @@ class Test(unittest.TestCase):
         sleep(2)
 
         #self.driver.find_element_by_xpath("//td[@class='sorting_1'][contains(text(), '" + warehouseName + "')]//following::a").click()
-        self.html.clickElementFollowing(labelText = warehouseName, tag = 'td', byClass = 'sorting_1')
+        self.html.clickElementFollowing(tagText = warehouseName, tag = 'td', byClass = 'sorting_1')
         sleep(2)
         self.html.clickElement(text='Igen')
         #self.driver.find_element_by_xpath('//button[contains(., "Igen")]').click()
@@ -96,6 +99,7 @@ class Test(unittest.TestCase):
 
         # check it's displayed
         self.assertTrue(self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']".format("1newWH")).is_displayed())
+        #self.assertTrue(self.html.("//table[@id='storages']/tbody/tr[td = '{}']".format("1newWH")).is_displayed())
 
         self.deleteWarehouse("1newWH")
         #self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '0newWH']//following::a").click()
@@ -108,13 +112,19 @@ class Test(unittest.TestCase):
 
         self.driver.implicitly_wait(10)
         #self.driver.find_element_by_xpath('//*[@id="newStorage"]').click()
-        self.driver.find_element_by_xpath('//a[contains(., "Új raktár felvitele")]').click()
+        #self.driver.find_element_by_xpath('//a[contains(., "Új raktár felvitele")]').click()
+        self.html.clickElement(text='Új raktár felvitele', tag='a')
         self.driver.implicitly_wait(10)
-        self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
+        #self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
+        self.html.switchFrame("iframe")
         #self.driver.find_element_by_xpath('//*[@id="st_name"]').send_keys("2newWH")
-        self.driver.find_element_by_xpath('//label[contains(., "Raktár neve")]//following::input').send_keys("2newWH")
+
+        #self.driver.find_element_by_xpath('//label[contains(., "Raktár neve")]//following::input').send_keys("2newWH")
+        self.html.fillInputByLabel(labelText='Raktár neve', message="2newWH")
         #self.driver.find_element_by_xpath('//*[@id="save"]').click()
-        self.driver.find_element_by_xpath('//button[contains(., "Rögzít")]').click()
+        #self.driver.find_element_by_xpath('//button[contains(., "Rögzít")]').click()
+        self.html.clickElement("Rögzít")
+
         self.driver.implicitly_wait(10)
 
         sleep(2)
@@ -122,7 +132,8 @@ class Test(unittest.TestCase):
 
         #self.driver.find_element_by_xpath('//*[@id="st_name"]').clear()
         self.driver.find_element_by_xpath('//label[contains(., "Raktár neve")]//following::input').clear()
-        self.driver.find_element_by_xpath('//button[contains(., "Mégsem")]').click()
+        self.html.clickElement("Mégsem")
+        #self.driver.find_element_by_xpath('//button[contains(., "Mégsem")]').click()
         #self.driver.find_element_by_xpath('//*[@id="cancel"]').click()
 
         self.deleteWarehouse("2newWH")
@@ -131,21 +142,26 @@ class Test(unittest.TestCase):
     def testEdit(self):
         self.createWarehouse("3newWH")
 
-        newName = "11newWH"
+        #newName = "11newWH"
         sleep(2)
-        self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']//following::a//following::a".format("3newWH")).click()
+        #self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']//following::a//following::a".format("3newWH")).click()
+        self.html.clickElementFollowing(tagText="3newWH", tag = 'td', followNum=2, byClass = 'sorting_1')
         self.driver.implicitly_wait(10)
-        self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
+        #self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
+        self.html.switchFrame("iframe")
         #self.driver.find_element_by_xpath('//*[@id="st_name"]').clear()
         self.driver.find_element_by_xpath('//label[contains(., "Raktár neve")]//following::input').clear()
         #self.driver.find_element_by_xpath('//*[@id="st_name"]').send_keys("33newWH")
-        self.driver.find_element_by_xpath('//label[contains(., "Raktár neve")]//following::input').send_keys("33newWH")
-        self.name = newName
+        #self.driver.find_element_by_xpath('//label[contains(., "Raktár neve")]//following::input').send_keys("33newWH")
+        self.html.fillInputByLabel("Raktár neve", message="33newWH")
+        #self.name = newName
         #self.driver.find_element_by_xpath('//*[@id="save"]').click()
-        self.driver.find_element_by_xpath('//button[contains(., "Rögzít")]').click()
+        #self.driver.find_element_by_xpath('//button[contains(., "Rögzít")]').click()
+        self.html.clickElement("Rögzít")
 
         self.driver.implicitly_wait(10)
-        self.driver.switch_to.default_content()
+        #self.driver.switch_to.default_content()
+        self.html.switchFrame()
         self.driver.refresh()
 
         sleep(2)
@@ -159,9 +175,11 @@ class Test(unittest.TestCase):
         self.createWarehouse("4newWH")
 
         sleep(2)
-        self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '4newWH']//following::a").click()
+        #self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '4newWH']//following::a").click()
+        self.html.clickElementFollowing(tagText="4newWH", tag='td', byClass='sorting_1')
         sleep(2)
-        self.driver.find_element_by_xpath('//button[contains(., "Igen")]').click()
+        #self.driver.find_element_by_xpath('//button[contains(., "Igen")]').click()
+        self.html.clickElement("Igen")
         sleep(2)
 
         sleep(2)
