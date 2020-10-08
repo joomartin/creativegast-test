@@ -6,6 +6,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
 from core.HtmlProxy import HtmlProxy
+from mainMenu.MainMenuProxy import MainMenuProxy
+
 
 class RawMaterial(unittest.TestCase):
 
@@ -32,7 +34,7 @@ class RawMaterial(unittest.TestCase):
         self.assertTrue(self.html.getElement(tag="td", searchText=materialName).is_displayed())
 
     def deleteRawMaterial(self, name):
-        self.html.clickElementFollowing(tag= "td", tagText=name)
+        self.html.clickElementFollowing(tag="td", tagText=name)
         sleep(2)
         self.html.clickElement("Törlés", tag='a')
         self.html.clickElement("Igen")
@@ -49,21 +51,22 @@ class RawMaterial(unittest.TestCase):
         self.driver.get("https://ricsi.creativegast.hu/login")
 
         self.html = HtmlProxy(self.driver)
+        self.menu = MainMenuProxy(self.driver)
 
-        self.driver.find_element_by_name("username").send_keys("admin")
+        self.html.fillInputByPlaceholder(placeholder='Felhasználónév', message='admin')
         # password textfield and type 'admin'
-        self.driver.find_element_by_name("pass").send_keys("admin")
+        self.html.fillInputByPlaceholder(placeholder='Jelszó', message='admin')
 
         # click 'Belépés' button
-        self.html.clickElement("Belépés")
+        self.html.clickElement(text='Belépés')
+        # self.assertEqual(self.driver.title, "Felhasználó váltás | CreativeGAST")
 
-        self.driver.find_element_by_name("id_code").send_keys("admin")
-        # Keys.ENTER
-        test.html.clickElement("Belépés")
+        self.html.fillInputByPlaceholder(placeholder='Belépési kód', message='admin')
+        self.html.clickElement(text='Belépés')
         self.driver.implicitly_wait(10)
 
         self.driver.implicitly_wait(10)
-        self.html.click("/html/body/section/div/a[3]")
+        self.menu.openStocks()
 
     def testCreate(self):
         # This case we simply test the process of creation
@@ -76,8 +79,8 @@ class RawMaterial(unittest.TestCase):
         testName = "Abszint"
         price = "1 010.00"
         self.createRawMaterial(testName)
-        self.html.clickElementFollowing(tag= "td", tagText=testName)
-        self.driver.find_element_by_class_name("edit").click()
+        self.html.clickElementFollowing(tag="td", tagText=testName)
+        self.html.getElementByClassName("edit").click()
         self.html.switchFrame("iframe")
         self.html.fillInputByLabel("Bruttó beszerzési egységár", price)
         self.html.clickElement("Rögzít")
@@ -118,8 +121,8 @@ class RawMaterial(unittest.TestCase):
         self.assertEqual(nettvalue, "7 874.02")
         # checking the warehouses
 
-        self.html.clickElementFollowing(tag= "td", tagText=testName)
-        self.driver.find_element_by_class_name("storages").click()
+        self.html.clickElementFollowing(tag="td", tagText=testName)
+        self.html.getElementByClassName("storages").click()
         self.html.switchFrame("iframe")
         whause = self.html.getTxtFromTable(2, 2)
         self.assertEqual(whause, "Pult")
@@ -129,9 +132,9 @@ class RawMaterial(unittest.TestCase):
         self.assertEqual(qty, "10")
         whValue = self.html.getTxtFromTable(2, 5)
         self.assertEqual(whValue, "10000")
-        self.driver.find_element_by_tag_name("body").send_keys(Keys.ESCAPE)
+        self.html.getElementByClassName("iframe").send_keys(Keys.ESCAPE)
         self.html.switchFrame()
-        self.html.click("/html/body/section/div/a[3]/span")
+        self.menu.openStocks()
         sleep(2)
         self.deleteRawMaterial(testName)
 
@@ -157,7 +160,7 @@ class RawMaterial(unittest.TestCase):
         self.driver.refresh()
         sleep(2)
 
-        #self.assertTrue(self.driver.find_element_by_xpath("//td[contains(., '" + testName + "')]").is_displayed())
+        # self.assertTrue(self.driver.find_element_by_xpath("//td[contains(., '" + testName + "')]").is_displayed())
         self.assertTrue(self.html.getElement(tag="td", searchText=testName).is_displayed())
         # second try to check if we can create duplicate raw materials
         self.html.clickElement("Új nyersanyag felvitele", tag="a")
@@ -175,7 +178,7 @@ class RawMaterial(unittest.TestCase):
         # Save
         self.html.clickElement("Rögzít")
         # we check if the iframe is still present, because if it is the system didn't let us create duplicate items
-        self.assertTrue(self.driver.find_element_by_class_name("ui-tabs"))
+        self.assertTrue(self.html.getElementByClassName("ui-tabs").is_displayed())
         # after that we close it with cancel button
         self.html.clickElement("Mégse")
         self.html.clickElement("Igen")
@@ -186,16 +189,16 @@ class RawMaterial(unittest.TestCase):
     def testWastingRawMaterial(self):
         testName = "Abszint"
         self.createRawMaterial(testName)
-        self.html.clickElementFollowing(tag= "td", tagText=testName)
-        self.driver.find_element_by_class_name("edit").click()
+        self.html.clickElementFollowing(tag="td", tagText=testName)
+        self.html.getElementByClassName("edit").click()
         self.html.switchFrame("iframe")
         self.html.fillInputByLabel("Nyitó mennyiség", "10")
         self.html.clickDropdown("Raktár", "Pult")
         self.html.clickElement("Rögzít")
         self.html.switchFrame()
         sleep(2)
-        self.html.clickElementFollowing(tag= "td", tagText=testName)
-        self.driver.find_element_by_class_name("waste").click()
+        self.html.clickElementFollowing(tag="td", tagText=testName)
+        self.html.getElementByClassName("waste").click()
         self.html.switchFrame("iframe")
         self.html.clickDropdown("Raktár", "Pult")
         sleep(1)
