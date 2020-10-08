@@ -7,7 +7,7 @@ class HtmlProxy:
         self.driver = driver
 
 
-    def clickElement(self, text, tag='button', exactMatch=False,):
+    def clickElement(self, text, tag='button', exactMatch=False):
         """
 
         :param text: Text what we want to find
@@ -23,7 +23,7 @@ class HtmlProxy:
             self.driver.find_element_by_xpath('//' + tag + '[text() = "' + text + '"]').click()
 
 
-    def click(self,xpath):
+    def click(self, xpath):
         self.driver.find_element_by_xpath(xpath).click()
 
 
@@ -51,17 +51,6 @@ class HtmlProxy:
         else:
             self.driver.find_element_by_xpath('//' + tag + '[@class="' + byClass + '"][text() = "' + tagText + '"]' + followString + '').click()
 
-
-    def getElement(self, text, tag='button', exactMatch=False):
-
-        returner = None
-
-        if not exactMatch:
-            self.driver.find_element_by_xpath('//' + tag + '[contains(., "' + text + '")]').click()
-        else:
-            self.driver.find_element_by_xpath('//' + tag + '[text() = "' + text + '"]').click()
-
-        return returner
 
     def fillInputByPlaceholder(self, placeholder, message):
         """
@@ -166,6 +155,7 @@ class HtmlProxy:
         else:
             self.driver.switch_to.frame(self.driver.find_element_by_tag_name(tagName))
 
+
     def getElement(self, tag, searchText, exactMatch=False):
         '''
         :param tag: Type of tag that includes the text
@@ -185,6 +175,25 @@ class HtmlProxy:
             return element
 
 
+    def getElementByClassName(self, className):
+        return self.driver.find_element_by_class_name(className)
+
+
+    def getElementInTable(self, searchText, byClass):
+        #return self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']".format("1newWH"))
+        return self.driver.find_element_by_xpath('//td[@class="' + byClass + '"][text() = "' + searchText + '"]')
+
+
+    def clearInputByLabel(self, labelText, followNum=1, exactMatch=False):
+        followString = ''
+        for i in range(followNum):
+            followString += '//following::input'
+
+        if not exactMatch:
+            self.driver.find_element_by_xpath("//label[contains(.,'" + labelText + "')]" + followString).clear()
+        else:
+            self.driver.find_element_by_xpath('//label[text() = "' + labelText + '"]' + followString).clear()
+
 
     '''
     def fillInput(self, attribute='', message='', searchType='name'):
@@ -203,6 +212,17 @@ class HtmlProxy:
     '''
 
 
+    '''
+    def getElement(self, text, tag='button', exactMatch=False):
 
+        returner = None
+
+        if not exactMatch:
+            self.driver.find_element_by_xpath('//' + tag + '[contains(., "' + text + '")]').click()
+        else:
+            self.driver.find_element_by_xpath('//' + tag + '[text() = "' + text + '"]').click()
+
+        return returner
+    '''
 
 
