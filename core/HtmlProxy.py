@@ -155,7 +155,6 @@ class HtmlProxy:
         else:
             self.driver.switch_to.frame(self.driver.find_element_by_tag_name(tagName))
 
-
     def getElement(self, tag, searchText, exactMatch=False):
         '''
         :param tag: Type of tag that includes the text
@@ -178,6 +177,9 @@ class HtmlProxy:
     def getElementByClassName(self, className):
         return self.driver.find_element_by_class_name(className)
 
+    def getElementByTag(self, tag):
+        return self.driver.find_element_by_tag_name(tag)
+
 
     def getElementInTable(self, searchText, byClass):
         #return self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']".format("1newWH"))
@@ -193,6 +195,9 @@ class HtmlProxy:
             self.driver.find_element_by_xpath("//label[contains(.,'" + labelText + "')]" + followString).clear()
         else:
             self.driver.find_element_by_xpath('//label[text() = "' + labelText + '"]' + followString).clear()
+
+    def pressKey(self, className, key):
+        self.getElementByClassName(className).send_keys(key)
 
 
     '''

@@ -132,7 +132,8 @@ class RawMaterial(unittest.TestCase):
         self.assertEqual(qty, "10")
         whValue = self.html.getTxtFromTable(2, 5)
         self.assertEqual(whValue, "10000")
-        self.html.getElementByClassName("iframe").send_keys(Keys.ESCAPE)
+        #self.html.getElementByClassName("iframe").send_keys(Keys.ESCAPE)
+        self.html.pressKey("iframe",Keys.ESCAPE)
         self.html.switchFrame()
         self.menu.openStocks()
         sleep(2)
@@ -214,5 +215,5 @@ class RawMaterial(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        # pass
+        #pass
         self.driver.quit()
