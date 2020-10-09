@@ -19,7 +19,7 @@ class RawMaterial(unittest.TestCase):
         sleep(1)
         self.html.switchFrame('iframe')
         # name
-        self.html.fillInputByLabel('Nyersanyag neve', materialName)
+        self.html.fillInput('Nyersanyag neve', materialName)
         # ME
         self.html.clickDropdown('ME', 'liter')
         # Warehause
@@ -53,15 +53,15 @@ class RawMaterial(unittest.TestCase):
         self.html = HtmlProxy(self.driver)
         self.menu = MainMenuProxy(self.driver)
 
-        self.html.fillInputByPlaceholder(placeholder='Felhasználónév', message='admin')
+        self.html.fillInput('Felhasználónév', 'admin', 'placeholder')
         # password textfield and type 'admin'
-        self.html.fillInputByPlaceholder(placeholder='Jelszó', message='admin')
+        self.html.fillInput('Jelszó', 'admin', 'placeholder')
 
         # click 'Belépés' button
         self.html.clickElement('Belépés')
         # self.assertEqual(self.driver.title, 'Felhasználó váltás | CreativeGAST')
 
-        self.html.fillInputByPlaceholder(placeholder='Belépési kód', message='admin')
+        self.html.fillInput('Belépési kód', 'admin', 'placeholder')
         self.html.clickElement('Belépés')
         self.driver.implicitly_wait(10)
 
@@ -82,7 +82,7 @@ class RawMaterial(unittest.TestCase):
         self.html.clickElement(testName, 'td', options={'following':'a'})
         self.html.getElementByClassName('edit').click()
         self.html.switchFrame('iframe')
-        self.html.fillInputByLabel('Bruttó beszerzési egységár', price)
+        self.html.fillInput('Bruttó beszerzési egységár', price)
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
         self.driver.refresh()
@@ -97,13 +97,13 @@ class RawMaterial(unittest.TestCase):
         self.html.clickElement('Új nyersanyag felvitele', 'a')
         self.html.switchFrame('iframe')
         # név
-        self.html.fillInputByLabel('Nyersanyag neve', testName)
+        self.html.fillInput('Nyersanyag neve', testName)
         # gross purchase price
-        self.html.fillInputByLabel('Bruttó beszerzési egységár', '1000')
+        self.html.fillInput('Bruttó beszerzési egységár', '1000')
         # ME
         self.html.clickDropdown('ME', 'liter')
         # setting opening stock
-        self.html.fillInputByLabel('Nyitó mennyiség', '10')
+        self.html.fillInput('Nyitó mennyiség', '10')
         # Warehouse
         self.html.clickDropdown('Raktár', 'Pult')
         # Save
@@ -148,7 +148,7 @@ class RawMaterial(unittest.TestCase):
         sleep(1)
         self.html.switchFrame('iframe')
         # name
-        self.html.fillInputByLabel('Nyersanyag neve', testName)
+        self.html.fillInput('Nyersanyag neve', testName)
         # ME
         self.html.clickDropdown('ME', 'liter')
         # Warehause
@@ -170,7 +170,7 @@ class RawMaterial(unittest.TestCase):
         self.driver.implicitly_wait(3)
         self.html.switchFrame('iframe')
         # # name
-        self.html.fillInputByLabel('Nyersanyag neve', testName)
+        self.html.fillInput('Nyersanyag neve', testName)
         # ME
         self.html.clickDropdown('ME', 'liter')
         # Warehause
@@ -193,7 +193,7 @@ class RawMaterial(unittest.TestCase):
         self.html.clickElement(testName, 'td', options={'following':'a'})
         self.html.getElementByClassName('edit').click()
         self.html.switchFrame('iframe')
-        self.html.fillInputByLabel('Nyitó mennyiség', '10')
+        self.html.fillInput('Nyitó mennyiség', '10')
         self.html.clickDropdown('Raktár', 'Pult')
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
@@ -203,7 +203,7 @@ class RawMaterial(unittest.TestCase):
         self.html.switchFrame('iframe')
         self.html.clickDropdown('Raktár', 'Pult')
         sleep(1)
-        self.html.fillInputByLabel('Mennyiség', '5')
+        self.html.fillInput('Mennyiség', '5')
         self.html.clickElement('Üveg összetört')
         sleep(2)
         self.html.switchFrame()

@@ -10,11 +10,10 @@ from mainMenu.MainMenuProxy import MainMenuProxy
 
 
 class Test(unittest.TestCase):
-    name = "0newWH"
 
     def createWarehouse(self, warehouseName):
         self.driver.implicitly_wait(10)
-        self.html.clickElement(text='Új raktár felvitele', tag='a')
+        self.html.clickElement('Új raktár felvitele', 'a')
         self.driver.implicitly_wait(10)
         self.html.switchFrame("iframe")
 
@@ -31,9 +30,11 @@ class Test(unittest.TestCase):
 
     def deleteWarehouse(self, warehouseName):
         sleep(1)
-        self.html.clickElementFollowing(tagText = warehouseName, tag = 'td', byClass = 'sorting_1')
+        #self.html.clickElementFollowing(tagText = warehouseName, tag = 'td', byClass = 'sorting_1')
+        self.html.clickElement(warehouseName,'td[@class="sorting_1"]',options={'following':'a'})
+
         sleep(1)
-        self.html.clickElement(text='Igen')
+        self.html.clickElement('Igen')
         sleep(1)
 
 
@@ -61,11 +62,11 @@ class Test(unittest.TestCase):
 
 
         # click 'Belépés' button
-        self.html.clickElement(text='Belépés')
+        self.html.clickElement('Belépés')
         #self.assertEqual(self.driver.title, "Felhasználó váltás | CreativeGAST")
 
         self.html.fillInput('Belépési kód', 'admin', selector='placeholder')
-        self.html.clickElement(text='Belépés')
+        self.html.clickElement('Belépés')
 
         #self.assertEqual(self.driver.title, "Főoldal | CreativeGAST")
 
@@ -74,7 +75,7 @@ class Test(unittest.TestCase):
         self.menu.openStocks()
 
         sleep(1)
-        self.html.clickElement(text='Raktárak', tag='a')
+        self.html.clickElement('Raktárak', 'a')
 
 
     # create warehouse
@@ -94,7 +95,7 @@ class Test(unittest.TestCase):
         self.createWarehouse("2newWH")
 
         self.driver.implicitly_wait(10)
-        self.html.clickElement(text='Új raktár felvitele', tag='a')
+        self.html.clickElement('Új raktár felvitele', 'a')
         self.driver.implicitly_wait(10)
         self.html.switchFrame("iframe")
 
@@ -119,7 +120,8 @@ class Test(unittest.TestCase):
 
         sleep(2)
         #self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']//following::a//following::a".format("3newWH")).click()
-        self.html.clickElementFollowing(tagText="3newWH", tag = 'td', followNum=2, byClass = 'sorting_1')
+        #self.html.clickElement(t"3newWH", tag = 'td', followNum=2, byClass = 'sorting_1')
+        self.html.clickElement(None,"//tr[contains(., '3newWH')]//a[contains(@class, 'edit') and contains(@class, 'actionButton')]", options = {'uniqueSelector':True})
         self.driver.implicitly_wait(10)
         self.html.switchFrame("iframe")
         #self.html.clearInput('Raktár neve')
@@ -142,7 +144,7 @@ class Test(unittest.TestCase):
         self.createWarehouse("4newWH")
 
         sleep(1)
-        self.html.clickElementFollowing(tagText="4newWH", tag='td', byClass='sorting_1')
+        self.html.clickElement('4newWH','td[@class="sorting_1"]',options={'following':'a'})
         sleep(1)
         self.html.clickElement("Igen")
         sleep(1)

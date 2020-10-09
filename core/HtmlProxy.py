@@ -9,6 +9,9 @@ class HtmlProxy:
 
     def clickElement(self, target, selector = 'button', options = {}):
         #options : exactMatch: True/False, following:True/False, following: the tag next to the clickable item
+        if options.get('uniqueSelector',False):
+            self.driver.find_element_by_xpath(selector).click()
+            return
 
         if options.get('following',False):
             if options.get('exactMatch', False):
