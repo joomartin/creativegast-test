@@ -65,24 +65,15 @@ class HtmlProxy:
         if options.get('uniqueSelector', False):
            return self.driver.find_element_by_xpath(selector)
 
-        element = None
+        if options.get('exactMatch', False):
+            xpath = '//' + selector + '[text() = "' + target + '"]'
+        else:
+            xpath = '//' + selector + '[contains(.,"' + target + '")]'
 
         if options.get('following', False):
-            if options.get('exactMatch', False):
-                element = self.driver.find_element_by_xpath(
-                    '//' + selector + '[text() = "' + target + '"]//following::' + options.get('following',
-                                                                                               'a'))
-            else:
-               element = self.driver.find_element_by_xpath(
-                    '//' + selector + '[contains(.,"' + target + '")]//following::' + options.get('following',
-                                                                                                  'a'))
-        else:
-            if options.get('exactMatch', False):
-                element = self.driver.find_element_by_xpath('//' + selector + '[text() = "' + target + '"]')
-            else:
-               element = self.driver.find_element_by_xpath('//' + selector + '[contains(.,"' + target + '")]')
+            xpath += '//following::' + options.get('following', 'a')
 
-        return element
+        return self.driver.find_element_by_xpath(xpath)
 
     def getElementByClassName(self, className):
         return self.driver.find_element_by_class_name(className)
