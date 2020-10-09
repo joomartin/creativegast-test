@@ -39,41 +39,16 @@ class HtmlProxy:
         :rtype:
         '''
         if selector != 'label':
+            self.clearInput(target, selector)
             self.driver.find_element_by_xpath('//input[@' + selector + ' = "' + target + '"]').send_keys(value)
             return
 
+        self.clearInput(target, selector, options)
         if options.get('exactMatch', False):
             self.driver.find_element_by_xpath('//label[text() = "' + target + '"]//following::input').send_keys(value)
         else:
             self.driver.find_element_by_xpath('//label[contains(.,"' + target + '")]//following::input').send_keys(value)
 
-
-    def fillInputByPlaceholder(self, placeholder, message):
-        """
-        Fill input field with a text
-        :param placeholder: Placeholder
-        :type placeholder: String
-        :param message: With which we want to fill input field
-        :type message: String
-        """
-        self.fillInput(placeholder, message, selector='placeholder')
-
-
-
-    def fillInputByLabel(self, labelText, message, followNum=1, exactMatch=False):
-        """
-        Fill input field
-        :param labelText: It's next to target input
-        :type labelText: String
-        :param message: What we want to put to input field
-        :type message: String
-        :param followNum: How many follow
-        :type followNum: Int
-        :param exactMatch: If True we want to find the exact labelText
-        :type exactMatch: Boolean
-        """
-
-        self.fillInput(labelText, message, options={exactMatch: exactMatch})
 
 
     # Dropwdown select method
@@ -177,15 +152,16 @@ class HtmlProxy:
         return self.driver.find_element_by_xpath('//td[@class="' + byClass + '"][text() = "' + searchText + '"]')
 
 
-    def clearInputByLabel(self, labelText, followNum=1, exactMatch=False):
-        followString = ''
-        for i in range(followNum):
-            followString += '//following::input'
+    def clearInput(self, target, selector = 'label', options = {}):
+        if selector != 'label':
+            self.driver.find_element_by_xpath('//input[@' + selector + ' = "' + target + '"]').clear()
+            return
 
-        if not exactMatch:
-            self.driver.find_element_by_xpath("//label[contains(.,'" + labelText + "')]" + followString).clear()
+        if options.get('exactMatch', False):
+            self.driver.find_element_by_xpath('//label[text() = "' + target + '"]//following::input').clear()
         else:
-            self.driver.find_element_by_xpath('//label[text() = "' + labelText + '"]' + followString).clear()
+            self.driver.find_element_by_xpath('//label[contains(.,"' + target + '")]//following::input').clear()
+        
 
     def pressKey(self, className, key):
         self.getElementByClassName(className).send_keys(key)
