@@ -19,7 +19,7 @@ class Test(unittest.TestCase):
         self.html.switchFrame("iframe")
 
         # textinput kitoltese
-        self.html.fillInputByLabel(labelText='Raktár neve', message=warehouseName)
+        self.html.fillInput('Raktár neve', warehouseName)
         self.html.clickElement("Rögzít")
         self.driver.implicitly_wait(10)
         self.html.switchFrame()
@@ -57,15 +57,15 @@ class Test(unittest.TestCase):
         self.html = HtmlProxy(self.driver)
         self.menu = MainMenuProxy(self.driver)
 
-        self.html.fillInputByPlaceholder(placeholder='Felhasználónév', message='admin')
-        # password textfield and type 'admin'
-        self.html.fillInputByPlaceholder(placeholder='Jelszó', message='admin')
+        self.html.fillInput('Felhasználónév', 'admin', selector='placeholder')
+        self.html.fillInput('Jelszó', 'admin', selector='placeholder')
+
 
         # click 'Belépés' button
         self.html.clickElement(text='Belépés')
         #self.assertEqual(self.driver.title, "Felhasználó váltás | CreativeGAST")
 
-        self.html.fillInputByPlaceholder(placeholder='Belépési kód', message='admin')
+        self.html.fillInput('Belépési kód', 'admin', selector='placeholder')
         self.html.clickElement(text='Belépés')
 
         #self.assertEqual(self.driver.title, "Főoldal | CreativeGAST")
@@ -99,7 +99,7 @@ class Test(unittest.TestCase):
         self.driver.implicitly_wait(10)
         self.html.switchFrame("iframe")
 
-        self.html.fillInputByLabel(labelText='Raktár neve', message="2newWH")
+        self.html.fillInput('Raktár neve', '2newWH',)
         self.html.clickElement("Rögzít")
         self.driver.implicitly_wait(10)
 
@@ -109,7 +109,7 @@ class Test(unittest.TestCase):
 
 
         #self.driver.find_element_by_xpath('//label[contains(., "Raktár neve")]//following::input').clear()
-        self.html.clearInputByLabel("Raktár neve")
+        self.html.clearInput('Raktár neve')
         self.html.clickElement("Mégsem")
 
         self.deleteWarehouse("2newWH")
@@ -123,9 +123,9 @@ class Test(unittest.TestCase):
         self.html.clickElementFollowing(tagText="3newWH", tag = 'td', followNum=2, byClass = 'sorting_1')
         self.driver.implicitly_wait(10)
         self.html.switchFrame("iframe")
-        self.html.clearInputByLabel("Raktár neve")
-        self.html.fillInputByLabel("Raktár neve", message="33newWH")
-        self.html.clickElement("Rögzít")
+        #self.html.clearInput('Raktár neve')
+        self.html.fillInput('Raktár neve', '33newWH')
+        self.html.clickElement('Rögzít')
 
         self.driver.implicitly_wait(10)
         self.html.switchFrame()
@@ -133,7 +133,7 @@ class Test(unittest.TestCase):
 
         sleep(2)
         #self.assertTrue(self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']".format("33newWH")).is_displayed())
-        self.assertTrue(self.html.getElementInTable("33newWH", "sorting_1").is_displayed())
+        self.assertTrue(self.html.getElementInTable('33newWH', 'sorting_1').is_displayed())
 
         self.deleteWarehouse("33newWH")
 
