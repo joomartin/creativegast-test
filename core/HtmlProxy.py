@@ -8,24 +8,8 @@ class HtmlProxy:
 
     def clickElement(self, target, selector='button', options={}):
         # options : exactMatch: True/False, following:True/False, following: the tag next to the clickable item
-        if options.get('uniqueSelector', False):
-            self.driver.find_element_by_xpath(selector).click()
-            return
-
-        if options.get('following', False):
-            if options.get('exactMatch', False):
-                self.driver.find_element_by_xpath(
-                    '//' + selector + '[text() = "' + target + '"]//following::' + options.get('following',
-                                                                                               'a')).click()
-            else:
-                self.driver.find_element_by_xpath(
-                    '//' + selector + '[contains(.,"' + target + '")]//following::' + options.get('following',
-                                                                                                  'a')).click()
-        else:
-            if options.get('exactMatch', False):
-                self.driver.find_element_by_xpath('//' + selector + '[text() = "' + target + '"]').click()
-            else:
-                self.driver.find_element_by_xpath('//' + selector + '[contains(.,"' + target + '")]').click()
+        element = self.getElement(target, selector, options)
+        element.click()
 
     def fillInput(self, target, value, selector='label', options={}):
         '''
@@ -76,23 +60,29 @@ class HtmlProxy:
         else:
             self.driver.switch_to.frame(self.driver.find_element_by_tag_name(tagName))
 
-    def getElement(self, tag, searchText, exactMatch=False):
-        '''
-        :param tag: Type of tag that includes the text
-        :type tag: String
-        :param searchText: The text to find
-        :type searchText: String
-        :param exactMatch: Specifies if we need an exact match or not
-        :type exactMatch: bool
-        :return: returns the found element
-        :rtype: webelement
-        '''
-        if not exactMatch:
-            element = self.driver.find_element_by_xpath("//" + tag + "[contains(., '" + searchText + "')]")
-            return element
+    def getElement(self, target, selector, options={}):
+
+        if options.get('uniqueSelector', False):
+           return self.driver.find_element_by_xpath(selector)
+
+        element = None
+
+        if options.get('following', False):
+            if options.get('exactMatch', False):
+                element = self.driver.find_element_by_xpath(
+                    '//' + selector + '[text() = "' + target + '"]//following::' + options.get('following',
+                                                                                               'a'))
+            else:
+               element = self.driver.find_element_by_xpath(
+                    '//' + selector + '[contains(.,"' + target + '")]//following::' + options.get('following',
+                                                                                                  'a'))
         else:
-            element = self.driver.find_element_by_xpath("//" + tag + "[text() = '" + searchText + "']")
-            return element
+            if options.get('exactMatch', False):
+                element = self.driver.find_element_by_xpath('//' + selector + '[text() = "' + target + '"]')
+            else:
+               element = self.driver.find_element_by_xpath('//' + selector + '[contains(.,"' + target + '")]')
+
+        return element
 
     def getElementByClassName(self, className):
         return self.driver.find_element_by_class_name(className)
