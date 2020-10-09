@@ -30,7 +30,6 @@ class Test(unittest.TestCase):
 
     def deleteWarehouse(self, warehouseName):
         sleep(1)
-        #self.driver.find_element_by_xpath("//td[@class='sorting_1'][contains(text(), '" + warehouseName + "')]//following::a").click()
         self.html.clickElementFollowing(tagText = warehouseName, tag = 'td', byClass = 'sorting_1')
         sleep(1)
         self.html.clickElement(text='Igen')

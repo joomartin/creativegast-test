@@ -199,6 +199,10 @@ class HtmlProxy:
     def pressKey(self, className, key):
         self.getElementByClassName(className).send_keys(key)
 
+    def pressKeyWithTag(self, tag, key):
+        self.getElementByTag(tag).send_keys(key)
+
+
 
     '''
     def fillInput(self, attribute='', message='', searchType='name'):

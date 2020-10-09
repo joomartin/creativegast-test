@@ -22,3 +22,5 @@ class MainMenuProxy:
     def openProduction(self):
         self.driver.find_element_by_xpath("/ html / body / section / div / a[6] / span").click()
 
+
+
