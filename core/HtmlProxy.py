@@ -52,6 +52,31 @@ class HtmlProxy:
             self.driver.find_element_by_xpath('//' + tag + '[@class="' + byClass + '"][text() = "' + tagText + '"]' + followString + '').click()
 
 
+
+    def fillInput(self, target, value, selector = 'label', options = {}):
+        '''
+
+        :param target: The value that we are looking for
+        :type target: String
+        :param value:
+        :type value:
+        :param selector:
+        :type selector:
+        :param options:
+        :type options:
+        :return:
+        :rtype:
+        '''
+        if selector != 'label':
+            self.driver.find_element_by_xpath('//input[@' + selector + ' = "' + target + '"]').send_keys(value)
+            return
+
+        if options.get('exactMatch', False):
+            self.driver.find_element_by_xpath('//label[text() = "' + target + '"]//following::input').send_keys(value)
+        else:
+            self.driver.find_element_by_xpath('//label[contains(.,"' + target + '")]//following::input').send_keys(value)
+
+
     def fillInputByPlaceholder(self, placeholder, message):
         """
         Fill input field with a text
@@ -60,7 +85,8 @@ class HtmlProxy:
         :param message: With which we want to fill input field
         :type message: String
         """
-        self.driver.find_element_by_xpath('//input[@placeholder = "' + placeholder + '"]').send_keys(message)
+        self.fillInput(placeholder, message, selector='placeholder')
+
 
 
     def fillInputByLabel(self, labelText, message, followNum=1, exactMatch=False):
@@ -75,14 +101,8 @@ class HtmlProxy:
         :param exactMatch: If True we want to find the exact labelText
         :type exactMatch: Boolean
         """
-        followString = ''
-        for i in range(followNum):
-            followString += '//following::input'
 
-        if not exactMatch:
-            self.driver.find_element_by_xpath("//label[contains(.,'" + labelText + "')]" + followString).send_keys(message)
-        else:
-            self.driver.find_element_by_xpath('//label[text() = "' + labelText + '"]' + followString).send_keys(message)
+        self.fillInput(labelText, message, options={exactMatch: exactMatch})
 
 
     # Dropwdown select method

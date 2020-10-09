@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 import unittest
 from core.HtmlProxy import HtmlProxy
+from mainMenu.MainMenuProxy import MainMenuProxy
 
 
 
@@ -53,6 +54,7 @@ class Test(unittest.TestCase):
         self.driver.get("https://adrian.creativegast.hu/login")
 
         self.html = HtmlProxy(self.driver)
+        self.menu = MainMenuProxy(self.driver)
 
         self.html.fillInputByPlaceholder(placeholder='Felhasználónév', message='admin')
         # password textfield and type 'admin'
@@ -69,7 +71,7 @@ class Test(unittest.TestCase):
 
         self.driver.implicitly_wait(10)
         #self.driver.find_element_by_xpath('/html/body/section/div/a[3]').click()
-        self.html.click("/html/body/section/div/a[3]")
+        self.menu.openStocks()
 
         sleep(1)
         self.html.clickElement(text='Raktárak', tag='a')
