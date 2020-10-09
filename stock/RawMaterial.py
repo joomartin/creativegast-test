@@ -31,7 +31,7 @@ class RawMaterial(unittest.TestCase):
         self.html.switchFrame()
         self.driver.refresh()
         sleep(2)
-        self.assertTrue(self.html.getElement(tag='td', searchText=materialName).is_displayed())
+        self.assertTrue(self.html.getElement(materialName, 'td').is_displayed())
 
     def deleteRawMaterial(self, name):
         self.html.clickElement(name, 'td', options={'following':'a'})
@@ -162,7 +162,7 @@ class RawMaterial(unittest.TestCase):
         sleep(2)
 
         # self.assertTrue(self.driver.find_element_by_xpath('//td[contains(., '' + testName + '')]').is_displayed())
-        self.assertTrue(self.html.getElement(tag='td', searchText=testName).is_displayed())
+        self.assertTrue(self.html.getElement(testName, 'td').is_displayed())
         # second try to check if we can create duplicate raw materials
         self.html.clickElement('Új nyersanyag felvitele', 'a')
         # Create a new raw material without opening stock
