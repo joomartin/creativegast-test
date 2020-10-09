@@ -7,49 +7,20 @@ class HtmlProxy:
         self.driver = driver
 
 
-    def clickElement(self, text, tag='button', exactMatch=False):
-        """
+    def clickElement(self, target, selector = 'button', options = {}):
+        #options : exactMatch: True/False, following:True/False, following: the tag next to the clickable item
 
-        :param text: Text what we want to find
-        :type text: String
-        :param tag: Type of tag
-        :type tag: String
-        :param exactMatch: If True we want to find the text in this tag otherwise in altag
-        :type exactMatch: Boolean
-        """
-        if not exactMatch:
-            self.driver.find_element_by_xpath('//' + tag + '[contains(., "' + text + '")]').click()
+        if options.get('following',False):
+            if options.get('exactMatch', False):
+                self.driver.find_element_by_xpath('//' + selector + '[text() = "' + target + '"]//following::'+options.get('following','a')).click()
+            else:
+                self.driver.find_element_by_xpath('//' + selector + '[contains(.,"' + target + '")]//following::'+options.get('following','a')).click()
         else:
-            self.driver.find_element_by_xpath('//' + tag + '[text() = "' + text + '"]').click()
+            if options.get('exactMatch', False):
+                self.driver.find_element_by_xpath('//' + selector + '[text() = "' + target + '"]').click()
+            else:
+                self.driver.find_element_by_xpath('//' + selector + '[contains(.,"' + target + '")]').click()
 
-
-    def click(self, xpath):
-        self.driver.find_element_by_xpath(xpath).click()
-
-
-
-    def clickElementFollowing(self, tagText, tag='label', followNum=1, followType='a', byClass=''):
-        """
-
-        :param labelText: Next to target
-        :type labelText:  String
-        :param tag: Type of tag
-        :type tag: String
-        :param followNum: How many following
-        :type followNum: Int
-        :param followType: Type of followed tag
-        :type followType: String
-        :param byClass: A switch. If it's not empty then method use class tag too.
-        :type byClass: String
-        """
-        followString = ''
-        for i in range(followNum):
-            followString += '//following::' + followType
-
-        if byClass == '':
-            self.driver.find_element_by_xpath('//' + tag + '[text() = "' + tagText + '"]' + followString + '').click()
-        else:
-            self.driver.find_element_by_xpath('//' + tag + '[@class="' + byClass + '"][text() = "' + tagText + '"]' + followString + '').click()
 
 
 
