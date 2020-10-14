@@ -6,7 +6,7 @@ class HtmlProxy:
     def __init__(self, driver):
         self.driver = driver
 
-    def clickElement(self, target, selector='button', options={}):
+    def clickElement(self, target, tag='button', options={}):
         # options : exactMatch: True/False, following:True/False, following: the tag next to the clickable item
         self.getElement(target, selector, options).click()
 
@@ -27,13 +27,10 @@ class HtmlProxy:
         self.clearInput(target, selector, options)
 
         if selector != 'label':
-            #self.driver.find_element_by_xpath('//input[@' + selector + ' = "' + target + '"]').send_keys(value)
-            self.getElement(target,'input',options={'htmlAttribute':selector}).send_keys(value)
+            self.getElement(target, 'input', options={'htmlAttribute': selector}).send_keys(value)
             return
 
-        xpath = self.getXpathByExactMatch('label', target, options)
-        xpath = self.appendFollowing(xpath, options={'following': 'input'})
-        self.driver.find_element_by_xpath(xpath).send_keys(value)
+        self.getElement(target, selector, options={'following': 'input', 'exactMatch': options.get('exactMatch', False)}).send_keys(value)
 
     def clickDropdown(self, labelTxt, selectValue):
         """
@@ -44,8 +41,8 @@ class HtmlProxy:
         :type selectValue: String
         """
         # TODO: Maybe we need exact match in the future
-        self.driver.find_element_by_xpath("//label[contains(.,'" + labelTxt + "')]//following::button").click()
-        self.driver.find_element_by_xpath("//label[contains(.,'" + selectValue + "')]").click()
+        self.getElement(labelTxt, 'label', options={'following': 'button'}).click()
+        self.getElement(selectValue, 'label').click()
 
     def switchFrame(self, tagName=""):
         """
@@ -58,21 +55,21 @@ class HtmlProxy:
         else:
             self.driver.switch_to.frame(self.driver.find_element_by_tag_name(tagName))
 
-    def getElement(self, target, selector, options={}):
+    def getElement(self, target, tag, options={}):
 
         if options.get('uniqueSelector', False):
-           return self.driver.find_element_by_xpath(selector)
+           return self.driver.find_element_by_xpath(tag)
 
         if options.get('htmlAttribute', False) and options.get('exactMatch', False):
             raise ValueError('exactMatch must be false while using htmlAttribute')
 
         if options.get('htmlAttribute', False):
-            xpath = '//' + selector + '[@'+options.get('htmlAttribute')+'="'+target+'"]'
+            xpath = '//' + tag + '[@' + options.get('htmlAttribute') + '="' + target + '"]'
             xpath = self.appendFollowing(xpath, options)
 
             return self.driver.find_element_by_xpath(xpath)
 
-        xpath = self.getXpathByExactMatch(selector, target, options)
+        xpath = self.getXpathByExactMatch(tag, target, options)
         xpath = self.appendFollowing(xpath, options)
 
         return self.driver.find_element_by_xpath(xpath)
@@ -115,8 +112,8 @@ class HtmlProxy:
                         options={'following': 'input',
                                  'exactMatch': options.get('exactMatch', False)}).clear()
 
-    def pressKey(self, target, selector, key, options={}):
-        self.getElement(target, selector, options).send_keys(key)
+    def pressKey(self, target, tag, key, options={}):
+        self.getElement(target, tag, options).send_keys(key)
 
 
 
