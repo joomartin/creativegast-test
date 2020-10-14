@@ -135,7 +135,7 @@ class RawMaterial(unittest.TestCase):
         whValue = self.html.getTxtFromTable(2, 5)
         self.assertEqual(whValue, '10000')
         #self.html.getElementByClassName('iframe').send_keys(Keys.ESCAPE)
-        self.html.pressKey('iframe',Keys.ESCAPE)
+        self.html.pressKey('iframe', 'body', Keys.ESCAPE, options={'htmlAttribute': 'class'})
         self.html.switchFrame()
         self.menu.openStocks()
         sleep(2)

@@ -32,11 +32,9 @@ class HtmlProxy:
             self.getElement(target,'input',options={'htmlAttribute':selector}).send_keys(value)
             return
 
-        if options.get('exactMatch', False):
-            self.driver.find_element_by_xpath('//label[text() = "' + target + '"]//following::input').send_keys(value)
-        else:
-            self.driver.find_element_by_xpath('//label[contains(.,"' + target + '")]//following::input').send_keys(
-                value)
+        xpath = self.getXpathByExactMatch('label', target, options)
+        xpath = self.appendFollowing(xpath, options={'following': 'input'})
+        self.driver.find_element_by_xpath(xpath).send_keys(value)
 
     def clickDropdown(self, labelTxt, selectValue):
         """
@@ -66,28 +64,32 @@ class HtmlProxy:
         if options.get('uniqueSelector', False):
            return self.driver.find_element_by_xpath(selector)
 
-        if options.get('htmlAttribute',False):
-            xpath = '//' + selector + '[@'+options.get('htmlAttribute','id')+'="'+target+'"]'
-            if options.get('following', False):
-                xpath += '//following::' + options.get('following', 'a')
+        if options.get('htmlAttribute', False) and options.get('exactMatch', False):
+            raise ValueError('exactMatch must be false while using htmlAttribute')
+
+        if options.get('htmlAttribute', False):
+            xpath = '//' + selector + '[@'+options.get('htmlAttribute')+'="'+target+'"]'
+            xpath = self.appendFollowing(xpath, options)
 
             return self.driver.find_element_by_xpath(xpath)
 
-        if options.get('exactMatch', False):
-            xpath = '//' + selector + '[text() = "' + target + '"]'
-        else:
-            xpath = '//' + selector + '[contains(.,"' + target + '")]'
-
-        if options.get('following', False):
-            xpath += '//following::' + options.get('following', 'a')
+        xpath = self.getXpathByExactMatch(selector, target, options)
+        xpath = self.appendFollowing(xpath, options)
 
         return self.driver.find_element_by_xpath(xpath)
 
-    def getElementByClassName(self, className):
-        return self.driver.find_element_by_class_name(className)
+    def appendFollowing(self, xpath, options={}):
+        if options.get('following', False):
+            xpath += '//following::' + options.get('following', 'a')
 
-    def getElementByTag(self, tag):
-        return self.driver.find_element_by_tag_name(tag)
+        return xpath
+
+    def getXpathByExactMatch(self, selector, target, options={}):
+        if options.get('exactMatch', False):
+            return '//' + selector + '[text() = "' + target + '"]'
+        else:
+            return '//' + selector + '[contains(.,"' + target + '")]'
+
 
     def getElementInTable(self, searchText, byClass):
         # return self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']".format("1newWH"))
@@ -115,9 +117,8 @@ class HtmlProxy:
         else:
             self.driver.find_element_by_xpath('//label[contains(.,"' + target + '")]//following::input').clear()
 
-    def pressKey(self, className, key):
-        self.getElementByClassName(className).send_keys(key)
+    def pressKey(self, target, selector, key, options={}):
+        self.getElement(target, selector, options).send_keys(key)
 
-    def pressKeyWithTag(self, tag, key):
-        self.getElementByTag(tag).send_keys(key)
+
 
