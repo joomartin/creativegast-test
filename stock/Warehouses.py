@@ -30,7 +30,6 @@ class Test(unittest.TestCase):
 
     def deleteWarehouse(self, warehouseName):
         sleep(1)
-        #self.html.clickElementFollowing(tagText = warehouseName, tag = 'td', byClass = 'sorting_1')
         self.html.clickElement(warehouseName,'td[@class="sorting_1"]',options={'following':'a'})
         sleep(1)
         self.html.clickElement('Igen')
@@ -70,7 +69,6 @@ class Test(unittest.TestCase):
         #self.assertEqual(self.driver.title, "Főoldal | CreativeGAST")
 
         self.driver.implicitly_wait(10)
-        #self.driver.find_element_by_xpath('/html/body/section/div/a[3]').click()
         self.menu.openStocks()
 
         sleep(1)
@@ -82,7 +80,6 @@ class Test(unittest.TestCase):
         self.createWarehouse("1newWH")
 
         # check it's displayed
-        #self.assertTrue(self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']".format("1newWH")).is_displayed())
         self.assertTrue(self.html.getElementInTable("1newWH", "sorting_1").is_displayed())
 
         self.deleteWarehouse("1newWH")
@@ -103,12 +100,8 @@ class Test(unittest.TestCase):
         self.driver.implicitly_wait(10)
 
         sleep(2)
-        #self.assertTrue(self.driver.find_element_by_class_name("iframe").is_displayed())
-        #self.assertTrue(self.html.getElementByClassName("iframe").is_displayed())
         self.assertTrue(self.html.getElement('iframe', 'body', options={'htmlAttribute': 'class'}).is_displayed())
 
-
-        #self.driver.find_element_by_xpath('//label[contains(., "Raktár neve")]//following::input').clear()
         self.html.clearInput('Raktár neve')
         self.html.clickElement("Mégsem")
 
@@ -124,7 +117,6 @@ class Test(unittest.TestCase):
         self.html.clickElement(None,"//tr[contains(., '3newWH')]//a[contains(@class, 'edit') and contains(@class, 'actionButton')]", options = {'uniqueSelector':True})
         self.driver.implicitly_wait(10)
         self.html.switchFrame("iframe")
-        #self.html.clearInput('Raktár neve')
         self.html.fillInput('Raktár neve', '33newWH')
         self.html.clickElement('Rögzít')
 
@@ -133,7 +125,6 @@ class Test(unittest.TestCase):
         self.driver.refresh()
 
         sleep(2)
-        #self.assertTrue(self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']".format("33newWH")).is_displayed())
         self.assertTrue(self.html.getElementInTable('33newWH', 'sorting_1').is_displayed())
 
         self.deleteWarehouse("33newWH")
@@ -153,6 +144,7 @@ class Test(unittest.TestCase):
         with self.assertRaises(NoSuchElementException):
             #self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '4newWH']")
             self.html.getElementInTable("4newWH", "sorting_1")
+
 
 
 

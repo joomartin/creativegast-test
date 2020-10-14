@@ -8,8 +8,7 @@ class HtmlProxy:
 
     def clickElement(self, target, selector='button', options={}):
         # options : exactMatch: True/False, following:True/False, following: the tag next to the clickable item
-        element = self.getElement(target, selector, options)
-        element.click()
+        self.getElement(target, selector, options).click()
 
     def fillInput(self, target, value, selector='label', options={}):
         '''
@@ -109,13 +108,12 @@ class HtmlProxy:
 
     def clearInput(self, target, selector='label', options={}):
         if selector != 'label':
-            self.driver.find_element_by_xpath('//input[@' + selector + ' = "' + target + '"]').clear()
+            self.getElement(target, 'input', options={'htmlAttribute': selector}).clear()
             return
 
-        if options.get('exactMatch', False):
-            self.driver.find_element_by_xpath('//label[text() = "' + target + '"]//following::input').clear()
-        else:
-            self.driver.find_element_by_xpath('//label[contains(.,"' + target + '")]//following::input').clear()
+        self.getElement(target, selector,
+                        options={'following': 'input',
+                                 'exactMatch': options.get('exactMatch', False)}).clear()
 
     def pressKey(self, target, selector, key, options={}):
         self.getElement(target, selector, options).send_keys(key)
