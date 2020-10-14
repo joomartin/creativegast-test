@@ -33,16 +33,16 @@ class HtmlProxy:
 
         self.getElement(target, selector, options={'following': 'input', 'exactMatch': options.get('exactMatch', False)}).send_keys(value)
 
-    def clickDropdown(self, labelTxt, selectValue):
+    def clickDropdown(self, target, selectValue):
         """
         Select value from dropdown button
-        :param labelTxt: It's next to dropdown button
-        :type labelTxt: String
+        :param target: It's next to dropdown button
+        :type target: String
         :param selectValue: This is what we want to select
         :type selectValue: String
         """
         # TODO: Maybe we need exact match in the future
-        self.getElement(labelTxt, 'label', options={'following': 'button'}).click()
+        self.getElement(target, 'label', options={'following': 'button'}).click()
         self.getElement(selectValue, 'label').click()
 
     def switchFrame(self, tagName=""):
