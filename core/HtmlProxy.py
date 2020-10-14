@@ -28,7 +28,8 @@ class HtmlProxy:
         self.clearInput(target, selector, options)
 
         if selector != 'label':
-            self.driver.find_element_by_xpath('//input[@' + selector + ' = "' + target + '"]').send_keys(value)
+            #self.driver.find_element_by_xpath('//input[@' + selector + ' = "' + target + '"]').send_keys(value)
+            self.getElement(target,'input',options={'htmlAttribute':selector}).send_keys(value)
             return
 
         if options.get('exactMatch', False):
@@ -67,6 +68,9 @@ class HtmlProxy:
 
         if options.get('htmlAttribute',False):
             xpath = '//' + selector + '[@'+options.get('htmlAttribute','id')+'="'+target+'"]'
+            if options.get('following', False):
+                xpath += '//following::' + options.get('following', 'a')
+
             return self.driver.find_element_by_xpath(xpath)
 
         if options.get('exactMatch', False):

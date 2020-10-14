@@ -32,7 +32,6 @@ class Test(unittest.TestCase):
         sleep(1)
         #self.html.clickElementFollowing(tagText = warehouseName, tag = 'td', byClass = 'sorting_1')
         self.html.clickElement(warehouseName,'td[@class="sorting_1"]',options={'following':'a'})
-
         sleep(1)
         self.html.clickElement('Igen')
         sleep(1)
