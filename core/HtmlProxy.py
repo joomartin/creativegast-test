@@ -65,6 +65,10 @@ class HtmlProxy:
         if options.get('uniqueSelector', False):
            return self.driver.find_element_by_xpath(selector)
 
+        if options.get('htmlAttribute',False):
+            xpath = '//' + selector + '[@'+options.get('htmlAttribute','id')+'="'+target+'"]'
+            return self.driver.find_element_by_xpath(xpath)
+
         if options.get('exactMatch', False):
             xpath = '//' + selector + '[text() = "' + target + '"]'
         else:
