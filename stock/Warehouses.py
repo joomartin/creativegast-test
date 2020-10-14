@@ -105,7 +105,8 @@ class Test(unittest.TestCase):
 
         sleep(2)
         #self.assertTrue(self.driver.find_element_by_class_name("iframe").is_displayed())
-        self.assertTrue(self.html.getElementByClassName("iframe").is_displayed())
+        #self.assertTrue(self.html.getElementByClassName("iframe").is_displayed())
+        self.assertTrue(self.html.getElement('iframe', 'body', options={'htmlAttribute': 'class'}).is_displayed())
 
 
         #self.driver.find_element_by_xpath('//label[contains(., "Raktár neve")]//following::input').clear()
