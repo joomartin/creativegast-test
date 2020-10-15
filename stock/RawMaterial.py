@@ -64,7 +64,6 @@ class RawMaterial(unittest.TestCase):
         self.html.fillInput('Belépési kód', 'admin', 'placeholder')
         self.html.clickElement('Belépés')
         self.driver.implicitly_wait(10)
-
         self.driver.implicitly_wait(10)
         self.menu.openStocks()
 

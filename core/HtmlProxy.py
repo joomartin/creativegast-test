@@ -42,7 +42,8 @@ class HtmlProxy:
         """
         # TODO: Maybe we need exact match in the future
         self.getElement(target, 'label', options={'following': 'button'}).click()
-        self.getElement(selectValue, 'label').click()
+        element = self.getElement(target, 'label', options={'following': 'ul'})
+        element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
 
     def switchFrame(self, tagName=""):
         """

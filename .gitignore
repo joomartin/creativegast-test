@@ -2,3 +2,4 @@
 reports
 **/*.pyc
 __pychache__
+debug.log
