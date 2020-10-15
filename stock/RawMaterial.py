@@ -24,7 +24,6 @@ class RawMaterial(unittest.TestCase):
         self.html.clickDropdown('ME', 'liter')
         # Warehause
         self.html.clickDropdown('Raktár', 'Pult')
-
         # Save
         self.html.clickElement('Rögzít')
         # switch back to the browser
@@ -49,18 +48,14 @@ class RawMaterial(unittest.TestCase):
         self.driver.implicitly_wait(10)
         # destination URL
         self.driver.get('https://ricsi.creativegast.hu/login')
-
         self.html = HtmlProxy(self.driver)
         self.menu = MainMenuProxy(self.driver)
-
         self.html.fillInput('Felhasználónév', 'admin', 'placeholder')
         # password textfield and type 'admin'
         self.html.fillInput('Jelszó', 'admin', 'placeholder')
-
         # click 'Belépés' button
         self.html.clickElement('Belépés')
         # self.assertEqual(self.driver.title, 'Felhasználó váltás | CreativeGAST')
-
         self.html.fillInput('Belépési kód', 'admin', 'placeholder')
         self.html.clickElement('Belépés')
         self.driver.implicitly_wait(10)
@@ -120,9 +115,7 @@ class RawMaterial(unittest.TestCase):
         nettvalue = self.html.getTxtFromTable(1, 7)
         self.assertEqual(nettvalue, '7 874.02')
         # checking the warehouses
-
         self.html.clickElement(testName,'td', options={'following':'a'})
-        #self.html.getElementByClassName('storages').click()
         self.html.getElement('storages', 'a', options={'htmlAttribute': 'class'}).click()
         self.html.switchFrame('iframe')
         whause = self.html.getTxtFromTable(2, 2)
@@ -133,7 +126,6 @@ class RawMaterial(unittest.TestCase):
         self.assertEqual(qty, '10')
         whValue = self.html.getTxtFromTable(2, 5)
         self.assertEqual(whValue, '10000')
-        #self.html.getElementByClassName('iframe').send_keys(Keys.ESCAPE)
         self.html.pressKey('iframe', 'body', Keys.ESCAPE, options={'htmlAttribute': 'class'})
         self.html.switchFrame()
         self.menu.openStocks()
@@ -154,15 +146,12 @@ class RawMaterial(unittest.TestCase):
         self.html.clickDropdown('ME', 'liter')
         # Warehause
         self.html.clickDropdown('Raktár', 'Pult')
-
         # Save
         self.html.clickElement('Rögzít')
         # switch back to the browser
         self.html.switchFrame()
         self.driver.refresh()
         sleep(2)
-
-        # self.assertTrue(self.driver.find_element_by_xpath('//td[contains(., '' + testName + '')]').is_displayed())
         self.assertTrue(self.html.getElement(testName, 'td').is_displayed())
         # second try to check if we can create duplicate raw materials
         self.html.clickElement('Új nyersanyag felvitele', 'a')
@@ -176,7 +165,6 @@ class RawMaterial(unittest.TestCase):
         self.html.clickDropdown('ME', 'liter')
         # Warehause
         self.html.clickDropdown('Raktár', 'Pult')
-
         # Save
         self.html.clickElement('Rögzít')
         # we check if the iframe is still present, because if it is the system didn't let us create duplicate items
@@ -192,7 +180,6 @@ class RawMaterial(unittest.TestCase):
         testName = 'Abszint'
         self.createRawMaterial(testName)
         self.html.clickElement(testName, 'td', options={'following':'a'})
-        #self.html.getElementByClassName('edit').click()
         self.html.getElement('edit', 'a', options={'htmlAttribute': 'class'}).click()
         self.html.switchFrame('iframe')
         self.html.fillInput('Nyitó mennyiség', '10')
@@ -201,7 +188,6 @@ class RawMaterial(unittest.TestCase):
         self.html.switchFrame()
         sleep(2)
         self.html.clickElement(testName, 'td', options={'following':'a'})
-        #self.html.getElementByClassName('waste').click()
         self.html.getElement('waste', 'a', options={'htmlAttribute': 'class'}).click()
         self.html.switchFrame('iframe')
         self.html.clickDropdown('Raktár', 'Pult')

@@ -82,11 +82,11 @@ class HtmlProxy:
 
         return xpath
 
-    def getXpathByExactMatch(self, selector, target, options={}):
+    def getXpathByExactMatch(self, tag, target, options={}):
         if options.get('exactMatch', False):
-            return '//' + selector + '[text() = "' + target + '"]'
+            return '//' + tag + '[text() = "' + target + '"]'
         else:
-            return '//' + selector + '[contains(.,"' + target + '")]'
+            return '//' + tag + '[contains(.,"' + target + '")]'
 
     def getElementInTable(self, searchText, byClass):
         # return self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']".format("1newWH"))
