@@ -7,8 +7,6 @@ from core.HtmlProxy import HtmlProxy
 from mainMenu.MainMenuProxy import MainMenuProxy
 
 
-
-
 class Test(unittest.TestCase):
 
     def createWarehouse(self, warehouseName):
@@ -27,22 +25,19 @@ class Test(unittest.TestCase):
 
         sleep(2)
 
-
     def deleteWarehouse(self, warehouseName):
         sleep(1)
-        self.html.clickElement(warehouseName,'td[@class="sorting_1"]',options={'following':'a'})
+        self.html.clickElement(warehouseName, 'td[@class="sorting_1"]', options={'following': 'a'})
         sleep(1)
         self.html.clickElement('Igen')
         sleep(1)
-
-
 
     @classmethod
     def setUpClass(self):
         # webdriver(chrome)
         options = webdriver.ChromeOptions()
         options.add_argument('--auto-open-devtools-for-tabs')
-        #self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        # self.driver = webdriver.Chrome(ChromeDriverManager().install())
         self.driver = webdriver.Chrome(executable_path='C:\Webdrivers/chromedriver.exe')
         # maximize window
         self.driver.maximize_window()
@@ -58,22 +53,20 @@ class Test(unittest.TestCase):
         self.html.fillInput('Felhasználónév', 'admin', selector='placeholder')
         self.html.fillInput('Jelszó', 'admin', selector='placeholder')
 
-
         # click 'Belépés' button
         self.html.clickElement('Belépés')
-        #self.assertEqual(self.driver.title, "Felhasználó váltás | CreativeGAST")
+        # self.assertEqual(self.driver.title, "Felhasználó váltás | CreativeGAST")
 
         self.html.fillInput('Belépési kód', 'admin', selector='placeholder')
         self.html.clickElement('Belépés')
 
-        #self.assertEqual(self.driver.title, "Főoldal | CreativeGAST")
+        # self.assertEqual(self.driver.title, "Főoldal | CreativeGAST")
 
         self.driver.implicitly_wait(10)
         self.menu.openStocks()
 
         sleep(1)
         self.html.clickElement('Raktárak', 'a')
-
 
     # create warehouse
     def testCreateWarehouse(self):
@@ -84,10 +77,8 @@ class Test(unittest.TestCase):
 
         self.deleteWarehouse("1newWH")
 
-
     # megegy azonos nevu raktar nem johet letre
     def testCantCreate(self):
-
         self.createWarehouse("2newWH")
 
         self.driver.implicitly_wait(10)
@@ -95,7 +86,7 @@ class Test(unittest.TestCase):
         self.driver.implicitly_wait(10)
         self.html.switchFrame("iframe")
 
-        self.html.fillInput('Raktár neve', '2newWH',)
+        self.html.fillInput('Raktár neve', '2newWH', )
         self.html.clickElement("Rögzít")
         self.driver.implicitly_wait(10)
 
@@ -112,9 +103,11 @@ class Test(unittest.TestCase):
         self.createWarehouse("3newWH")
 
         sleep(2)
-        #self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']//following::a//following::a".format("3newWH")).click()
-        #self.html.clickElement(t"3newWH", tag = 'td', followNum=2, byClass = 'sorting_1')
-        self.html.clickElement(None,"//tr[contains(., '3newWH')]//a[contains(@class, 'edit') and contains(@class, 'actionButton')]", options = {'uniqueSelector':True})
+        # self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']//following::a//following::a".format("3newWH")).click()
+        # self.html.clickElement(t"3newWH", tag = 'td', followNum=2, byClass = 'sorting_1')
+        self.html.clickElement(None,
+                               "//tr[contains(., '3newWH')]//a[contains(@class, 'edit') and contains(@class, 'actionButton')]",
+                               options={'uniqueSelector': True})
         self.driver.implicitly_wait(10)
         self.html.switchFrame("iframe")
         self.html.fillInput('Raktár neve', '33newWH')
@@ -131,56 +124,27 @@ class Test(unittest.TestCase):
 
     # törlés
     def testDelete(self):
-
         self.createWarehouse("4newWH")
 
         sleep(1)
-        self.html.clickElement('4newWH','td[@class="sorting_1"]',options={'following':'a'})
+        self.html.clickElement('4newWH', 'td[@class="sorting_1"]', options={'following': 'a'})
         sleep(1)
         self.html.clickElement("Igen")
         sleep(1)
 
         sleep(2)
         with self.assertRaises(NoSuchElementException):
-            #self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '4newWH']")
+            # self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '4newWH']")
             self.html.getElementInTable("4newWH", "sorting_1")
-
-
-
-
 
     @classmethod
     def tearDownClass(self):
-        #pass
+        # pass
         self.driver.quit()
-
-
-
 
 
 if __name__ == "__main__":
     unittest.main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 '''
 whList = []

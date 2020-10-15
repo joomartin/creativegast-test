@@ -30,7 +30,8 @@ class HtmlProxy:
             self.getElement(target, 'input', options={'htmlAttribute': selector}).send_keys(value)
             return
 
-        self.getElement(target, selector, options={'following': 'input', 'exactMatch': options.get('exactMatch', False)}).send_keys(value)
+        self.getElement(target, selector,
+                        options={'following': 'input', 'exactMatch': options.get('exactMatch', False)}).send_keys(value)
 
     def clickDropdown(self, target, selectValue):
         """
@@ -59,7 +60,7 @@ class HtmlProxy:
     def getElement(self, target, tag, options={}):
 
         if options.get('uniqueSelector', False):
-           return self.driver.find_element_by_xpath(tag)
+            return self.driver.find_element_by_xpath(tag)
 
         if options.get('htmlAttribute', False) and options.get('exactMatch', False):
             raise ValueError('exactMatch must be false while using htmlAttribute')
@@ -86,7 +87,6 @@ class HtmlProxy:
             return '//' + selector + '[text() = "' + target + '"]'
         else:
             return '//' + selector + '[contains(.,"' + target + '")]'
-
 
     def getElementInTable(self, searchText, byClass):
         # return self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']".format("1newWH"))
@@ -115,6 +115,3 @@ class HtmlProxy:
 
     def pressKey(self, target, tag, key, options={}):
         self.getElement(target, tag, options).send_keys(key)
-
-
-
