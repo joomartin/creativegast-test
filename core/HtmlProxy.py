@@ -8,7 +8,7 @@ class HtmlProxy:
 
     def clickElement(self, target, tag='button', options={}):
         # options : exactMatch: True/False, following:True/False, following: the tag next to the clickable item
-        self.getElement(target, selector, options).click()
+        self.getElement(target, tag, options).click()
 
     def fillInput(self, target, value, selector='label', options={}):
         '''
