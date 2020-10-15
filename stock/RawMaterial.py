@@ -24,7 +24,6 @@ class RawMaterial(unittest.TestCase):
         self.html.clickDropdown('ME', 'liter')
         # Warehause
         self.html.clickDropdown('Raktár', 'Pult')
-
         # Save
         self.html.clickElement('Rögzít')
         # switch back to the browser
@@ -117,7 +116,6 @@ class RawMaterial(unittest.TestCase):
         self.assertEqual(nettvalue, '7 874.02')
         # checking the warehouses
         self.html.clickElement(testName,'td', options={'following':'a'})
-        #self.html.getElementByClassName('storages').click()
         self.html.getElement('storages', 'a', options={'htmlAttribute': 'class'}).click()
         self.html.switchFrame('iframe')
         whause = self.html.getTxtFromTable(2, 2)
@@ -128,7 +126,6 @@ class RawMaterial(unittest.TestCase):
         self.assertEqual(qty, '10')
         whValue = self.html.getTxtFromTable(2, 5)
         self.assertEqual(whValue, '10000')
-        #self.html.getElementByClassName('iframe').send_keys(Keys.ESCAPE)
         self.html.pressKey('iframe', 'body', Keys.ESCAPE, options={'htmlAttribute': 'class'})
         self.html.switchFrame()
         self.menu.openStocks()
