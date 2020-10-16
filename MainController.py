@@ -1,13 +1,8 @@
-
-import HTMLTestRunner
 import os
-import unittest
-from selenium import webdriver
 
-from core.Options import Options
 from stock.StockController import StockController
-from core.HtmlProxy import HtmlProxy
-from mainMenu.MainMenuProxy import MainMenuProxy
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 sc = StockController()
 sc.run()

@@ -1,21 +1,18 @@
-from selenium.webdriver.support.ui import Select
-
+from time import sleep
 from core.Options import Options
 
 
 class HtmlProxy:
-
     def __init__(self, driver):
         self.driver = driver
 
-    def clickElement(self, target, tag='button', options=Options()):
-        # options : exactMatch: True/False, following: the tag next to the clickable item
+    def clickElement(self, target, tag='button', options=Options(), waitSeconds=0):
         self.getElement(target, tag, options).click()
+        self.wait(waitSeconds)
 
     def getInput(self, target, selector, options=Options()):
         if selector != 'label':
             return self.getElement(target, 'input', Options(htmlAttribute=selector))
-
 
         options.following = 'input'
         return self.getElement(target, selector, options)
@@ -45,7 +42,6 @@ class HtmlProxy:
         :param selectValue: This is what we want to select
         :type selectValue: String
         """
-        # TODO: Maybe we need exact match in the future
         self.getElement(target, 'label', Options(following='button')).click()
         element = self.getElement(target, 'label', Options(following='ul'))
         element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
@@ -60,6 +56,8 @@ class HtmlProxy:
             self.driver.switch_to.default_content()
         else:
             self.driver.switch_to.frame(self.driver.find_element_by_tag_name(tagName))
+
+        self.wait(2)
 
     def getElement(self, target, tag, options=Options()):
         if self.getOption(options,'uniqueSelector'):
@@ -97,7 +95,6 @@ class HtmlProxy:
             return '//' + tag + '[contains(.,"' + target + '")]'
 
     def getElementInTable(self, searchText, byClass):
-        # return self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '{}']".format("1newWH"))
         return self.driver.find_element_by_xpath('//td[@class="' + byClass + '"][text() = "' + searchText + '"]')
 
     def getTxtFromTable(self, row, col):
@@ -123,3 +120,10 @@ class HtmlProxy:
             options = Options()
 
         return getattr(options, key)
+
+    def wait(self, seconds = 2):
+        sleep(seconds)
+
+    def refresh(self):
+        self.driver.refresh()
+        self.wait(2)
