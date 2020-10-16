@@ -6,6 +6,7 @@ import unittest
 from core.HtmlProxy import HtmlProxy
 from core.Options import Options
 from mainMenu.MainMenuProxy import MainMenuProxy
+from stock.StockAssert import StockAssert
 
 
 class Test(unittest.TestCase):
@@ -50,6 +51,7 @@ class Test(unittest.TestCase):
 
         self.html = HtmlProxy(self.driver)
         self.menu = MainMenuProxy(self.driver)
+        self.stockAssert = StockAssert(self.html)
 
         self.html.fillInput('Felhasználónév', 'admin', selector='placeholder')
         self.html.fillInput('Jelszó', 'admin', selector='placeholder')
@@ -74,7 +76,8 @@ class Test(unittest.TestCase):
         self.createWarehouse("1newWH")
 
         # check it's displayed
-        self.assertTrue(self.html.getElementInTable("1newWH", "sorting_1").is_displayed())
+        self.stockAssert.assertWarehouseExist('1newWH')
+        #self.assertTrue(self.html.getElementInTable("1newWH", "sorting_1").is_displayed())
 
         self.deleteWarehouse("1newWH")
 
@@ -92,7 +95,8 @@ class Test(unittest.TestCase):
         self.driver.implicitly_wait(10)
 
         sleep(2)
-        self.assertTrue(self.html.getElement('iframe', 'body', Options(htmlAttribute='class')).is_displayed())
+        #self.assertTrue(self.html.getElement('iframe', 'body', Options(htmlAttribute='class')).is_displayed())
+        self.stockAssert.assertDialogDisplayed()
 
         self.html.clearInput('Raktár neve')
         self.html.clickElement("Mégsem")
@@ -119,7 +123,8 @@ class Test(unittest.TestCase):
         self.driver.refresh()
 
         sleep(2)
-        self.assertTrue(self.html.getElementInTable('33newWH', 'sorting_1').is_displayed())
+        self.stockAssert.assertWarehouseExist('33newWH')
+        #self.assertTrue(self.html.getElementInTable('33newWH', 'sorting_1').is_displayed())
 
         self.deleteWarehouse("33newWH")
 
@@ -134,9 +139,9 @@ class Test(unittest.TestCase):
         sleep(1)
 
         sleep(2)
-        with self.assertRaises(NoSuchElementException):
-            # self.driver.find_element_by_xpath("//table[@id='storages']/tbody/tr[td = '4newWH']")
-            self.html.getElementInTable("4newWH", "sorting_1")
+        self.stockAssert.assertWarehouseNotExist('4newWH')
+
+
 
     @classmethod
     def tearDownClass(self):

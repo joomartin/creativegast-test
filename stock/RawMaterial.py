@@ -1,13 +1,12 @@
 import unittest
-from time import sleep
 
+from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.support.ui import Select
 from core.HtmlProxy import HtmlProxy
 from core.Options import Options
 from mainMenu.MainMenuProxy import MainMenuProxy
+from stock.StockAssert import StockAssert
 
 
 class RawMaterial(unittest.TestCase):
@@ -31,7 +30,7 @@ class RawMaterial(unittest.TestCase):
         self.html.switchFrame()
         self.driver.refresh()
         sleep(2)
-        self.assertTrue(self.html.getElement(materialName, 'td').is_displayed())
+        self.stockAssert.assertMaterialExist(materialName)
 
     def deleteRawMaterial(self, name):
         self.html.clickElement(name, 'td', Options(following='a'))
@@ -51,12 +50,12 @@ class RawMaterial(unittest.TestCase):
         self.driver.get('https://ricsi.creativegast.hu/login')
         self.html = HtmlProxy(self.driver)
         self.menu = MainMenuProxy(self.driver)
+        self.stockAssert = StockAssert(self.html)
         self.html.fillInput('Felhasználónév', 'admin', 'placeholder')
         # password textfield and type 'admin'
         self.html.fillInput('Jelszó', 'admin', 'placeholder')
         # click 'Belépés' button
         self.html.clickElement('Belépés')
-        # self.assertEqual(self.driver.title, 'Felhasználó váltás | CreativeGAST')
         self.html.fillInput('Belépési kód', 'admin', 'placeholder')
         self.html.clickElement('Belépés')
         self.driver.implicitly_wait(10)
@@ -74,8 +73,8 @@ class RawMaterial(unittest.TestCase):
         testName = 'Abszint'
         price = '1 010.00'
         self.createRawMaterial(testName)
-        self.html.clickElement(testName, 'td',  Options(following='a'))
-        #self.html.getElementByClassName('edit').click()
+        self.html.clickElement(testName, 'td', Options(following='a'))
+        # self.html.getElementByClassName('edit').click()
         self.html.getElement('edit', 'a', Options(htmlAttribute='class')).click()
         self.html.switchFrame('iframe')
         self.html.fillInput('Bruttó beszerzési egységár', price)
@@ -116,7 +115,7 @@ class RawMaterial(unittest.TestCase):
         nettvalue = self.html.getTxtFromTable(1, 7)
         self.assertEqual(nettvalue, '7 874.02')
         # checking the warehouses
-        self.html.clickElement(testName,'td', Options(following='a'))
+        self.html.clickElement(testName, 'td', Options(following='a'))
         self.html.getElement('storages', 'a', Options(htmlAttribute='class')).click()
         self.html.switchFrame('iframe')
         whause = self.html.getTxtFromTable(2, 2)
@@ -153,7 +152,8 @@ class RawMaterial(unittest.TestCase):
         self.html.switchFrame()
         self.driver.refresh()
         sleep(2)
-        self.assertTrue(self.html.getElement(testName, 'td').is_displayed())
+
+        self.stockAssert.assertMaterialExist(testName)
         # second try to check if we can create duplicate raw materials
         self.html.clickElement('Új nyersanyag felvitele', 'a')
         # Create a new raw material without opening stock
@@ -169,7 +169,8 @@ class RawMaterial(unittest.TestCase):
         # Save
         self.html.clickElement('Rögzít')
         # we check if the iframe is still present, because if it is the system didn't let us create duplicate items
-        self.assertTrue(self.html.getElement('ui-tabs', 'div', Options(htmlAttribute='class')).is_displayed())
+        #self.stockAssert.assertDialogExist('ui-tabs', 'div', Options(htmlAttribute='class'))
+        self.stockAssert.assertDialogDisplayed()
         # after that we close it with cancel button
         self.html.clickElement('Mégse')
         self.html.clickElement('Igen')
@@ -180,7 +181,7 @@ class RawMaterial(unittest.TestCase):
     def testWastingRawMaterial(self):
         testName = 'Abszint'
         self.createRawMaterial(testName)
-        self.html.clickElement(testName, 'td',  Options(following='a'))
+        self.html.clickElement(testName, 'td', Options(following='a'))
         self.html.getElement('edit', 'a', Options(htmlAttribute='class')).click()
         self.html.switchFrame('iframe')
         self.html.fillInput('Nyitó mennyiség', '10')
@@ -188,7 +189,7 @@ class RawMaterial(unittest.TestCase):
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
         sleep(2)
-        self.html.clickElement(testName, 'td',  Options(following='a'))
+        self.html.clickElement(testName, 'td', Options(following='a'))
         self.html.getElement('waste', 'a', Options(htmlAttribute='class')).click()
         self.html.switchFrame('iframe')
         self.html.clickDropdown('Raktár', 'Pult')
@@ -205,5 +206,5 @@ class RawMaterial(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        #pass
+        # pass
         self.driver.quit()
