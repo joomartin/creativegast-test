@@ -7,12 +7,18 @@ class HtmlProxy:
         self.driver = driver
 
     def clickElement(self, target, tag='button', options={}):
-        # options : exactMatch: True/False, following:True/False, following: the tag next to the clickable item
+        # options : exactMatch: True/False, following: the tag next to the clickable item
         self.getElement(target, tag, options).click()
+
+    def getInput(self, target, selector, options={}):
+        if selector != 'label':
+            return self.getElement(target, 'input', options={'htmlAttribute': selector})
+
+        options['following'] = 'input'
+        return self.getElement(target, selector, options)
 
     def fillInput(self, target, value, selector='label', options={}):
         '''
-
         :param target: The value that we are looking for
         :type target: String
         :param value:
@@ -24,14 +30,9 @@ class HtmlProxy:
         :return:
         :rtype:
         '''
-        self.clearInput(target, selector, options)
-
-        if selector != 'label':
-            self.getElement(target, 'input', options={'htmlAttribute': selector}).send_keys(value)
-            return
-
-        self.getElement(target, selector,
-                        options={'following': 'input', 'exactMatch': options.get('exactMatch', False)}).send_keys(value)
+        element = self.getInput(target,selector,options)
+        element.clear()
+        element.send_keys(value)
 
     def clickDropdown(self, target, selectValue):
         """
@@ -46,7 +47,7 @@ class HtmlProxy:
         element = self.getElement(target, 'label', options={'following': 'ul'})
         element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
 
-    def switchFrame(self, tagName=""):
+    def switchFrame(self, tagName=None):
         """
         Frame switch method
         :param tagName: If it's empty(default) we'll switch to default content, otherwise we'll switch to frame that its tag is tagName
@@ -58,7 +59,6 @@ class HtmlProxy:
             self.driver.switch_to.frame(self.driver.find_element_by_tag_name(tagName))
 
     def getElement(self, target, tag, options={}):
-
         if options.get('uniqueSelector', False):
             return self.driver.find_element_by_xpath(tag)
 
@@ -105,13 +105,7 @@ class HtmlProxy:
         return self.driver.find_element_by_xpath("//table//tbody//tr[" + str(row) + "]/td[" + str(col) + "]").text
 
     def clearInput(self, target, selector='label', options={}):
-        if selector != 'label':
-            self.getElement(target, 'input', options={'htmlAttribute': selector}).clear()
-            return
-
-        self.getElement(target, selector,
-                        options={'following': 'input',
-                                 'exactMatch': options.get('exactMatch', False)}).clear()
+        self.getInput(target, selector, options).clear()
 
     def pressKey(self, target, tag, key, options={}):
         self.getElement(target, tag, options).send_keys(key)
