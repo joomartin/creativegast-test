@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 import unittest
 from core.HtmlProxy import HtmlProxy
+from core.Options import Options
 from mainMenu.MainMenuProxy import MainMenuProxy
 
 
@@ -27,7 +28,7 @@ class Test(unittest.TestCase):
 
     def deleteWarehouse(self, warehouseName):
         sleep(1)
-        self.html.clickElement(warehouseName, 'td[@class="sorting_1"]', options={'following': 'a'})
+        self.html.clickElement(warehouseName, 'td[@class="sorting_1"]', Options(following='a'))
         sleep(1)
         self.html.clickElement('Igen')
         sleep(1)
@@ -91,7 +92,7 @@ class Test(unittest.TestCase):
         self.driver.implicitly_wait(10)
 
         sleep(2)
-        self.assertTrue(self.html.getElement('iframe', 'body', options={'htmlAttribute': 'class'}).is_displayed())
+        self.assertTrue(self.html.getElement('iframe', 'body', Options(htmlAttribute='class')).is_displayed())
 
         self.html.clearInput('Raktár neve')
         self.html.clickElement("Mégsem")
@@ -107,7 +108,7 @@ class Test(unittest.TestCase):
         # self.html.clickElement(t"3newWH", tag = 'td', followNum=2, byClass = 'sorting_1')
         self.html.clickElement(None,
                                "//tr[contains(., '3newWH')]//a[contains(@class, 'edit') and contains(@class, 'actionButton')]",
-                               options={'uniqueSelector': True})
+                               Options(uniqueSelector=True))
         self.driver.implicitly_wait(10)
         self.html.switchFrame("iframe")
         self.html.fillInput('Raktár neve', '33newWH')
@@ -127,7 +128,7 @@ class Test(unittest.TestCase):
         self.createWarehouse("4newWH")
 
         sleep(1)
-        self.html.clickElement('4newWH', 'td[@class="sorting_1"]', options={'following': 'a'})
+        self.html.clickElement('4newWH', 'td[@class="sorting_1"]', Options(following='a'))
         sleep(1)
         self.html.clickElement("Igen")
         sleep(1)

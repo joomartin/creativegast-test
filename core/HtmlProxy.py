@@ -1,23 +1,26 @@
 from selenium.webdriver.support.ui import Select
 
+from core.Options import Options
+
 
 class HtmlProxy:
 
     def __init__(self, driver):
         self.driver = driver
 
-    def clickElement(self, target, tag='button', options={}):
+    def clickElement(self, target, tag='button', options=Options()):
         # options : exactMatch: True/False, following: the tag next to the clickable item
         self.getElement(target, tag, options).click()
 
-    def getInput(self, target, selector, options={}):
+    def getInput(self, target, selector, options=Options()):
         if selector != 'label':
-            return self.getElement(target, 'input', options={'htmlAttribute': selector})
+            return self.getElement(target, 'input', Options(htmlAttribute=selector))
 
-        options['following'] = 'input'
+
+        options.following = 'input'
         return self.getElement(target, selector, options)
 
-    def fillInput(self, target, value, selector='label', options={}):
+    def fillInput(self, target, value, selector='label', options=Options()):
         '''
         :param target: The value that we are looking for
         :type target: String
@@ -43,8 +46,8 @@ class HtmlProxy:
         :type selectValue: String
         """
         # TODO: Maybe we need exact match in the future
-        self.getElement(target, 'label', options={'following': 'button'}).click()
-        element = self.getElement(target, 'label', options={'following': 'ul'})
+        self.getElement(target, 'label', Options(following='button')).click()
+        element = self.getElement(target, 'label', Options(following='ul'))
         element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
 
     def switchFrame(self, tagName=None):
@@ -58,15 +61,18 @@ class HtmlProxy:
         else:
             self.driver.switch_to.frame(self.driver.find_element_by_tag_name(tagName))
 
-    def getElement(self, target, tag, options={}):
-        if options.get('uniqueSelector', False):
+    def getElement(self, target, tag, options=Options()):
+        if self.getOption(options,'uniqueSelector'):
             return self.driver.find_element_by_xpath(tag)
 
-        if options.get('htmlAttribute', False) and options.get('exactMatch', False):
+        htmlAttribute = self.getOption(options,'htmlAttribute')
+        exactMatch = self.getOption(options,'exactMatch')
+
+        if htmlAttribute and exactMatch:
             raise ValueError('exactMatch must be false while using htmlAttribute')
 
-        if options.get('htmlAttribute', False):
-            xpath = '//' + tag + '[@' + options.get('htmlAttribute') + '="' + target + '"]'
+        if htmlAttribute:
+            xpath = '//' + tag + '[@' + htmlAttribute + '="' + target + '"]'
             xpath = self.appendFollowing(xpath, options)
 
             return self.driver.find_element_by_xpath(xpath)
@@ -76,14 +82,16 @@ class HtmlProxy:
 
         return self.driver.find_element_by_xpath(xpath)
 
-    def appendFollowing(self, xpath, options={}):
-        if options.get('following', False):
-            xpath += '//following::' + options.get('following', 'a')
+    def appendFollowing(self, xpath, options=Options()):
+        following = self.getOption(options, 'following')
+        if following:
+            xpath += '//following::' + following
 
         return xpath
 
-    def getXpathByExactMatch(self, tag, target, options={}):
-        if options.get('exactMatch', False):
+    def getXpathByExactMatch(self, tag, target, options=Options()):
+        exactMatch = self.getOption(options, 'exactMatch')
+        if exactMatch:
             return '//' + tag + '[text() = "' + target + '"]'
         else:
             return '//' + tag + '[contains(.,"' + target + '")]'
@@ -104,8 +112,14 @@ class HtmlProxy:
         """
         return self.driver.find_element_by_xpath("//table//tbody//tr[" + str(row) + "]/td[" + str(col) + "]").text
 
-    def clearInput(self, target, selector='label', options={}):
+    def clearInput(self, target, selector='label', options=Options()):
         self.getInput(target, selector, options).clear()
 
-    def pressKey(self, target, tag, key, options={}):
+    def pressKey(self, target, tag, key, options=Options()):
         self.getElement(target, tag, options).send_keys(key)
+
+    def getOption(self, options, key):
+        if not options :
+            options = Options()
+
+        return getattr(options, key)

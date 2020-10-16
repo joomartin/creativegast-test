@@ -6,6 +6,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
 from core.HtmlProxy import HtmlProxy
+from core.Options import Options
 from mainMenu.MainMenuProxy import MainMenuProxy
 
 
@@ -33,7 +34,7 @@ class RawMaterial(unittest.TestCase):
         self.assertTrue(self.html.getElement(materialName, 'td').is_displayed())
 
     def deleteRawMaterial(self, name):
-        self.html.clickElement(name, 'td', options={'following':'a'})
+        self.html.clickElement(name, 'td', Options(following='a'))
         sleep(2)
         self.html.clickElement('Törlés', 'a')
         self.html.clickElement('Igen')
@@ -73,9 +74,9 @@ class RawMaterial(unittest.TestCase):
         testName = 'Abszint'
         price = '1 010.00'
         self.createRawMaterial(testName)
-        self.html.clickElement(testName, 'td', options={'following':'a'})
+        self.html.clickElement(testName, 'td',  Options(following='a'))
         #self.html.getElementByClassName('edit').click()
-        self.html.getElement('edit', 'a', options={'htmlAttribute':'class'}).click()
+        self.html.getElement('edit', 'a', Options(htmlAttribute='class')).click()
         self.html.switchFrame('iframe')
         self.html.fillInput('Bruttó beszerzési egységár', price)
         self.html.clickElement('Rögzít')
@@ -115,8 +116,8 @@ class RawMaterial(unittest.TestCase):
         nettvalue = self.html.getTxtFromTable(1, 7)
         self.assertEqual(nettvalue, '7 874.02')
         # checking the warehouses
-        self.html.clickElement(testName,'td', options={'following':'a'})
-        self.html.getElement('storages', 'a', options={'htmlAttribute': 'class'}).click()
+        self.html.clickElement(testName,'td', Options(following='a'))
+        self.html.getElement('storages', 'a', Options(htmlAttribute='class')).click()
         self.html.switchFrame('iframe')
         whause = self.html.getTxtFromTable(2, 2)
         self.assertEqual(whause, 'Pult')
@@ -126,7 +127,7 @@ class RawMaterial(unittest.TestCase):
         self.assertEqual(qty, '10')
         whValue = self.html.getTxtFromTable(2, 5)
         self.assertEqual(whValue, '10000')
-        self.html.pressKey('iframe', 'body', Keys.ESCAPE, options={'htmlAttribute': 'class'})
+        self.html.pressKey('iframe', 'body', Keys.ESCAPE, Options(htmlAttribute='class'))
         self.html.switchFrame()
         self.menu.openStocks()
         sleep(2)
@@ -168,7 +169,7 @@ class RawMaterial(unittest.TestCase):
         # Save
         self.html.clickElement('Rögzít')
         # we check if the iframe is still present, because if it is the system didn't let us create duplicate items
-        self.assertTrue(self.html.getElement('ui-tabs', 'div', options={'htmlAttribute': 'class'}).is_displayed())
+        self.assertTrue(self.html.getElement('ui-tabs', 'div', Options(htmlAttribute='class')).is_displayed())
         # after that we close it with cancel button
         self.html.clickElement('Mégse')
         self.html.clickElement('Igen')
@@ -179,16 +180,16 @@ class RawMaterial(unittest.TestCase):
     def testWastingRawMaterial(self):
         testName = 'Abszint'
         self.createRawMaterial(testName)
-        self.html.clickElement(testName, 'td', options={'following':'a'})
-        self.html.getElement('edit', 'a', options={'htmlAttribute': 'class'}).click()
+        self.html.clickElement(testName, 'td',  Options(following='a'))
+        self.html.getElement('edit', 'a', Options(htmlAttribute='class')).click()
         self.html.switchFrame('iframe')
         self.html.fillInput('Nyitó mennyiség', '10')
         self.html.clickDropdown('Raktár', 'Pult')
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
         sleep(2)
-        self.html.clickElement(testName, 'td', options={'following':'a'})
-        self.html.getElement('waste', 'a', options={'htmlAttribute': 'class'}).click()
+        self.html.clickElement(testName, 'td',  Options(following='a'))
+        self.html.getElement('waste', 'a', Options(htmlAttribute='class')).click()
         self.html.switchFrame('iframe')
         self.html.clickDropdown('Raktár', 'Pult')
         sleep(1)
