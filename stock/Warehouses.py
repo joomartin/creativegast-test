@@ -1,14 +1,23 @@
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
 import unittest
-from core.HtmlProxy import HtmlProxy
+
 from core.Options import Options
-from mainMenu.MainMenuProxy import MainMenuProxy
-from stock.StockAssert import StockAssert
-from Config import read_section
+from shared.BaseTestCase import BaseTestCase
 
 
-class Test(unittest.TestCase):
+class Test(BaseTestCase):
+
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        super().login(self)
+
+        self.menu.openStocks()
+        self.html.clickElement('Raktárak', 'a')
+
+    @classmethod
+    def tearDownClass(self):
+        super().tearDownClass()
+
     def createWarehouse(self, warehouseName):
         self.html.clickElement('Új raktár felvitele', 'a')
         self.html.switchFrame("iframe")
@@ -22,30 +31,6 @@ class Test(unittest.TestCase):
         self.html.wait(2)
         self.html.clickElement(warehouseName, 'td[@class="sorting_1"]', Options(following='a'))
         self.html.clickElement('Igen')
-
-    @classmethod
-    def setUpClass(self):
-        options = webdriver.ChromeOptions()
-        options.add_argument('--auto-open-devtools-for-tabs')
-        self.driver = webdriver.Chrome(executable_path='C:\Webdrivers/chromedriver.exe')
-        self.driver.maximize_window()
-
-        config = read_section()
-        self.driver.get(config.get('path'))
-
-        self.html = HtmlProxy(self.driver)
-        self.menu = MainMenuProxy(self.driver)
-        self.stockAssert = StockAssert(self.html)
-
-        self.html.fillInput('Felhasználónév', 'admin', selector='placeholder')
-        self.html.fillInput('Jelszó', 'admin', selector='placeholder')
-
-        self.html.clickElement('Belépés')
-        self.html.fillInput('Belépési kód', 'admin', selector='placeholder')
-        self.html.clickElement('Belépés')
-
-        self.menu.openStocks()
-        self.html.clickElement('Raktárak', 'a')
 
     def testCreateWarehouse(self):
         self.createWarehouse("1newWH")
@@ -91,10 +76,6 @@ class Test(unittest.TestCase):
         self.html.clickElement("Igen", waitSeconds=2)
 
         self.stockAssert.assertWarehouseNotExist('4newWH')
-
-    @classmethod
-    def tearDownClass(self):
-        self.driver.quit()
 
 
 if __name__ == "__main__":

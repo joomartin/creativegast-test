@@ -8,6 +8,7 @@ from core.Options import Options
 from mainMenu.MainMenuProxy import MainMenuProxy
 from stock.StockAssert import StockAssert
 from Config import read_section
+from shared.BaseTestCase import SetUp
 
 
 class RawMaterial(unittest.TestCase):
@@ -32,7 +33,8 @@ class RawMaterial(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        self.driver = webdriver.Chrome()
+
+        '''self.driver = webdriver.Chrome()
         self.driver.maximize_window()
 
         config = read_section()
@@ -46,7 +48,12 @@ class RawMaterial(unittest.TestCase):
         self.html.fillInput('Jelszó', 'admin', 'placeholder')
         self.html.clickElement('Belépés')
         self.html.fillInput('Belépési kód', 'admin', 'placeholder')
-        self.html.clickElement('Belépés')
+        self.html.clickElement('Belépés')'''
+
+        self.setup = SetUp()
+        self.html = self.setup.html
+        self.menu = self.setup.menu
+        self.stockAssert = self.setup.stockAssert
 
         self.menu.openStocks()
 
@@ -181,4 +188,5 @@ class RawMaterial(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.driver.quit()
+        self.setup.driver.quit()
+        #self.driver.quit()
