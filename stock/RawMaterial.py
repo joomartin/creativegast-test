@@ -8,10 +8,21 @@ from core.Options import Options
 from mainMenu.MainMenuProxy import MainMenuProxy
 from stock.StockAssert import StockAssert
 from Config import read_section
-from shared.BaseTestCase import SetUp
+from shared.BaseTestCase import BaseTestCase
 
 
-class RawMaterial(unittest.TestCase):
+class RawMaterial(BaseTestCase):
+
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        super().login(self)
+
+        self.menu.openStocks()
+
+    @classmethod
+    def tearDownClass(self):
+        super().tearDownClass()
 
     def createRawMaterial(self, materialName):
         self.html.clickElement('Új nyersanyag felvitele', 'a')
@@ -30,32 +41,6 @@ class RawMaterial(unittest.TestCase):
         self.html.clickElement(name, 'td', Options(following='a'))
         self.html.clickElement('Törlés', 'a', waitSeconds=2)
         self.html.clickElement('Igen')
-
-    @classmethod
-    def setUpClass(self):
-
-        '''self.driver = webdriver.Chrome()
-        self.driver.maximize_window()
-
-        config = read_section()
-        self.driver.get(config.get('path'))
-
-        self.html = HtmlProxy(self.driver)
-        self.menu = MainMenuProxy(self.driver)
-        self.stockAssert = StockAssert(self.html)
-
-        self.html.fillInput('Felhasználónév', 'admin', 'placeholder')
-        self.html.fillInput('Jelszó', 'admin', 'placeholder')
-        self.html.clickElement('Belépés')
-        self.html.fillInput('Belépési kód', 'admin', 'placeholder')
-        self.html.clickElement('Belépés')'''
-
-        self.setup = SetUp()
-        self.html = self.setup.html
-        self.menu = self.setup.menu
-        self.stockAssert = self.setup.stockAssert
-
-        self.menu.openStocks()
 
     def testCreate(self):
         testName = 'Abszint'
@@ -186,7 +171,3 @@ class RawMaterial(unittest.TestCase):
 
         self.deleteRawMaterial(testName)
 
-    @classmethod
-    def tearDownClass(self):
-        self.setup.driver.quit()
-        #self.driver.quit()
