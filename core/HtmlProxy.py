@@ -1,4 +1,7 @@
 from time import sleep
+
+from selenium.webdriver.common.keys import Keys
+
 from core.Options import Options
 
 
@@ -31,7 +34,7 @@ class HtmlProxy:
         :rtype:
         '''
         element = self.getInput(target,selector,options)
-        element.clear()
+        self.clearInput(target,selector,options)
         element.send_keys(value)
 
     def clickDropdown(self, target, selectValue):
@@ -64,6 +67,7 @@ class HtmlProxy:
             return self.driver.find_element_by_xpath(tag)
 
         htmlAttribute = self.getOption(options,'htmlAttribute')
+
         exactMatch = self.getOption(options,'exactMatch')
 
         if htmlAttribute and exactMatch:
@@ -110,7 +114,12 @@ class HtmlProxy:
         return self.driver.find_element_by_xpath("//table//tbody//tr[" + str(row) + "]/td[" + str(col) + "]").text
 
     def clearInput(self, target, selector='label', options=Options()):
-        self.getInput(target, selector, options).clear()
+        input  = self.getInput(target, selector, options)
+        input.clear()
+
+        if input.get_attribute('value'):
+            input.send_keys(Keys.CONTROL + 'a')
+            input.send_keys(Keys.DELETE)
 
     def pressKey(self, target, tag, key, options=Options()):
         self.getElement(target, tag, options).send_keys(key)
@@ -127,3 +136,8 @@ class HtmlProxy:
     def refresh(self):
         self.driver.refresh()
         self.wait(2)
+
+    def fillAutocomplete(self, target, tag, value, selectValue, selectTag, options):
+        self.getElement(target, tag, options).send_keys(value)
+        self.wait(3)
+        self.clickElement(selectValue, selectTag)

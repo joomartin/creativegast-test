@@ -23,7 +23,12 @@ class StockAssert(unittest.TestCase):
     def assertMaterialExist(self, materialName):
         self.assertTrue(self.html.getElement(materialName, 'td').is_displayed())
 
+    def assertAllergenExist(self, allergenName):
+        self.assertTrue(self.html.getElement(allergenName, 'td').is_displayed())
 
+    def assertStockMovementExist(self, fromWh, toWh):
+        self.assertTrue(self.html.getElement(fromWh, 'td').is_displayed())
+        self.assertTrue(self.html.getElement(toWh, 'td').is_displayed())
 
 
 

@@ -2,7 +2,7 @@
 
 class Options:
 
-    def __init__(self, following='', exactMatch=False, uniqueSelector='', htmlAttribute=''):
+    def __init__(self, following='', exactMatch=False, uniqueSelector=False, htmlAttribute=''):
         '''
 
         :param following:
