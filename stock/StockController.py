@@ -7,6 +7,7 @@ from core.contracts.Controller import Controller
 from stock.RawMaterial import RawMaterial
 from stock.Warehouses import Test
 from stock.StockMovement import StockMovement
+from stock.BarCheckings import  BarCheckings
 
 
 class StockController(Controller):
@@ -17,9 +18,10 @@ class StockController(Controller):
         warehouses = unittest.TestLoader().loadTestsFromTestCase(Test)
         rawMaterial = unittest.TestLoader().loadTestsFromTestCase(RawMaterial)
         stockMovement = unittest.TestLoader().loadTestsFromTestCase(StockMovement)
+        barCheckings = unittest.TestLoader().loadTestsFromTestCase(BarCheckings)
 
         # create a test suite combining search_text and home_page_test
-        test_suite = unittest.TestSuite([warehouses, rawMaterial, stockMovement])
+        test_suite = unittest.TestSuite([warehouses, rawMaterial, stockMovement, barCheckings])
 
 
         # open the report file
