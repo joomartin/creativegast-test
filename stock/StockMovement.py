@@ -1,13 +1,5 @@
-import unittest
-
-from time import sleep
-from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from core.HtmlProxy import HtmlProxy
 from core.Options import Options
-from mainMenu.MainMenuProxy import MainMenuProxy
-from stock.StockAssert import StockAssert
-from Config import read_section
 from shared.BaseTestCase import BaseTestCase
 
 
@@ -45,8 +37,35 @@ class StockMovement(BaseTestCase):
         self.html.switchFrame()
         self.html.refresh()
 
-        #self.html.clickElement('Admin Admin admin', 'td[@class="sorting_1"]', Options(following='a'))
-
+    def deleteMovement(self):
+        table = self.html.getElement('storagemove', 'table', Options(htmlAttribute='id'))
+        table.find_element_by_xpath('.//span[contains(., "Töröl")]').click()
+        self.html.clickElement('Igen')
 
     def testCreate(self):
         self.createNewMovement()
+        self.deleteMovement()
+
+    def testView(self):
+        self.createNewMovement()
+
+        table = self.html.getElement('storagemove', 'table', Options(htmlAttribute='id'))
+        table.find_element_by_xpath('.//span[contains(., "Megtekintés")]').click()
+
+        self.html.switchFrame('iframe')
+
+        materialName = self.html.getTxtFromTable(2, 1)
+        self.assertEqual(materialName, 'Coca Cola 025l')
+
+        qty = self.html.getTxtFromTable(2, 2)
+        self.assertEqual(qty, '11',)
+
+        me = self.html.getTxtFromTable(2, 3)
+        self.assertEqual(me, 'db')
+
+        self.html.pressKey('iframe', 'body', Keys.ESCAPE, Options(htmlAttribute='class'))
+        self.html.switchFrame()
+        self.menu.openStocks()
+        self.html.clickElement('Raktármozgás', 'a')
+
+        self.deleteMovement()

@@ -6,6 +6,7 @@ from selenium import webdriver
 from core.contracts.Controller import Controller
 from stock.RawMaterial import RawMaterial
 from stock.Warehouses import Test
+from stock.StockMovement import StockMovement
 
 
 class StockController(Controller):
@@ -15,9 +16,10 @@ class StockController(Controller):
         # get all tests from SearchText and HomePageTest class
         warehouses = unittest.TestLoader().loadTestsFromTestCase(Test)
         rawMaterial = unittest.TestLoader().loadTestsFromTestCase(RawMaterial)
+        stockMovement = unittest.TestLoader().loadTestsFromTestCase(StockMovement)
 
         # create a test suite combining search_text and home_page_test
-        test_suite = unittest.TestSuite([warehouses, rawMaterial])
+        test_suite = unittest.TestSuite([warehouses, rawMaterial, stockMovement])
 
 
         # open the report file
