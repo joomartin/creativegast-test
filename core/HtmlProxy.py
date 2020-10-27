@@ -6,6 +6,8 @@ from core.Options import Options
 
 
 class HtmlProxy:
+    currElement = None
+
     def __init__(self, driver):
         self.driver = driver
 
@@ -62,7 +64,7 @@ class HtmlProxy:
 
         self.wait(2)
 
-    def getElement(self, target, tag, options=Options()):
+    def getElement(self, target, tag, options=Options(), element = False):
         if self.getOption(options,'uniqueSelector'):
             return self.driver.find_element_by_xpath(tag)
 
@@ -81,6 +83,7 @@ class HtmlProxy:
 
         xpath = self.getXpathByExactMatch(tag, target, options)
         xpath = self.appendFollowing(xpath, options)
+
 
         return self.driver.find_element_by_xpath(xpath)
 
