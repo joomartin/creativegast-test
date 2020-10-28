@@ -153,3 +153,10 @@ class HtmlProxy:
         table.find_element_by_xpath('.//td[contains(., "Admin Admin")]//following::a[contains(.,"Megtekintés")]').click()
         '''
 
+    def clickTableDropdown(self, materialName, target):
+        element = self.getElement(materialName, 'td', Options(following='td[contains(.,"Menü")]'))
+        element.find_element_by_xpath('./a').click()
+        element2 = element.find_element_by_xpath('./div')
+        element2.find_element_by_xpath('./ul/li[contains(.,"' + target + '")]').click()
+        self.wait(2)
+

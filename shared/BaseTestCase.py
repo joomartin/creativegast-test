@@ -18,7 +18,7 @@ class BaseTestCase(unittest.TestCase):
 
         self.html = HtmlProxy(self.driver)
         self.menu = MainMenuProxy(self.driver)
-        self.stockAssert = StockAssert(self.html)
+        self.stockAssert = StockAssert(self.html,self.driver)
 
     @classmethod
     def tearDownClass(self):

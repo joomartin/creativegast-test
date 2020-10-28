@@ -25,7 +25,7 @@ class StockMovement(BaseTestCase):
 
         self.html.clickDropdown('Forrás raktár','Pult')
         self.html.wait()
-        self.html.clickDropdown('Cél raktár', 'Konyha')
+        self.html.clickDropdown('Cél raktár', 'Dugipia raktár')
 
         self.html.fillAutocomplete('Nyersanyag', 'input', 'Coca','Coca Cola 025l', 'li', Options(htmlAttribute='data-title'))
         self.html.getElement('Maximum', 'input', Options(htmlAttribute='data-title')).click()
@@ -63,7 +63,7 @@ class StockMovement(BaseTestCase):
 
         self.html.pressKey('iframe', 'body', Keys.ESCAPE, Options(htmlAttribute='class'))
         self.html.switchFrame()
-        self.menu.openStocks()
+        self.stockAssert.assertStock('Coca Cola 025l', 'Dugipia raktár', '11')
         self.html.clickElement('Raktármozgás', 'a')
 
         self.deleteMovement()

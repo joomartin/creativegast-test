@@ -24,7 +24,8 @@ class BarCheckings(BaseTestCase):
         self.html.clickElement('Pult', 'label', Options(following='label'))
         self.html.clickElement('Indít', waitSeconds=3)
 
-        self.html.fillInput('450.00000', '445', 'value')
+        qty = int(self.html.getInput('barcheckItemValue', 'class').get_attribute('value'))-5
+        self.html.fillInput('barcheckItemValue', str(qty), 'class')
         self.html.clickElement('Coca Cola 0.5 l', 'td', Options(following='button'))
 
         self.html.clickElement('Lezárás', 'a')
@@ -50,6 +51,9 @@ class BarCheckings(BaseTestCase):
 
         self.html.clickElement('Mégsem')
         self.html.switchFrame()
+
+        self.stockAssert.assertStock('Coca Cola 0.5 l', 'Pult', '440')
+        self.html.clickElement('Standellenőrzések', 'a')
 
         self.deleteChecking()
 
