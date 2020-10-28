@@ -145,4 +145,11 @@ class HtmlProxy:
         self.wait(3)
         self.clickElement(selectValue, selectTag)
 
+    def clickTableElement(self, atrName, atrType, tdText, followingType, targetText):
+        table = self.getElement(atrName, 'table', Options(htmlAttribute=atrType))
+        table.find_element_by_xpath('.//td[contains(., "' + tdText + '")]//following::' + followingType +'[contains(.,"' + targetText +'")]').click()
+        '''
+        table = self.html.getElement('barchecking', 'table', Options(htmlAttribute='id'))
+        table.find_element_by_xpath('.//td[contains(., "Admin Admin")]//following::a[contains(.,"Megtekintés")]').click()
+        '''
 

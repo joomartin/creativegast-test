@@ -31,16 +31,14 @@ class BarCheckings(BaseTestCase):
         self.html.refresh()
 
     def deleteChecking(self):
-        table = self.html.getElement('barchecking', 'table', Options(htmlAttribute='id'))
-        table.find_element_by_xpath('.//a[contains(., "Törlés")]').click()
+        self.html.clickTableElement('barchecking', 'id', 'Admin Admin', 'a', 'Törlés')
         self.html.clickElement('Igen')
         self.html.refresh()
 
     def testCreate(self):
         self.createBarChecking()
 
-        table = self.html.getElement('barchecking', 'table', Options(htmlAttribute='id'))
-        table.find_element_by_xpath('.//a[contains(., "Megtekintés")]').click()
+        self.html.clickTableElement('barchecking', 'id', 'Admin Admin', 'a', 'Megtekintés')
 
         self.html.switchFrame('iframe')
 

@@ -38,8 +38,7 @@ class StockMovement(BaseTestCase):
         self.html.refresh()
 
     def deleteMovement(self):
-        table = self.html.getElement('storagemove', 'table', Options(htmlAttribute='id'))
-        table.find_element_by_xpath('.//span[contains(., "Töröl")]').click()
+        self.html.clickTableElement('storagemove', 'id', 'Admin Admin admin', 'span', 'Töröl')
         self.html.clickElement('Igen')
 
     def testCreate(self):
@@ -49,8 +48,7 @@ class StockMovement(BaseTestCase):
     def testView(self):
         self.createNewMovement()
 
-        table = self.html.getElement('storagemove', 'table', Options(htmlAttribute='id'))
-        table.find_element_by_xpath('.//span[contains(., "Megtekintés")]').click()
+        self.html.clickTableElement('storagemove', 'id', 'Admin Admin admin', 'span', 'Megtekintés')
 
         self.html.switchFrame('iframe')
 
