@@ -67,3 +67,5 @@ class StockMovement(BaseTestCase):
         self.html.clickElement('Raktármozgás', 'a')
 
         self.deleteMovement()
+
+        self.stockAssert.assertStock('Coca Cola 025l', 'Dugipia raktár', '0')

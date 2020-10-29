@@ -57,3 +57,5 @@ class BarCheckings(BaseTestCase):
 
         self.deleteChecking()
 
+        self.stockAssert.assertStock('Coca Cola 0.5 l', 'Pult', '445')
+

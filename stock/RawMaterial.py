@@ -113,6 +113,8 @@ class RawMaterial(BaseTestCase):
 
         self.deleteRawMaterial(testName)
 
+        self.stockAssert.assertDeletedMaterial(testName, 'Pult',)
+
     def testDuplicate(self):
         testName = 'Abszint'
 
@@ -171,6 +173,8 @@ class RawMaterial(BaseTestCase):
         self.stockAssert.assertStock(testName, 'Pult', '5')
 
         self.deleteRawMaterial(testName)
+
+        self.stockAssert.assertDeletedMaterial(testName, 'Pult',)
 
     def testOpeningButton(self):
         testName = 'Abszint'

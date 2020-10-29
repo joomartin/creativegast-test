@@ -40,15 +40,25 @@ class StockAssert(unittest.TestCase):
 
         self.html.clickTableDropdown(materialName,'Raktárak')
         self.html.switchFrame('iframe')
-        stock = self.html.getElement(whName, 'td', Options(following='td//following::td')).text
-        self.assertEqual(stock,qty)
+        if qty != '0':
+            stock = self.html.getElement(whName, 'td', Options(following='td//following::td')).text
+            self.assertEqual(stock,qty)
+        else:
+            with self.assertRaises(NoSuchElementException):
+                self.html.getElement(whName, 'td')
+
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
 
         self.html.clickTableDropdown(materialName,'Készlet')
         self.html.switchFrame('iframe')
-        stock = self.html.getElement(whName, 'td', Options(following='td//following::td')).text
-        self.assertEqual(stock, qty)
+        if qty != '0':
+            stock = self.html.getElement(whName, 'td', Options(following='td//following::td')).text
+            self.assertEqual(stock, qty)
+        else :
+            with self.assertRaises(NoSuchElementException):
+                self.html.getElement(whName, 'td')
+
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
 
@@ -60,15 +70,32 @@ class StockAssert(unittest.TestCase):
 
         self.html.switchFrame("iframe")
 
-        stock = self.html.getElement(materialName, 'td', Options(following='td')).text
-        self.assertEqual(stock, qty)
+        if qty != '0':
+            stock = self.html.getElement(materialName, 'td', Options(following='td')).text
+            self.assertEqual(stock, qty)
+        else:
+            with self.assertRaises(NoSuchElementException):
+                self.html.getElement(materialName, 'td')
+
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
         self.menu.openStocks()
 
 
 
+    def assertDeletedMaterial(self, materialName, whName):
+        self.html.clickElement('Raktárak', 'a')
 
+        self.html.clickElement(None,
+                               "//tr[contains(., '" + whName + "')]//a[contains(@class, 'stock') and contains(@class, 'actionButton')]",
+                               Options(uniqueSelector=True))
 
+        self.html.switchFrame("iframe")
 
+        with self.assertRaises(NoSuchElementException):
+            self.html.getElement(materialName, 'td')
+
+        self.html.switchFrame()
+        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+        self.menu.openStocks()
 
