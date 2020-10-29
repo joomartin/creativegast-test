@@ -61,8 +61,8 @@ class StockMovement(BaseTestCase):
         me = self.html.getTxtFromTable(2, 3)
         self.assertEqual(me, 'db')
 
-        self.html.pressKey('iframe', 'body', Keys.ESCAPE, Options(htmlAttribute='class'))
         self.html.switchFrame()
+        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
         self.stockAssert.assertStock('Coca Cola 025l', 'Dugipia raktár', '11')
         self.html.clickElement('Raktármozgás', 'a')
 

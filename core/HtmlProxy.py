@@ -39,7 +39,7 @@ class HtmlProxy:
         self.clearInput(target,selector,options)
         element.send_keys(value)
 
-    def clickDropdown(self, target, selectValue):
+    def clickDropdown(self, target, selectValue, selector='label'):
         """
         Select value from dropdown button
         :param target: It's next to dropdown button
@@ -47,8 +47,8 @@ class HtmlProxy:
         :param selectValue: This is what we want to select
         :type selectValue: String
         """
-        self.getElement(target, 'label', Options(following='button')).click()
-        element = self.getElement(target, 'label', Options(following='ul'))
+        self.getElement(target, selector, Options(following='button')).click()
+        element = self.getElement(target, selector, Options(following='ul'))
         element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
 
     def switchFrame(self, tagName=None):

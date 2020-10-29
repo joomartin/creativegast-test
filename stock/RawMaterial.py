@@ -103,9 +103,11 @@ class RawMaterial(BaseTestCase):
         whValue = self.html.getTxtFromTable(2, 5)
         self.assertEqual(whValue, '10000')
 
-        self.html.pressKey('iframe', 'body', Keys.ESCAPE, Options(htmlAttribute='class'))
+        # self.html.pressKey('iframe', 'body', Keys.ESCAPE, Options(htmlAttribute='class'))
+        # self.html.switchFrame()
+        # self.menu.openStocks()
         self.html.switchFrame()
-        self.menu.openStocks()
+        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
 
         self.stockAssert.assertStock(testName, 'Pult', '10')
 
@@ -169,6 +171,33 @@ class RawMaterial(BaseTestCase):
         self.stockAssert.assertStock(testName, 'Pult', '5')
 
         self.deleteRawMaterial(testName)
+
+    def testOpeningButton(self):
+        testName = 'Abszint'
+        qty = '100'
+        self.createRawMaterial(testName)
+
+        self.html.clickElement(testName, 'td', Options(following='a'))
+        self.html.clickElement('Nyitókészlet', 'a')
+
+        self.html.switchFrame('iframe')
+        input = self.html.getElement(testName, 'td', Options(following='input'))
+        input.send_keys(qty)
+
+        self.html.clickDropdown(testName, 'Dugipia raktár', 'td')
+        self.html.clickElement('Rögzít', 'span', waitSeconds=2)
+
+        self.html.switchFrame()
+        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+
+
+        self.html.refresh()
+        self.stockAssert.assertStock(testName, 'Dugipia raktár', qty)
+
+
+
+
+
 
 
 

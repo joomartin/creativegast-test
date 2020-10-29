@@ -38,27 +38,20 @@ class StockAssert(unittest.TestCase):
     def assertStock(self, materialName, whName, qty):
         self.menu.openStocks()
 
-        # element =self.html.getElement(materialName, 'td', Options(following='td[contains(.,"Menü")]'))
-        # element.find_element_by_xpath('./a').click()
-        # element2 = element.find_element_by_xpath('./div')
-        # element2.find_element_by_xpath('./ul/li[contains(.,"Raktárak")]').click()
         self.html.clickTableDropdown(materialName,'Raktárak')
         self.html.switchFrame('iframe')
         stock = self.html.getElement(whName, 'td', Options(following='td//following::td')).text
         self.assertEqual(stock,qty)
-        self.html.pressKey('iframe', 'body', Keys.ESCAPE, Options(htmlAttribute='class'))
-
         self.html.switchFrame()
-        self.menu.openStocks()
+        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
 
         self.html.clickTableDropdown(materialName,'Készlet')
         self.html.switchFrame('iframe')
         stock = self.html.getElement(whName, 'td', Options(following='td//following::td')).text
         self.assertEqual(stock, qty)
-        self.html.pressKey('iframe', 'body', Keys.ESCAPE, Options(htmlAttribute='class'))
-
         self.html.switchFrame()
-        self.menu.openStocks()
+        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+
         self.html.clickElement('Raktárak', 'a')
 
         self.html.clickElement(None,
@@ -69,9 +62,8 @@ class StockAssert(unittest.TestCase):
 
         stock = self.html.getElement(materialName, 'td', Options(following='td')).text
         self.assertEqual(stock, qty)
-        self.html.pressKey('iframe', 'body', Keys.ESCAPE, Options(htmlAttribute='class'))
-
         self.html.switchFrame()
+        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
         self.menu.openStocks()
 
 
