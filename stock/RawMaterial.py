@@ -38,8 +38,7 @@ class RawMaterial(BaseTestCase):
         self.stockAssert.assertMaterialExist(materialName)
 
     def deleteRawMaterial(self, name):
-        self.html.clickElement(name, 'td', Options(following='a'))
-        self.html.clickElement('Törlés', 'a', waitSeconds=2)
+        self.html.clickTableDropdown(name, 'Törlés')
         self.html.clickElement('Igen')
 
     def testCreate(self):
@@ -52,8 +51,7 @@ class RawMaterial(BaseTestCase):
         price = '1 010.00'
 
         self.createRawMaterial(testName)
-        self.html.clickElement(testName, 'td', Options(following='a'))
-        self.html.getElement('edit', 'a', Options(htmlAttribute='class')).click()
+        self.html.clickTableDropdown(testName, 'Szerkeszt')
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Bruttó beszerzési egységár', price)
@@ -90,8 +88,7 @@ class RawMaterial(BaseTestCase):
         nettValue = self.html.getTxtFromTable(1, 7)
         self.assertEqual(nettValue, '7 874.02')
 
-        self.html.clickElement(testName,'td', Options(following='a'))
-        self.html.getElement('storages', 'a', Options(htmlAttribute='class')).click()
+        self.html.clickTableDropdown(testName, 'Raktárak')
         self.html.switchFrame('iframe')
 
         whause = self.html.getTxtFromTable(2, 2)
@@ -106,11 +103,17 @@ class RawMaterial(BaseTestCase):
         whValue = self.html.getTxtFromTable(2, 5)
         self.assertEqual(whValue, '10000')
 
-        self.html.pressKey('iframe', 'body', Keys.ESCAPE, Options(htmlAttribute='class'))
+        # self.html.pressKey('iframe', 'body', Keys.ESCAPE, Options(htmlAttribute='class'))
+        # self.html.switchFrame()
+        # self.menu.openStocks()
         self.html.switchFrame()
-        self.menu.openStocks()
+        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+
+        self.stockAssert.assertStock(testName, 'Pult', '10')
 
         self.deleteRawMaterial(testName)
+
+        self.stockAssert.assertDeletedMaterial(testName, 'Pult',)
 
     def testDuplicate(self):
         testName = 'Abszint'
@@ -147,8 +150,7 @@ class RawMaterial(BaseTestCase):
         testName = 'Abszint'
 
         self.createRawMaterial(testName)
-        self.html.clickElement(testName, 'td',  Options(following='a'))
-        self.html.getElement('edit', 'a', Options(htmlAttribute='class')).click()
+        self.html.clickTableDropdown(testName, 'Szerkeszt')
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Nyitó mennyiség', '10')
@@ -156,8 +158,7 @@ class RawMaterial(BaseTestCase):
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
 
-        self.html.clickElement(testName, 'td',  Options(following='a'))
-        self.html.getElement('waste', 'a', Options(htmlAttribute='class')).click()
+        self.html.clickTableDropdown(testName, 'Selejt')
         self.html.switchFrame('iframe')
 
         self.html.clickDropdown('Raktár', 'Pult')
@@ -169,5 +170,38 @@ class RawMaterial(BaseTestCase):
         qty = self.html.getTxtFromTable(1, 3)
         self.assertEqual(qty, '5.00')
 
+        self.stockAssert.assertStock(testName, 'Pult', '5')
+
         self.deleteRawMaterial(testName)
+
+        self.stockAssert.assertDeletedMaterial(testName, 'Pult',)
+
+    def testOpeningButton(self):
+        testName = 'Abszint'
+        qty = '100'
+        self.createRawMaterial(testName)
+
+        self.html.clickElement(testName, 'td', Options(following='a'))
+        self.html.clickElement('Nyitókészlet', 'a')
+
+        self.html.switchFrame('iframe')
+        input = self.html.getElement(testName, 'td', Options(following='input'))
+        input.send_keys(qty)
+
+        self.html.clickDropdown(testName, 'Dugipia raktár', 'td')
+        self.html.clickElement('Rögzít', 'span', waitSeconds=2)
+
+        self.html.switchFrame()
+        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+
+
+        self.html.refresh()
+        self.stockAssert.assertStock(testName, 'Dugipia raktár', qty)
+
+
+
+
+
+
+
 

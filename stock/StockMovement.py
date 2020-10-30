@@ -25,7 +25,7 @@ class StockMovement(BaseTestCase):
 
         self.html.clickDropdown('Forrás raktár','Pult')
         self.html.wait()
-        self.html.clickDropdown('Cél raktár', 'Konyha')
+        self.html.clickDropdown('Cél raktár', 'Dugipia raktár')
 
         self.html.fillAutocomplete('Nyersanyag', 'input', 'Coca','Coca Cola 025l', 'li', Options(htmlAttribute='data-title'))
         self.html.getElement('Maximum', 'input', Options(htmlAttribute='data-title')).click()
@@ -38,8 +38,7 @@ class StockMovement(BaseTestCase):
         self.html.refresh()
 
     def deleteMovement(self):
-        table = self.html.getElement('storagemove', 'table', Options(htmlAttribute='id'))
-        table.find_element_by_xpath('.//span[contains(., "Töröl")]').click()
+        self.html.clickTableElement('storagemove', 'id', 'Admin Admin admin', 'span', 'Töröl')
         self.html.clickElement('Igen')
 
     def testCreate(self):
@@ -49,8 +48,7 @@ class StockMovement(BaseTestCase):
     def testView(self):
         self.createNewMovement()
 
-        table = self.html.getElement('storagemove', 'table', Options(htmlAttribute='id'))
-        table.find_element_by_xpath('.//span[contains(., "Megtekintés")]').click()
+        self.html.clickTableElement('storagemove', 'id', 'Admin Admin admin', 'span', 'Megtekintés')
 
         self.html.switchFrame('iframe')
 
@@ -63,9 +61,11 @@ class StockMovement(BaseTestCase):
         me = self.html.getTxtFromTable(2, 3)
         self.assertEqual(me, 'db')
 
-        self.html.pressKey('iframe', 'body', Keys.ESCAPE, Options(htmlAttribute='class'))
         self.html.switchFrame()
-        self.menu.openStocks()
+        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+        self.stockAssert.assertStock('Coca Cola 025l', 'Dugipia raktár', '11')
         self.html.clickElement('Raktármozgás', 'a')
 
         self.deleteMovement()
+
+        self.stockAssert.assertStock('Coca Cola 025l', 'Dugipia raktár', '0')

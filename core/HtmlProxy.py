@@ -39,7 +39,7 @@ class HtmlProxy:
         self.clearInput(target,selector,options)
         element.send_keys(value)
 
-    def clickDropdown(self, target, selectValue):
+    def clickDropdown(self, target, selectValue, selector='label'):
         """
         Select value from dropdown button
         :param target: It's next to dropdown button
@@ -47,8 +47,8 @@ class HtmlProxy:
         :param selectValue: This is what we want to select
         :type selectValue: String
         """
-        self.getElement(target, 'label', Options(following='button')).click()
-        element = self.getElement(target, 'label', Options(following='ul'))
+        self.getElement(target, selector, Options(following='button')).click()
+        element = self.getElement(target, selector, Options(following='ul'))
         element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
 
     def switchFrame(self, tagName=None):
@@ -145,4 +145,18 @@ class HtmlProxy:
         self.wait(3)
         self.clickElement(selectValue, selectTag)
 
+    def clickTableElement(self, atrName, atrType, tdText, followingType, targetText):
+        table = self.getElement(atrName, 'table', Options(htmlAttribute=atrType))
+        table.find_element_by_xpath('.//td[contains(., "' + tdText + '")]//following::' + followingType +'[contains(.,"' + targetText +'")]').click()
+        '''
+        table = self.html.getElement('barchecking', 'table', Options(htmlAttribute='id'))
+        table.find_element_by_xpath('.//td[contains(., "Admin Admin")]//following::a[contains(.,"Megtekintés")]').click()
+        '''
+
+    def clickTableDropdown(self, materialName, target):
+        element = self.getElement(materialName, 'td', Options(following='td[contains(.,"Menü")]'))
+        element.find_element_by_xpath('./a').click()
+        element2 = element.find_element_by_xpath('./div')
+        element2.find_element_by_xpath('./ul/li[contains(.,"' + target + '")]').click()
+        self.wait(2)
 

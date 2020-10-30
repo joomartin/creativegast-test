@@ -24,23 +24,22 @@ class BarCheckings(BaseTestCase):
         self.html.clickElement('Pult', 'label', Options(following='label'))
         self.html.clickElement('Indít', waitSeconds=3)
 
-        self.html.fillInput('450.00000', '445', 'value')
+        qty = int(self.html.getInput('barcheckItemValue', 'class').get_attribute('value'))-5
+        self.html.fillInput('barcheckItemValue', str(qty), 'class')
         self.html.clickElement('Coca Cola 0.5 l', 'td', Options(following='button'))
 
         self.html.clickElement('Lezárás', 'a')
         self.html.refresh()
 
     def deleteChecking(self):
-        table = self.html.getElement('barchecking', 'table', Options(htmlAttribute='id'))
-        table.find_element_by_xpath('.//a[contains(., "Törlés")]').click()
+        self.html.clickTableElement('barchecking', 'id', 'Admin Admin', 'a', 'Törlés')
         self.html.clickElement('Igen')
         self.html.refresh()
 
     def testCreate(self):
         self.createBarChecking()
 
-        table = self.html.getElement('barchecking', 'table', Options(htmlAttribute='id'))
-        table.find_element_by_xpath('.//a[contains(., "Megtekintés")]').click()
+        self.html.clickTableElement('barchecking', 'id', 'Admin Admin', 'a', 'Megtekintés')
 
         self.html.switchFrame('iframe')
 
@@ -53,5 +52,10 @@ class BarCheckings(BaseTestCase):
         self.html.clickElement('Mégsem')
         self.html.switchFrame()
 
+        self.stockAssert.assertStock('Coca Cola 0.5 l', 'Pult', '440')
+        self.html.clickElement('Standellenőrzések', 'a')
+
         self.deleteChecking()
+
+        self.stockAssert.assertStock('Coca Cola 0.5 l', 'Pult', '445')
 
