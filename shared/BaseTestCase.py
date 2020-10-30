@@ -10,7 +10,7 @@ class BaseTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Chrome(executable_path='C:/webdrivers/chromedriver.exe')
         self.driver.maximize_window()
 
         config = read_section()
