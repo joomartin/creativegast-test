@@ -44,6 +44,7 @@ class ProductGroups(BaseTestCase):
     def testCreate(self):
         testName = 'testGroup'
         self.createProductGroup(testName)
+        self.html.search(testName,'Termékcsoportok')
         self.productAssert.assertGroupExists(testName)
         self.deleteProductGroup(testName)
 
@@ -72,6 +73,7 @@ class ProductGroups(BaseTestCase):
         testName = 'testGroup'
         newName = 'modifiedName'
         self.createProductGroup(testName)
+        self.html.search(testName, 'Termékcsoportok')
         self.productAssert.assertGroupExists(testName)
         self.html.clickTableElement('product_groups', 'id', testName, 'span', 'Szerkeszt')
 
@@ -82,6 +84,7 @@ class ProductGroups(BaseTestCase):
         self.html.wait(3)
         self.html.switchFrame()
         self.html.refresh()
+        self.html.search(newName, 'Termékcsoportok')
         self.productAssert.assertGroupExists(newName)
 
         self.deleteProductGroup(newName)

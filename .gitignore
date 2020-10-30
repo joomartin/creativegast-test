@@ -4,3 +4,4 @@ reports
 __pychache__
 debug.log
 config.ini
+stock/geckodriver.log
