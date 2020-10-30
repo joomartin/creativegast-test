@@ -13,6 +13,8 @@ class Test(BaseTestCase):
 
         self.menu.openStocks()
         self.html.clickElement('Raktárak', 'a')
+        #self.html.getTab('Raktárak')
+        #self.html.currWindow = self.html.getElement('tabs-3', 'div', options=Options(htmlAttribute='id'))
 
     @classmethod
     def tearDownClass(self):
@@ -25,25 +27,39 @@ class Test(BaseTestCase):
         self.html.fillInput('Raktár neve', warehouseName)
         self.html.clickElement("Rögzít")
         self.html.switchFrame()
-        self.html.refresh()
+
 
     def deleteWarehouse(self, warehouseName):
+        self.html.refresh()
+
         self.html.wait(2)
-        self.html.clickElement(warehouseName, 'td[@class="sorting_1"]', Options(following='a'))
+        self.html.search(warehouseName, 'Raktárak')
+        self.html.wait(2)
+        currWindow = self.html.getElement('tabs-3', 'div', options=Options(htmlAttribute='id'))
+        # itt azert adjuk at a currWindow-t, hogy az adott oldalon keressen a td-k kozott
+        self.html.clickElement(warehouseName, 'td', Options(following='a'), element = currWindow)
+        self.html.wait(2)
         self.html.clickElement('Igen')
+        self.html.wait(2)
+        self.html.search('', 'Raktárak')
+        self.html.wait(2)
+
 
     def testCreateWarehouse(self):
-        self.createWarehouse("1newWH")
-        self.stockAssert.assertWarehouseExist('1newWH')
+        self.createWarehouse("kicsiraktar")
+        self.stockAssert.assertWarehouseExist('kicsiraktar', 'Raktárak')
+        self.html.search('', 'Raktárak')
 
-        self.deleteWarehouse("1newWH")
 
+        self.deleteWarehouse("kicsiraktar")
+
+    #@unittest.skip
     def testCantCreate(self):
-        self.createWarehouse("2newWH")
+        self.createWarehouse("nagyraktar")
         self.html.clickElement('Új raktár felvitele', 'a')
         self.html.switchFrame("iframe")
 
-        self.html.fillInput('Raktár neve', '2newWH', )
+        self.html.fillInput('Raktár neve', 'nagyraktar', )
         self.html.clickElement("Rögzít")
 
         self.stockAssert.assertDialogDisplayed()
@@ -51,31 +67,39 @@ class Test(BaseTestCase):
         self.html.clearInput('Raktár neve')
         self.html.clickElement("Mégsem")
 
-        self.deleteWarehouse("2newWH")
+        self.deleteWarehouse("nagyraktar")
 
+    #@unittest.skip
     def testEdit(self):
-        self.createWarehouse("3newWH")
+        self.createWarehouse("joraktar")
         self.html.clickElement(None,
-                               "//tr[contains(., '3newWH')]//a[contains(@class, 'edit') and contains(@class, 'actionButton')]",
+                               "//tr[contains(., 'joraktar')]//a[contains(@class, 'edit') and contains(@class, 'actionButton')]",
                                Options(uniqueSelector=True))
 
         self.html.switchFrame("iframe")
-        self.html.fillInput('Raktár neve', '33newWH')
+        self.html.fillInput('Raktár neve', 'rosszraktar')
         self.html.clickElement('Rögzít')
 
         self.html.switchFrame()
         self.html.refresh()
 
-        self.stockAssert.assertWarehouseExist('33newWH')
+        self.stockAssert.assertWarehouseExist('rosszraktar', 'Raktárak')
+        self.html.search('', 'Raktárak')
 
-        self.deleteWarehouse("33newWH")
+        self.deleteWarehouse("rosszraktar")
+
 
     def testDelete(self):
-        self.createWarehouse("4newWH")
-        self.html.clickElement('4newWH', 'td[@class="sorting_1"]', Options(following='a'))
+        self.html.refresh()
+        self.createWarehouse("csakraktar")
+        self.html.search('csakraktar', 'Raktárak')
+        currWindow = self.html.getElement('tabs-3', 'div', options=Options(htmlAttribute='id'))
+        self.html.clickElement('csakraktar', 'td', Options(following='a'), element = currWindow)
         self.html.clickElement("Igen", waitSeconds=2)
+        self.html.search('', 'Raktárak')
 
-        self.stockAssert.assertWarehouseNotExist('4newWH')
+        self.stockAssert.assertWarehouseNotExist('csakraktar', 'Raktárak')
+        self.html.search('', 'Raktárak')
 
 
 if __name__ == "__main__":

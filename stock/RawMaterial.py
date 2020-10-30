@@ -35,11 +35,22 @@ class RawMaterial(BaseTestCase):
 
         self.html.switchFrame()
         self.html.refresh()
-        self.stockAssert.assertMaterialExist(materialName)
+        self.stockAssert.assertMaterialExist(materialName, 'Raktárkészlet')
 
     def deleteRawMaterial(self, name):
+        self.html.refresh()
+
+        self.html.wait(2)
+        self.html.search(name, 'Raktárkészlet')
+        self.html.wait(2)
+        currWindow = self.html.getTab('Raktárkészlet')
+        self.html.clickElement(name, 'td', Options(following='a'), element = currWindow)
+        self.html.clickElement('Törlés', 'a', waitSeconds=2)
         self.html.clickTableDropdown(name, 'Törlés')
         self.html.clickElement('Igen')
+        self.html.wait(2)
+        self.html.search('', 'Raktárkészlet')
+        self.html.wait(2)
 
     def testCreate(self):
         testName = 'Abszint'
@@ -51,6 +62,9 @@ class RawMaterial(BaseTestCase):
         price = '1 010.00'
 
         self.createRawMaterial(testName)
+        self.html.search(testName, 'Raktárkészlet')
+        self.html.clickElement(testName, 'td', Options(following='a'))
+        self.html.getElement('edit', 'a', Options(htmlAttribute='class')).click()
         self.html.clickTableDropdown(testName, 'Szerkeszt')
         self.html.switchFrame('iframe')
 
@@ -59,6 +73,7 @@ class RawMaterial(BaseTestCase):
         self.html.switchFrame()
         self.html.refresh()
 
+        self.html.search(testName, 'Raktárkészlet')
         new = self.html.getTxtFromTable('1', '6')
         self.assertEqual(price, new)
 
@@ -79,6 +94,7 @@ class RawMaterial(BaseTestCase):
         self.html.switchFrame()
         self.html.refresh()
 
+        self.html.search(testName, 'Raktárkészlet')
         quantity = self.html.getTxtFromTable(1, 3)
         self.assertEqual('10.00', quantity)
 
@@ -126,7 +142,8 @@ class RawMaterial(BaseTestCase):
         self.html.switchFrame()
 
         self.html.refresh()
-        self.stockAssert.assertMaterialExist(testName)
+        self.html.search(testName, 'Raktárkészlet')
+        self.stockAssert.assertMaterialExist(testName, 'Raktárkészlet')
 
         self.html.clickElement('Új nyersanyag felvitele', 'a')
         self.html.switchFrame('iframe')
@@ -148,6 +165,9 @@ class RawMaterial(BaseTestCase):
         testName = 'Abszint'
 
         self.createRawMaterial(testName)
+        self.html.search(testName, 'Raktárkészlet')
+        self.html.clickElement(testName, 'td',  Options(following='a'))
+        self.html.getElement('edit', 'a', Options(htmlAttribute='class')).click()
         self.html.clickTableDropdown(testName, 'Szerkeszt')
         self.html.switchFrame('iframe')
 
@@ -165,6 +185,7 @@ class RawMaterial(BaseTestCase):
         self.html.switchFrame()
         self.html.refresh()
 
+        self.html.search(testName, 'Raktárkészlet')
         qty = self.html.getTxtFromTable(1, 3)
         self.assertEqual(qty, '5.00')
 
