@@ -22,7 +22,8 @@ class BaseTestCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.driver.quit()
+        #self.driver.quit()
+        pass
 
     def login(self):
         self.html.fillInput('Felhasználónév', 'admin', selector='placeholder')
