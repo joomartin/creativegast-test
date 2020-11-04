@@ -19,7 +19,7 @@ class BarCheckings(BaseTestCase):
 
 
     def deleteChecking(self):
-        self.html.clickTableElement('barchecking', 'id', 'Admin Admin', 'a', 'Törlés')
+        self.html.clickTableElement('barchecking', 'id', 'Pult', 'a', 'Törlés', 'Standellenőrzések')
         self.html.clickElement('Igen')
         self.html.refresh()
 
@@ -38,7 +38,7 @@ class BarCheckings(BaseTestCase):
         self.html.clickElement('Lezárás', 'a')
         self.html.refresh()
 
-        self.html.clickTableElement('barchecking', 'id', 'Admin Admin', 'a', 'Megtekintés')
+        self.html.clickTableElement('barchecking', 'id', 'Pult', 'a', 'Megtekintés', 'Standellenőrzések')
 
         self.html.switchFrame('iframe')
 

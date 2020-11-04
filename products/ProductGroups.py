@@ -37,7 +37,7 @@ class ProductGroups(BaseTestCase):
         self.html.wait(2)
 
     def deleteProductGroup(self, groupName):
-        self.html.clickTableElement('product_groups', 'id', groupName, 'span', 'Törlés')
+        self.html.clickTableElement('product_groups', 'id', groupName, 'span', 'Törlés', 'Termékcsoportok')
         self.html.wait(2)
         self.html.clickElement('Igen')
 
@@ -75,7 +75,7 @@ class ProductGroups(BaseTestCase):
         self.createProductGroup(testName)
         self.html.search(testName, 'Termékcsoportok')
         self.productAssert.assertGroupExists(testName)
-        self.html.clickTableElement('product_groups', 'id', testName, 'span', 'Szerkeszt')
+        self.html.clickTableElement('product_groups', 'id', testName, 'span', 'Szerkeszt', 'Termékcsoportok')
 
         self.html.switchFrame('iframe')
 
