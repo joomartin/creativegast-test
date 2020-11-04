@@ -29,10 +29,10 @@ class BarCheckings(BaseTestCase):
 
         self.html.clickElement('Pult', 'label', Options(following='label'))
         self.html.clickElement('Indít', waitSeconds=3)
-
-        qty = int(self.html.getInput('barcheckItemValue', 'class').get_attribute('value'))
-        modqty= qty-5
-        self.html.fillInput('barcheckItemValue', str(modqty), 'class')
+        qty = int(self.html.getElement('Coca Cola 0.5 l', 'td', Options(following='td[3]//input')).get_attribute('value'))
+        modqty= qty - 5
+        self.html.getElement('Coca Cola 0.5 l', 'td', Options(following='td[3]//input')).clear()
+        self.html.getElement('Coca Cola 0.5 l', 'td', Options(following='td[3]//input')).send_keys(str(modqty))
         self.html.clickElement('Coca Cola 0.5 l', 'td', Options(following='button'))
 
         self.html.clickElement('Lezárás', 'a')
