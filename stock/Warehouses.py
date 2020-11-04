@@ -13,8 +13,6 @@ class Test(BaseTestCase):
 
         self.menu.openStocks()
         self.html.clickElement('Raktárak', 'a')
-        #self.html.getTab('Raktárak')
-        #self.html.currWindow = self.html.getElement('tabs-3', 'div', options=Options(htmlAttribute='id'))
 
     @classmethod
     def tearDownClass(self):

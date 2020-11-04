@@ -43,10 +43,9 @@ class RawMaterial(BaseTestCase):
         self.html.wait(2)
         self.html.search(name, 'Raktárkészlet')
         self.html.wait(2)
-        currWindow = self.html.getTab('Raktárkészlet')
-        self.html.clickElement(name, 'td', Options(following='a'), element = currWindow)
-        self.html.clickElement('Törlés', 'a', waitSeconds=2)
-        self.html.clickTableDropdown(name, 'Törlés')
+        #currWindow = self.html.getTab('Raktárkészlet')
+        #self.html.clickElement(name, 'td', Options(following='a'), element = currWindow)
+        self.html.clickTableDropdown(name, 'Törlés', 'Raktárkészlet')
         self.html.clickElement('Igen')
         self.html.wait(2)
         self.html.search('', 'Raktárkészlet')
@@ -62,10 +61,9 @@ class RawMaterial(BaseTestCase):
         price = '1 010.00'
 
         self.createRawMaterial(testName)
-        self.html.search(testName, 'Raktárkészlet')
-        self.html.clickElement(testName, 'td', Options(following='a'))
-        self.html.getElement('edit', 'a', Options(htmlAttribute='class')).click()
-        self.html.clickTableDropdown(testName, 'Szerkeszt')
+        #self.html.search(testName, 'Raktárkészlet')
+        #self.html.clickElement(testName, 'td', Options(following='a'))
+        self.html.clickTableDropdown(testName, 'Szerkeszt', 'Raktárkészlet')
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Bruttó beszerzési egységár', price)
@@ -104,7 +102,7 @@ class RawMaterial(BaseTestCase):
         nettValue = self.html.getTxtFromTable(1, 7)
         self.assertEqual(nettValue, '7 874.02')
 
-        self.html.clickTableDropdown(testName, 'Raktárak')
+        self.html.clickTableDropdown(testName, 'Raktárak', 'Raktárkészlet')
         self.html.switchFrame('iframe')
 
         whause = self.html.getTxtFromTable(2, 2)
@@ -165,10 +163,9 @@ class RawMaterial(BaseTestCase):
         testName = 'Abszint'
 
         self.createRawMaterial(testName)
-        self.html.search(testName, 'Raktárkészlet')
-        self.html.clickElement(testName, 'td',  Options(following='a'))
-        self.html.getElement('edit', 'a', Options(htmlAttribute='class')).click()
-        self.html.clickTableDropdown(testName, 'Szerkeszt')
+        # self.html.search(testName, 'Raktárkészlet')
+        # self.html.clickElement(testName, 'td',  Options(following='a'))
+        self.html.clickTableDropdown(testName, 'Szerkeszt', 'Raktárkészlet')
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Nyitó mennyiség', '10')
@@ -176,7 +173,7 @@ class RawMaterial(BaseTestCase):
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
 
-        self.html.clickTableDropdown(testName, 'Selejt')
+        self.html.clickTableDropdown(testName, 'Selejt', 'Raktárkészlet')
         self.html.switchFrame('iframe')
 
         self.html.clickDropdown('Raktár', 'Pult')
