@@ -1,7 +1,6 @@
 from time import sleep
 
 from selenium.webdriver.common.keys import Keys
-
 from core.Options import Options
 
 
@@ -162,19 +161,21 @@ class HtmlProxy:
         table.find_element_by_xpath('.//td[contains(., "Admin Admin")]//following::a[contains(.,"Megtekintés")]').click()
         '''
 
-    def clickTableDropdown(self, materialName, target):
+    def clickTableDropdown(self, materialName, target, tab):
+        self.search(materialName, tab)
         element = self.getElement(materialName, 'td', Options(following='td[contains(.,"Menü")]'))
         element.find_element_by_xpath('./a').click()
+        self.wait(1)
         element2 = element.find_element_by_xpath('./div')
         element2.find_element_by_xpath('./ul/li[contains(.,"' + target + '")]').click()
+        self.wait(1)
+
     def getTab(self, tab):
         # az osszes tabot tartalmazo ul lista // azert, mert mashol is elofprdulhat a tabnev
         tabList = self.getElement('ui-tabs-nav ui-state-default', 'ul', options=Options(htmlAttribute='class'))
         var = self.getElement(tab, 'a', element = tabList)
-        string = var.get_attribute('href')
-        #print(string)
-        subResult = string.split('#')
-        #print(subResult[1])
+        href = var.get_attribute('href')
+        subResult = href.split('#')
 
         result = self.getElement(subResult[1], 'div', options=Options(htmlAttribute='id'))
 
@@ -183,7 +184,6 @@ class HtmlProxy:
     def search(self, value, tab):
         currWindow = self.getTab(tab)
 
-        #currWindow = self.getElement('tabs-3', 'div', options=Options(htmlAttribute='id'))
         self.fillInput('searchinput simpleFilterTerm', value, selector = 'class', element = currWindow)
         self.clickElement('Keresés', element = currWindow)
         self.wait(2)

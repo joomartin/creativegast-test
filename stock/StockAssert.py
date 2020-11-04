@@ -39,9 +39,10 @@ class StockAssert(unittest.TestCase):
         self.assertTrue(self.html.getElement(toWh, 'td').is_displayed())
 
     def assertStock(self, materialName, whName, qty):
+        tab = 'Raktárkészlet'
         self.menu.openStocks()
 
-        self.html.clickTableDropdown(materialName,'Raktárak')
+        self.html.clickTableDropdown(materialName, 'Raktárak', tab)
         self.html.switchFrame('iframe')
         if qty != '0':
             stock = self.html.getElement(whName, 'td', Options(following='td//following::td')).text
@@ -53,7 +54,7 @@ class StockAssert(unittest.TestCase):
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
 
-        self.html.clickTableDropdown(materialName,'Készlet')
+        self.html.clickTableDropdown(materialName, 'Készlet', tab)
         self.html.switchFrame('iframe')
         if qty != '0':
             stock = self.html.getElement(whName, 'td', Options(following='td//following::td')).text
