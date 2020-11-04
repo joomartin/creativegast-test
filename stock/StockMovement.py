@@ -37,18 +37,20 @@ class StockMovement(BaseTestCase):
         self.html.switchFrame()
         self.html.refresh()
 
-    def deleteMovement(self):
-        self.html.clickTableElement('storagemove', 'id', 'Admin Admin admin', 'span', 'Töröl')
+    def deleteMovement(self, warehouse):
+        self.html.clickTableElement('storagemove', 'id', warehouse, 'span', 'Töröl', 'Raktármozgás')
         self.html.clickElement('Igen')
 
     def testCreate(self):
+        warehouse = 'Pult'
         self.createNewMovement()
-        self.deleteMovement()
+        self.deleteMovement(warehouse)
 
     def testView(self):
+        warehouse = 'Pult'
         self.createNewMovement()
 
-        self.html.clickTableElement('storagemove', 'id', 'Admin Admin admin', 'span', 'Megtekintés')
+        self.html.clickTableElement('storagemove', 'id', warehouse, 'span', 'Megtekintés', 'Raktármozgás')
 
         self.html.switchFrame('iframe')
 
@@ -66,6 +68,6 @@ class StockMovement(BaseTestCase):
         self.stockAssert.assertStock('Coca Cola 025l', 'Dugipia raktár', '11')
         self.html.clickElement('Raktármozgás', 'a')
 
-        self.deleteMovement()
+        self.deleteMovement(warehouse)
 
         self.stockAssert.assertStock('Coca Cola 025l', 'Dugipia raktár', '0')
