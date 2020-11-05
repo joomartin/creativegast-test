@@ -39,7 +39,7 @@ class HtmlProxy:
         self.clearInput(target,selector,options, element)
         elem.send_keys(value)
 
-    def clickDropdown(self, target, selectValue, selector='label'):
+    def clickDropdown(self, target, selectValue, selector='label', element=None):
         """
         Select value from dropdown button
         :param target: It's next to dropdown button
@@ -47,9 +47,14 @@ class HtmlProxy:
         :param selectValue: This is what we want to select
         :type selectValue: String
         """
-        self.getElement(target, selector, Options(following='button')).click()
-        element = self.getElement(target, selector, Options(following='ul'))
-        element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
+        if not element:
+            self.getElement(target, selector, Options(following='button')).click()
+            element = self.getElement(target, selector, Options(following='ul'))
+            element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
+        else:
+            self.getElement(target, selector, Options(following='button'), element).click()
+            element = self.getElement(target, selector, Options(following='ul'), element)
+            element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
 
     def switchFrame(self, tagName=None):
         """
@@ -64,7 +69,7 @@ class HtmlProxy:
 
         self.wait(2)
 
-    def getElement(self, target, tag, options=Options(), element = None):
+    def getElement(self, target, tag, options=Options(), element=None):
         if self.getOption(options,'uniqueSelector'):
             if element:
                 return element.find_element_by_xpath(tag)

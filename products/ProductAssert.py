@@ -21,3 +21,10 @@ class ProductAssert(unittest.TestCase):
     def asseretParentGroup(self, groupName, parentName):
         parent = self.html.getElement(groupName, 'td', Options(following='td')).text
         self.assertEqual(parent, parentName)
+
+    def assertMenuExists(self, menuName, price):
+        dispPrice = self.html.getElement(menuName, 'td', Options(following='td[3]')).text
+        self.assertEqual(price, dispPrice)
+
+    def assertDialogDisplayed(self):
+        self.assertTrue(self.html.getElement('iframe', 'body', Options(htmlAttribute='class')).is_displayed())
