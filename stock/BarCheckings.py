@@ -19,15 +19,17 @@ class BarCheckings(BaseTestCase):
 
 
     def deleteChecking(self):
-        self.html.clickTableElement('barchecking', 'id', 'Pult', 'a', 'Törlés', 'Standellenőrzések')
+        warehouse = 'Pult'
+        self.html.clickTableElement('barchecking', 'id', warehouse, 'a', 'Törlés', 'Standellenőrzések')
         self.html.clickElement('Igen')
         self.html.refresh()
 
     def testCreate(self):
+        warehouse = 'Pult'
         self.html.clickElement('Új standellenőrzés', 'a')
         self.html.switchFrame('iframe')
 
-        self.html.clickElement('Pult', 'label', Options(following='label'))
+        self.html.clickElement(warehouse, 'label', Options(following='label'))
         self.html.clickElement('Indít', waitSeconds=3)
         qty = int(self.html.getElement('Coca Cola 0.5 l', 'td', Options(following='td[3]//input')).get_attribute('value'))
         modqty= qty - 5
@@ -38,7 +40,7 @@ class BarCheckings(BaseTestCase):
         self.html.clickElement('Lezárás', 'a')
         self.html.refresh()
 
-        self.html.clickTableElement('barchecking', 'id', 'Pult', 'a', 'Megtekintés', 'Standellenőrzések')
+        self.html.clickTableElement('barchecking', 'id', warehouse, 'a', 'Megtekintés', 'Standellenőrzések')
 
         self.html.switchFrame('iframe')
 
