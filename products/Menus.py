@@ -1,3 +1,4 @@
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 
 from core.Options import Options
@@ -84,12 +85,16 @@ class Menus(BaseTestCase):
         self.html.getElement('27%', 'td', Options(following='td//input')).clear()
         self.html.getElement('27%', 'td', Options(following='td//input')).send_keys(modPrice)
         self.html.clickElement('Rögzít')
-        self.html.clickElement('Rögzít')
-        self.html.switchFrame()
-
+        self.html.wait(2)
+        try:
+            self.html.getElement('iframe hasTwoRow', 'body', Options(htmlAttribute='class'))
+        except NoSuchElementException:
+            self.html.switchFrame()
+        else:
+            self.html.clickElement('Rögzít')
+            self.html.switchFrame()
 
         self.html.refresh()
-        self.html.wait(3)
         self.html.search(modName, 'Menü')
         self.html.wait(3)
         self.productAssert.assertMenuExists(modName, '381.00')
