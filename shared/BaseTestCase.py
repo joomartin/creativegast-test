@@ -25,7 +25,7 @@ class BaseTestCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(self):
-        # self.driver.quit()
+        self.driver.quit()
         pass
 
     def login(self):

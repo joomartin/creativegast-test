@@ -1,5 +1,6 @@
 from time import sleep
 
+from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.common.keys import Keys
 from core.Options import Options
 
@@ -161,8 +162,9 @@ class HtmlProxy:
         self.wait(3)
         self.clickElement(selectValue, selectTag)
 
-    def clickTableElement(self, atrName, atrType, tdText, followingType, targetText, tab):
-        self.search(tdText, tab)
+    def clickTableElement(self, atrName, atrType, tdText, followingType, targetText, tab=None):
+        if tab != None:
+            self.search(tdText, tab)
         table = self.getElement(atrName, 'table', Options(htmlAttribute=atrType))
         table.find_element_by_xpath('.//td[contains(., "' + tdText + '")]//following::' + followingType +'[contains(.,"' + targetText +'")]').click()
         self.wait(1)
@@ -197,4 +199,8 @@ class HtmlProxy:
         self.fillInput('searchinput simpleFilterTerm', value, selector = 'class', element = currWindow)
         self.clickElement('Keresés', element = currWindow)
         self.wait(2)
+
+    def closeAllert(self):
+        a = Alert(self.driver)
+        a.accept()
 
