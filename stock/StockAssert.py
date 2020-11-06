@@ -16,11 +16,11 @@ class StockAssert(unittest.TestCase):
         self.menu = MainMenuProxy(driver)
 
     def assertWarehouseExist(self, name, tab):
-        self.assertTrue(self.html.getElementInTable(name, 'sorting_1', tab).is_displayed())
+        self.assertTrue(self.html.getElementInTable(name, 'storages', tab).is_displayed())
 
     def assertWarehouseNotExist(self, name, tab):
         with self.assertRaises(NoSuchElementException):
-            self.html.getElementInTable(name, 'sorting_1', tab)
+            self.html.getElementInTable(name, 'storages', tab)
 
     def assertDialogDisplayed(self):
         self.assertTrue(self.html.getElement('iframe', 'body', Options(htmlAttribute='class')).is_displayed())

@@ -72,7 +72,7 @@ class RawMaterial(BaseTestCase):
         self.html.refresh()
 
         self.html.search(testName, 'Raktárkészlet')
-        new = self.html.getTxtFromTable('1', '6')
+        new = self.html.getTxtFromTable('1', '6', 'components')
         self.assertEqual(price, new)
 
         self.deleteRawMaterial(testName)
@@ -93,13 +93,13 @@ class RawMaterial(BaseTestCase):
         self.html.refresh()
 
         self.html.search(testName, 'Raktárkészlet')
-        quantity = self.html.getTxtFromTable(1, 3)
+        quantity = self.html.getTxtFromTable(1, 3, 'components')
         self.assertEqual('10.00', quantity)
 
-        netPrice = self.html.getTxtFromTable(1, 5)
+        netPrice = self.html.getTxtFromTable(1, 5, 'components')
         self.assertEqual(netPrice, '787.40')
 
-        nettValue = self.html.getTxtFromTable(1, 7)
+        nettValue = self.html.getTxtFromTable(1, 7, 'components')
         self.assertEqual(nettValue, '7 874.02')
 
         self.html.clickTableDropdown(testName, 'Raktárak', 'Raktárkészlet')
@@ -185,7 +185,7 @@ class RawMaterial(BaseTestCase):
         self.html.refresh()
 
         self.html.search(testName, 'Raktárkészlet')
-        qty = self.html.getTxtFromTable(1, 3)
+        qty = self.html.getTxtFromTable(1, 3, 'components')
         self.assertEqual(qty, '5.00')
 
         self.stockAssert.assertStock(testName, 'Pult', '5')

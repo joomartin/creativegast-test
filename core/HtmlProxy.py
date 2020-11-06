@@ -108,11 +108,11 @@ class HtmlProxy:
         else:
             return './/' + tag + '[contains(.,"' + target + '")]'
 
-    def getElementInTable(self, searchText, byClass, tab):
+    def getElementInTable(self, searchText, id, tab):
         self.search(searchText, tab)
-        return self.driver.find_element_by_xpath('//td[@class="' + byClass + '"][text() = "' + searchText + '"]')
+        return self.driver.find_element_by_xpath('//table[@id="' + id + '"]//td[text() = "' + searchText + '"]')
 
-    def getTxtFromTable(self, row, col):
+    def getTxtFromTable(self, row, col, tableId = '', element = None):
         """
         We can get a value from table that depends on params
         :param row: Table row number
@@ -122,7 +122,10 @@ class HtmlProxy:
         :return: Cell value
         :rtype: String
         """
-        return self.driver.find_element_by_xpath("//table//tbody//tr[" + str(row) + "]/td[" + str(col) + "]").text
+        if tableId == '':
+            return self.driver.find_element_by_xpath('//table//tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
+        else:
+            return self.driver.find_element_by_xpath('//table[@id="' + tableId + '"]//tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
 
     def clearInput(self, target, selector='label', options=Options(), element = None):
         input  = self.getInput(target, selector, options, element)
@@ -157,6 +160,7 @@ class HtmlProxy:
         self.search(tdText, tab)
         table = self.getElement(atrName, 'table', Options(htmlAttribute=atrType))
         table.find_element_by_xpath('.//td[contains(., "' + tdText + '")]//following::' + followingType +'[contains(.,"' + targetText +'")]').click()
+        self.wait(1)
         '''
         table = self.html.getElement('barchecking', 'table', Options(htmlAttribute='id'))
         table.find_element_by_xpath('.//td[contains(., "Admin Admin")]//following::a[contains(.,"Megtekintés")]').click()
@@ -183,8 +187,8 @@ class HtmlProxy:
         return result
 
     def search(self, value, tab):
+        self.wait(2)
         currWindow = self.getTab(tab)
-
         self.fillInput('searchinput simpleFilterTerm', value, selector = 'class', element = currWindow)
         self.clickElement('Keresés', element = currWindow)
         self.wait(2)

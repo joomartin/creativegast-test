@@ -20,10 +20,10 @@ class Test(BaseTestCase):
 
     def createWarehouse(self, warehouseName):
         self.html.clickElement('Új raktár felvitele', 'a')
-        self.html.switchFrame("iframe")
+        self.html.switchFrame('iframe')
 
         self.html.fillInput('Raktár neve', warehouseName)
-        self.html.clickElement("Rögzít")
+        self.html.clickElement('Rögzít')
         self.html.switchFrame()
 
 

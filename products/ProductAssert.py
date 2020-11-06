@@ -21,3 +21,13 @@ class ProductAssert(unittest.TestCase):
     def asseretParentGroup(self, groupName, parentName):
         parent = self.html.getElement(groupName, 'td', Options(following='td')).text
         self.assertEqual(parent, parentName)
+
+    def assertCounterExists(self, name, tab):
+        self.html.search(name, tab)
+        self.assertTrue(self.html.getElement(name, 'td').is_displayed())
+        self.html.search('', tab)
+
+    def assertCounterNotExists(self, name, tab):
+        with self.assertRaises(NoSuchElementException):
+            self.html.getElementInTable(name, 'counters', tab)
+
