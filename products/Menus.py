@@ -86,6 +86,7 @@ class Menus(BaseTestCase):
         self.html.getElement('27%', 'td', Options(following='td//input')).send_keys(modPrice)
         self.html.clickElement('Rögzít')
         self.html.wait(2)
+
         try:
             self.html.getElement('iframe hasTwoRow', 'body', Options(htmlAttribute='class'))
         except NoSuchElementException:
