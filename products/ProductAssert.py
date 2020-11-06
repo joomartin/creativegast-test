@@ -22,6 +22,9 @@ class ProductAssert(unittest.TestCase):
         parent = self.html.getElement(groupName, 'td', Options(following='td')).text
         self.assertEqual(parent, parentName)
 
+    def assertMenuExists(self, menuName, price):
+        dispPrice = self.html.getElement(menuName, 'td', Options(following='td[3]')).text
+        self.assertEqual(price, dispPrice)
     def assertCounterExists(self, name, tab):
         self.html.search(name, tab)
         self.assertTrue(self.html.getElement(name, 'td').is_displayed())

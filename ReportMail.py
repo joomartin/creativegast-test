@@ -1,13 +1,12 @@
 from email.mime.text import MIMEText
 import smtplib
 
-
 fromAddr = 'dev.gr33nt3ch@gmail.com'
 toAddr = 'ricsi.sikulitest@gmail.com'
 #ide tömb megy majd a cél email címekkel
 
 
-html = open('reports/SeleniumPythonTestSummary.html')
+#html = open('reports/SeleniumPythonTestSummary.html')
 msg = MIMEText(html.read(), 'html')
 msg['From'] = fromAddr
 msg['To'] = toAddr

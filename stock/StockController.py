@@ -25,10 +25,10 @@ class StockController(Controller):
 
 
         # open the report file
-        outfile = open(dir + "\\reports\SeleniumPythonTestSummary.html", "w")
+        outfile = open(dir + "\\reports\StocksTestReport.html", "w")
 
         # configure HTMLTestRunner options
-        runner = HTMLTestRunner.HTMLTestRunner(stream=outfile, title='Test Report', description='Acceptance Tests')
+        runner = HTMLTestRunner.HTMLTestRunner(stream=outfile, title='Stock Test Report', description='Acceptance Tests')
 
         # run the suite using HTMLTestRunner
         runner.run(test_suite)
