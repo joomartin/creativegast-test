@@ -3,6 +3,7 @@ from selenium.webdriver.common.keys import Keys
 
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
+from datetime import datetime
 
 
 class Pizza(BaseTestCase):
@@ -57,13 +58,13 @@ class Pizza(BaseTestCase):
 
 
     def testCreate(self):
-        testName = 'Finom pizza'
+        testName = 'Create pizza'
         self.createPizza(testName)
         self.productAssert.assertPizzaExists(testName,'1 270.00')
         self.deletePizza(testName)
 
     def testUpdate(self):
-        testName = 'Finom pizza'
+        testName = 'Update pizza'
         newName = 'Uj pizza'
 
         self.createPizza(testName)
@@ -87,3 +88,31 @@ class Pizza(BaseTestCase):
         self.productAssert.assertPizzaExists(newName, '3 810.00')
 
         self.deletePizza(newName)
+
+    def testWasting(self):
+        testName = 'Waste pizza'
+
+        self.createPizza(testName)
+        self.productAssert.assertPizzaExists(testName, '1 270.00')
+
+        self.html.clickTableElement('customproduct-2', 'id', testName, 'a', 'Selejt', 'Pizza (testreszabható)')
+        self.html.switchFrame('iframe')
+
+        time = datetime.now().strftime('%Y-%m-%d %H:%M')
+        self.html.fillInput('Selejt darabszám', '10', 'placeholder')
+        self.html.clickElement('Minőségi kifogás')
+
+        self.html.switchFrame()
+
+        self.menu.openStatistics()
+
+        self.html.clickElement('Termék selejtezések és sztornózások', 'a')
+
+        self.html.clickElement('Mehet', waitSeconds=3)
+
+        self.productAssert.assertWastingExists(testName, time)
+
+        self.menu.openProducts()
+        self.html.clickElement('Pizza (testreszabható)', 'a')
+        self.deletePizza(testName)
+

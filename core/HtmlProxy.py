@@ -128,10 +128,16 @@ class HtmlProxy:
         :return: Cell value
         :rtype: String
         """
-        if tableId == '':
-            return self.driver.find_element_by_xpath('//table//tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
+        if element is None:
+            if tableId == '':
+                return self.driver.find_element_by_xpath('//table//tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
+            else:
+                return self.driver.find_element_by_xpath('//table[@id="' + tableId + '"]//tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
         else:
-            return self.driver.find_element_by_xpath('//table[@id="' + tableId + '"]//tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
+            if tableId == '':
+                return element.find_element_by_xpath('./table/tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
+            else:
+                return element.find_element_by_xpath('./table[@id="' + tableId + '"]/tbody/tr[' + str(row) + ']/td[' + str(col) + ']').text
 
     def clearInput(self, target, selector='label', options=Options(), element = None):
         input  = self.getInput(target, selector, options, element)
@@ -168,10 +174,6 @@ class HtmlProxy:
         table = self.getElement(atrName, 'table', Options(htmlAttribute=atrType))
         table.find_element_by_xpath('.//td[contains(., "' + tdText + '")]//following::' + followingType +'[contains(.,"' + targetText +'")]').click()
         self.wait(1)
-        '''
-        table = self.html.getElement('barchecking', 'table', Options(htmlAttribute='id'))
-        table.find_element_by_xpath('.//td[contains(., "Admin Admin")]//following::a[contains(.,"Megtekintés")]').click()
-        '''
 
     def clickTableDropdown(self, materialName, target, tab):
         self.search(materialName, tab)

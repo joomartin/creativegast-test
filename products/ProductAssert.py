@@ -40,3 +40,7 @@ class ProductAssert(unittest.TestCase):
         dispPrice = self.html.getElement(pizzaName, 'td', Options(following='td[4]')).text
         self.assertEqual(dispPrice,price)
 
+    def assertWastingExists(self, pizzaName, time):
+        exists = self.html.getElement(pizzaName, 'td').is_displayed() and self.html.getElement(time, 'td').is_displayed()
+        self.assertTrue(exists)
+

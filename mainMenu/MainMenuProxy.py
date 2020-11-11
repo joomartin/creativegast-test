@@ -27,7 +27,7 @@ class MainMenuProxy:
         self.wait()
 
     def openStatistics(self):
-        self.navigate('itemsale')
+        self.navigate('statistics/itemsale')
         self.wait()
 
     def openProduction(self):

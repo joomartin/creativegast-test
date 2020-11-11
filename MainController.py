@@ -5,5 +5,5 @@ sc = StockController()
 pc = ProductController()
 
 
-sc.run()
+#sc.run()
 pc.run()
