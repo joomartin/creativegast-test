@@ -16,7 +16,11 @@ class HtmlProxy:
 
     def getInput(self, target, selector, options=Options(), element=None):
         if selector != 'label':
-            return self.getElement(target, 'input', Options(htmlAttribute=selector), element)
+            if self.getOption(options, 'htmlAttribute'):
+                htmlAttribute = self.getOption(options, 'htmlAttribute')
+                return self.getElement(target, selector, Options(htmlAttribute=htmlAttribute), element)
+            else:
+                return self.getElement(target, 'input', Options(htmlAttribute=selector), element)
 
         options.following = 'input'
         return self.getElement(target, selector, options, element)
@@ -156,10 +160,10 @@ class HtmlProxy:
         self.driver.refresh()
         self.wait(2)
 
-    def fillAutocomplete(self, target, tag, value, selectValue, selectTag, options):
-        self.getElement(target, tag, options).send_keys(value)
+    def fillAutocomplete(self, target, tag, value, selectValue, selectTag, options, element = None):
+        self.getElement(target, tag, options, element=element).send_keys(value)
         self.wait(3)
-        self.clickElement(selectValue, selectTag)
+        self.clickElement(selectValue, selectTag, element=element)
 
     def clickTableElement(self, atrName, atrType, tdText, followingType, targetText, tab):
         self.search(tdText, tab)
