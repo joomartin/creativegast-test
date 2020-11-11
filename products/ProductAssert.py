@@ -25,6 +25,7 @@ class ProductAssert(unittest.TestCase):
     def assertMenuExists(self, menuName, price):
         dispPrice = self.html.getElement(menuName, 'td', Options(following='td[3]')).text
         self.assertEqual(price, dispPrice)
+
     def assertCounterExists(self, name, tab):
         self.html.search(name, tab)
         self.assertTrue(self.html.getElement(name, 'td').is_displayed())
@@ -34,6 +35,11 @@ class ProductAssert(unittest.TestCase):
         with self.assertRaises(NoSuchElementException):
             self.html.getElementInTable(name, 'counters', tab)
 
+    def assertProductExist(self, name, tab):
+        self.html.search(name, tab)
+        self.assertTrue(self.html.getElement(name, 'td').is_displayed())
+        self.html.search('', tab)
+        self.html.search('', tab)
     def assertPizzaExists(self, pizzaName, price):
         self.html.search(pizzaName, 'Pizza (testreszabható)')
         self.assertTrue(self.html.getElement(pizzaName, 'td').is_displayed())
