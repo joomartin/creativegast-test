@@ -122,6 +122,11 @@ class HtmlProxy:
         self.search(searchText, tab)
         return self.driver.find_element_by_xpath('//table[@id="' + id + '"]//td[text() = "' + searchText + '"]')
 
+    def getElementTxtInTable(self, searchText, target, tab, attribute='id'):
+        # self.search(searchText, tab)
+        return self.driver.find_element_by_xpath(
+            '//table[@' + attribute + '="' + target + '"]//td[text() = "' + searchText + '"]').text
+
     def getTxtFromTable(self, row, col, tableId = '', element = None):
         """
         We can get a value from table that depends on params
@@ -139,6 +144,8 @@ class HtmlProxy:
                 return self.driver.find_element_by_xpath('//table[@id="' + tableId + '"]//tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
         else:
             if tableId == '':
+                asd = element.find_element_by_xpath('./table/tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
+                print()
                 return element.find_element_by_xpath('./table/tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
             else:
                 return element.find_element_by_xpath('./table[@id="' + tableId + '"]/tbody/tr[' + str(row) + ']/td[' + str(col) + ']').text
@@ -188,6 +195,11 @@ class HtmlProxy:
         element2.find_element_by_xpath('./ul/li[contains(.,"' + target + '")]').click()
         self.wait(1)
 
+
+    def clickTab(self, tab):
+        tabList = self.getElement('ui-tabs-nav ui-state-default', 'ul', options=Options(htmlAttribute='class'))
+        self.clickElement(tab, 'a', element=tabList)
+
     def getTab(self, tab):
         # az osszes tabot tartalmazo ul lista // azert, mert mashol is elofprdulhat a tabnev
         tabList = self.getElement('ui-tabs-nav ui-state-default', 'ul', options=Options(htmlAttribute='class'))
@@ -200,11 +212,16 @@ class HtmlProxy:
         return result
 
     def search(self, value, tab):
+
         self.wait(2)
         currWindow = self.getTab(tab)
-        self.fillInput('searchinput simpleFilterTerm', value, selector = 'class', element = currWindow)
-        self.clickElement('Keresés', element = currWindow)
-        self.wait(2)
+        searchExist = self.getElement('searchinput simpleFilterTerm', 'input', options=Options(htmlAttribute='class'), element=currWindow)
+        if searchExist is not None:
+            self.fillInput('searchinput simpleFilterTerm', value, selector = 'class', element = currWindow)
+            self.clickElement('Keresés', element = currWindow)
+            self.wait(2)
+        else:
+            return
 
     def closeAllert(self):
         a = Alert(self.driver)

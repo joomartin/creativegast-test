@@ -39,7 +39,7 @@ class ProductAssert(unittest.TestCase):
         self.html.search(name, tab)
         self.assertTrue(self.html.getElement(name, 'td').is_displayed())
         self.html.search('', tab)
-        self.html.search('', tab)
+
     def assertPizzaExists(self, pizzaName, price):
         self.html.search(pizzaName, 'Pizza (testreszabható)')
         self.assertTrue(self.html.getElement(pizzaName, 'td').is_displayed())

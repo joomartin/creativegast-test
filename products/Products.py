@@ -1,5 +1,6 @@
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
+from products.ProductGroups import ProductGroups as pg
 
 class Products(BaseTestCase):
 
@@ -8,11 +9,33 @@ class Products(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
+        self.pg = pg()
+        self.tempGroup = 'ideiglenes'
+
         self.menu.openProducts()
+
+
+        #self.createTempGroup(self, self.tempGroup)
 
     @classmethod
     def tearDownClass(self):
-        super().tearDownClass()
+        #super().tearDownClass()
+        #self.deleteTempGroup(self.tempGroup)
+        pass
+
+    '''
+    @staticmethod
+    def createProductGroup(html, groupName):
+        html.clickElement('Új termékcsoport felvitele', 'a')
+
+        html.switchFrame('iframe')
+
+        html.fillInput('Termékcsoport neve', groupName)
+        html.clickDropdown('Kategória', 'Étel')
+        html.clickElement('Rögzít')
+        html.switchFrame()
+        html.wait(2)
+    '''
 
     def createProduct(self, name, group, code, counter):
         self.html.clickElement('Új termék felvitele', 'a')
@@ -48,6 +71,20 @@ class Products(BaseTestCase):
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
 
+    '''
+    def createTempGroup(self, name):
+        self.html.clickTab('Termékcsoportok')
+        #self.pg.createProductGroup(name)
+        self.createProductGroup(self.html, name)
+        self.html.clickTab('Termékek')
+
+
+    def deleteTempGroup(self, name):
+        self.html.clickTab('Termékcsoportok')
+        self.pg.deleteProductGroup(name)
+        self.html.clickTab('Termékek')
+    '''
+
     def deleteProduct(self, name):
         self.html.refresh()
 
@@ -55,10 +92,11 @@ class Products(BaseTestCase):
         self.html.clickElement('Igen', waitSeconds=1)
         self.html.search('', 'Termékek')
 
+
     def testCreate(self):
         name = 'bestProduct'
 
-        self.createProduct(name, 'Szeszes italok', 99, '1asd')
+        self.createProduct(name, 'ideiglenes', 99, '1asd')
         self.productAssert.assertProductExist(name, 'Termékek')
         self.deleteProduct(name)
 
@@ -68,9 +106,12 @@ class Products(BaseTestCase):
         editedGroup = 'Üdítők'
         group = 'Szeszes italok'
         editedCode = '11'
+        editedPlace = 'Pizza'
         editedCounter = ''
         editedCounterState = 11
         counter = '1asd'
+        editedMaterial1 = 'Coca Cola 0.5 l'
+
 
 
         self.createProduct(name, group, 99, counter)
@@ -78,7 +119,7 @@ class Products(BaseTestCase):
         self.html.clickTableElement('products', 'id', name, 'a', 'Szerkeszt', 'Termékek')
         self.html.switchFrame('iframe')
 
-        self.html.clickDropdown('Nyomtatási részleg', 'Pizza')
+        self.html.clickDropdown('Nyomtatási részleg', editedPlace)
         self.html.switchFrame('iframe')
 
         self.html.clickElement(group, 'a')
@@ -93,30 +134,38 @@ class Products(BaseTestCase):
         #self.html.fillInput('Számláló állás', editedCounterState)
 
         self.html.clickElement('Törlés')
-        self.html.fillAutocomplete('componentName', 'input', 'Coca', 'Coca Cola 0.5 l', 'li',
+        self.html.fillAutocomplete('componentName', 'input', 'Coca', editedMaterial1, 'li',
                                    Options(htmlAttribute='id'))
         self.html.fillInput('componentQty', 1, 'input', options=Options(htmlAttribute='id'))
         self.html.clickElement('Hozzáad')
-
         self.html.clickElement('Rögzít')
-        self.html.search('', 'Termékek')
 
         self.productAssert.assertProductExist(editedName, 'Termékek')
 
         self.html.search(editedName, 'Termékek')
-        self.html.clickTableElement('products', 'id', name, 'a', 'Részletek', 'Termékek')
+        self.html.clickTableElement('products', 'id', editedName, 'a', 'Részletek', 'Termékek')
         self.html.switchFrame('iframe')
 
-        detailsTable = self.html.getElement('details', 'table', options=Options(htmlAttribute='class'))
 
+        dName =  self.html.getElementTxtInTable(editedName, 'details', 'Termékek', attribute='class')
+        dPlace = self.html.getElementTxtInTable(editedPlace, 'details', 'Termékek', attribute='class')
+        dGroup = self.html.getElementTxtInTable(editedGroup, 'details', 'Termékek', attribute='class')
+        dCode = self.html.getElementTxtInTable(editedCode, 'details', 'Termékek', attribute='class')
+        self.assertEqual(dName, editedName)
+        self.assertEqual(dPlace, editedPlace)
+        self.assertEqual(dGroup, editedGroup)
+        self.assertEqual(dCode, editedCode)
 
+        cName =  self.html.getElementTxtInTable(editedMaterial1, 'components', 'Termékek', attribute='class')
+        self.assertEqual(cName, editedMaterial1)
+
+        self.html.switchFrame()
+        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+        self.html.search('', 'Termékek')
 
 
 
     def testDetails(self):
-        pass
-
-    def testClone(self):
         pass
 
 

@@ -6,6 +6,7 @@ from selenium.webdriver.common.keys import Keys
 from core.HtmlProxy import HtmlProxy
 from core.Options import Options
 from mainMenu.MainMenuProxy import MainMenuProxy
+from products.ProductAssert import ProductAssert
 from stock.StockAssert import StockAssert
 from Config import read_section
 from shared.BaseTestCase import BaseTestCase
@@ -19,7 +20,7 @@ class ProductGroups(BaseTestCase):
         super().login(self)
 
         self.menu.openProducts()
-        self.html.clickElement('Termékcsoportok', 'a')
+        self.html.clickTab('Termékcsoportok')
 
     @classmethod
     def tearDownClass(self):
