@@ -3,14 +3,16 @@ from selenium import webdriver
 from core.HtmlProxy import HtmlProxy
 from mainMenu.MainMenuProxy import MainMenuProxy
 from core.Options import Options
+from stock.StockAssert import StockAssert
 
 class DataSeed():
 
-    def __init__(self):
-        self.driver = webdriver.Chrome(executable_path='C:/webdrivers/chromedriver.exe')
-
+    def __init__(self, driver):
+        self.driver = driver
         self.html = HtmlProxy(self.driver)
         self.menu = MainMenuProxy(self.driver)
+        self.stockAssert = StockAssert(self.html, self.driver)
+
 
     def createRawMaterial(self, materialName, me, wareHouse):
         self.menu.openStocks()

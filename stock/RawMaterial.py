@@ -9,6 +9,7 @@ from mainMenu.MainMenuProxy import MainMenuProxy
 from stock.StockAssert import StockAssert
 from Config import read_section
 from shared.BaseTestCase import BaseTestCase
+from shared.DataSeed import DataSeed
 
 
 class RawMaterial(BaseTestCase):
@@ -19,6 +20,7 @@ class RawMaterial(BaseTestCase):
         super().login(self)
 
         self.menu.openStocks()
+        self.data = DataSeed(self.driver)
 
     @classmethod
     def tearDownClass(self):
@@ -53,14 +55,15 @@ class RawMaterial(BaseTestCase):
 
     def testCreate(self):
         testName = 'Abszint'
-        self.createRawMaterial(testName)
-        self.deleteRawMaterial(testName)
+        self.data.createRawMaterial(testName, 'liter', 'Pult')
+        self.data.deleteRawMaterial(testName)
+
 
     def testUpdate(self):
         testName = 'Abszint'
         price = '1 010.00'
 
-        self.createRawMaterial(testName)
+        self.data.createRawMaterial(testName, 'liter', 'Pult')
         #self.html.search(testName, 'Raktárkészlet')
         #self.html.clickElement(testName, 'td', Options(following='a'))
         self.html.clickTableDropdown(testName, 'Szerkeszt', 'Raktárkészlet')
@@ -164,7 +167,7 @@ class RawMaterial(BaseTestCase):
     def testWastingRawMaterial(self):
         testName = 'Abszint'
 
-        self.createRawMaterial(testName)
+        self.data.createRawMaterial(testName, 'liter', 'Pult')
         # self.html.search(testName, 'Raktárkészlet')
         # self.html.clickElement(testName, 'td',  Options(following='a'))
         self.html.clickTableDropdown(testName, 'Szerkeszt', 'Raktárkészlet')
@@ -190,7 +193,7 @@ class RawMaterial(BaseTestCase):
 
         self.stockAssert.assertStock(testName, 'Pult', '5')
 
-        self.deleteRawMaterial(testName)
+        self.data.deleteRawMaterial(testName)
 
         self.stockAssert.assertDeletedMaterial(testName, 'Pult',)
 
