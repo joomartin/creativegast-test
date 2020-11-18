@@ -26,12 +26,12 @@ class RawMaterial(BaseTestCase):
     def tearDownClass(self):
         super().tearDownClass()
 
-    def createRawMaterial(self, materialName):
+    def createRawMaterial(self, materialName, ME):
         self.html.clickElement('Új nyersanyag felvitele', 'a')
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Nyersanyag neve', materialName)
-        self.html.clickDropdown('ME', 'liter')
+        self.html.clickDropdown('ME', ME)
         self.html.clickDropdown('Raktár', 'Pult')
         self.html.clickElement('Rögzít')
 
@@ -61,6 +61,7 @@ class RawMaterial(BaseTestCase):
 
     def testUpdate(self):
         testName = 'Abszint'
+        ME = 'liter'
         price = '1 010.00'
 
         self.data.createRawMaterial(testName, 'liter', 'Pult')
@@ -166,6 +167,7 @@ class RawMaterial(BaseTestCase):
 
     def testWastingRawMaterial(self):
         testName = 'Abszint'
+        ME = 'liter'
 
         self.data.createRawMaterial(testName, 'liter', 'Pult')
         # self.html.search(testName, 'Raktárkészlet')
@@ -199,8 +201,10 @@ class RawMaterial(BaseTestCase):
 
     def testOpeningButton(self):
         testName = 'Abszint'
+        ME = 'liter'
         qty = '100'
-        self.createRawMaterial(testName)
+
+        self.createRawMaterial(testName, ME)
 
         self.html.clickElement(testName, 'td', Options(following='a'))
         self.html.clickElement('Nyitókészlet', 'a')
