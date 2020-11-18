@@ -51,8 +51,6 @@ class ProductGroups(BaseTestCase):
 
 
     def testCreateWithParentGroup(self):
-        pass
-        '''
         testName = 'testGroupWithParent'
         self.html.clickElement('Új termékcsoport felvitele', 'a')
 
@@ -68,7 +66,6 @@ class ProductGroups(BaseTestCase):
         self.productAssert.asseretParentGroup(testName, 'Ételek')
 
         self.deleteProductGroup(testName)
-        '''
 
     def testUpdateGroup(self):
         testName = 'testGroup'
