@@ -18,29 +18,6 @@ class Test(BaseTestCase):
     def tearDownClass(self):
         super().tearDownClass()
 
-    def createWarehouse(self, warehouseName):
-        self.html.clickElement('Új raktár felvitele', 'a')
-        self.html.switchFrame('iframe')
-
-        self.html.fillInput('Raktár neve', warehouseName)
-        self.html.clickElement('Rögzít')
-        self.html.switchFrame()
-
-
-    def deleteWarehouse(self, warehouseName):
-        self.html.refresh()
-
-        self.html.wait(2)
-        self.html.search(warehouseName, 'Raktárak')
-        self.html.wait(2)
-        currWindow = self.html.getElement('tabs-3', 'div', options=Options(htmlAttribute='id'))
-        # itt azert adjuk at a currWindow-t, hogy az adott oldalon keressen a td-k kozott
-        self.html.clickElement(warehouseName, 'td', Options(following='a'), element = currWindow)
-        self.html.wait(2)
-        self.html.clickElement('Igen')
-        self.html.wait(2)
-        self.html.search('', 'Raktárak')
-        self.html.wait(2)
 
 
     def testCreateWarehouse(self):

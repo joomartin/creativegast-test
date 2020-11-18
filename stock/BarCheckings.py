@@ -10,32 +10,36 @@ class BarCheckings(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
+        self.data.createWarehouse('Araktár')
+        self.data.createRawMaterialWithOpening('Abszint', '1000', '10', 'Araktár')
         self.menu.openStocks()
         self.html.clickElement('Standellenőrzések', 'a')
 
     @classmethod
     def tearDownClass(self):
+        self.data.deleteRawMaterial('Abszint')
+        self.data.deleteWarehouse('Araktár')
         super().tearDownClass()
 
 
     def deleteChecking(self):
-        warehouse = 'Pult'
+        warehouse = 'Araktár'
         self.html.clickTableElement('barchecking', 'id', warehouse, 'a', 'Törlés', 'Standellenőrzések')
         self.html.clickElement('Igen')
         self.html.refresh()
 
     def testCreate(self):
-        warehouse = 'Pult'
+        warehouse = 'Araktár'
         self.html.clickElement('Új standellenőrzés', 'a')
         self.html.switchFrame('iframe')
 
         self.html.clickElement(warehouse, 'label', Options(following='label'))
         self.html.clickElement('Indít', waitSeconds=3)
-        qty = int(self.html.getElement('Coca Cola 0.5 l', 'td', Options(following='td[3]//input')).get_attribute('value'))
+        qty = int(self.html.getElement('Abszint', 'td', Options(following='td[3]//input')).get_attribute('value'))
         modqty= qty - 5
-        self.html.getElement('Coca Cola 0.5 l', 'td', Options(following='td[3]//input')).clear()
-        self.html.getElement('Coca Cola 0.5 l', 'td', Options(following='td[3]//input')).send_keys(str(modqty))
-        self.html.clickElement('Coca Cola 0.5 l', 'td', Options(following='button'))
+        self.html.getElement('Abszint', 'td', Options(following='td[3]//input')).clear()
+        self.html.getElement('Abszint', 'td', Options(following='td[3]//input')).send_keys(str(modqty))
+        self.html.clickElement('Abszint', 'td', Options(following='button'))
 
         self.html.clickElement('Lezárás', 'a')
         self.html.refresh()
@@ -47,16 +51,16 @@ class BarCheckings(BaseTestCase):
         summMiss = self.html.getTxtFromTable(3, 4)
         self.assertEqual(summMiss, '-5')
 
-        colaMiss = self.html.getTxtFromTable(3, 4)
-        self.assertEqual(colaMiss, '-5')
+        matMiss = self.html.getTxtFromTable(3, 4)
+        self.assertEqual(matMiss, '-5')
 
         self.html.clickElement('Mégsem')
         self.html.switchFrame()
 
-        self.stockAssert.assertStock('Coca Cola 0.5 l', 'Pult', str(modqty))
+        self.stockAssert.assertStock('Abszint', 'Araktár', str(modqty))
         self.html.clickElement('Standellenőrzések', 'a')
 
         self.deleteChecking()
 
-        self.stockAssert.assertStock('Coca Cola 0.5 l', 'Pult', str(qty))
+        self.stockAssert.assertStock('Abszint', 'Araktár', str(qty))
 

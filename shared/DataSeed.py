@@ -29,6 +29,19 @@ class DataSeed():
         self.html.refresh()
         self.stockAssert.assertMaterialExist(materialName, 'Raktárkészlet')
 
+    def createRawMaterialWithOpening(self, testName, grossPrice, openingQty, whName):
+        self.menu.openStocks()
+        self.html.clickElement('Új nyersanyag felvitele', 'a')
+        self.html.switchFrame('iframe')
+
+        self.html.fillInput('Nyersanyag neve', testName)
+        self.html.fillInput('Bruttó beszerzési egységár', grossPrice)
+        self.html.clickDropdown('ME', 'liter')
+        self.html.fillInput('Nyitó mennyiség', openingQty)
+        self.html.clickDropdown('Raktár', whName)
+        self.html.clickElement('Rögzít')
+        self.html.switchFrame()
+
     def deleteRawMaterial(self, name):
         self.menu.openStocks()
 
@@ -50,6 +63,8 @@ class DataSeed():
         self.html.fillInput('Raktár neve', warehouseName)
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
+
+
 
     def deleteWarehouse(self, warehouseName):
         self.menu.openStocks()

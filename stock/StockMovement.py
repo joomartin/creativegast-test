@@ -10,11 +10,17 @@ class StockMovement(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        self.menu.openStocks()
+        self.data.createWarehouse('Araktár')
+        self.data.createWarehouse('Braktár')
+        self.data.createRawMaterialWithOpening('Abszint', '1000', '10', 'Araktár')
+
         self.html.clickElement('Raktármozgás', 'a')
 
     @classmethod
     def tearDownClass(self):
+        self.data.deleteRawMaterial('Abszint')
+        self.data.deleteWarehouse('Araktár')
+        self.data.deleteWarehouse('Braktár')
         super().tearDownClass()
 
     def createNewMovement(self):
@@ -23,14 +29,14 @@ class StockMovement(BaseTestCase):
         self.html.clickElement('Új')
         self.html.switchFrame('iframe')
 
-        self.html.clickDropdown('Forrás raktár','Pult')
+        self.html.clickDropdown('Forrás raktár','Araktár')
         self.html.wait()
-        self.html.clickDropdown('Cél raktár', 'Dugipia raktár')
+        self.html.clickDropdown('Cél raktár', 'Braktár')
 
-        self.html.fillAutocomplete('Nyersanyag', 'input', 'Coca','Coca Cola 025l', 'li', Options(htmlAttribute='data-title'))
+        self.html.fillAutocomplete('Nyersanyag', 'input', 'Abszint','Abszint', 'li', Options(htmlAttribute='data-title'))
         self.html.getElement('Maximum', 'input', Options(htmlAttribute='data-title')).click()
         self.html.wait()
-        self.html.fillInput('Mennyiség', '11', 'data-title')
+        self.html.fillInput('Mennyiség', '5', 'data-title')
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
 
@@ -42,12 +48,12 @@ class StockMovement(BaseTestCase):
         self.html.clickElement('Igen')
 
     def testCreate(self):
-        warehouse = 'Pult'
+        warehouse = 'Araktár'
         self.createNewMovement()
         self.deleteMovement(warehouse)
 
     def testView(self):
-        warehouse = 'Pult'
+        warehouse = 'Araktár'
         self.createNewMovement()
 
         self.html.clickTableElement('storagemove', 'id', warehouse, 'span', 'Megtekintés', 'Raktármozgás')
@@ -55,19 +61,19 @@ class StockMovement(BaseTestCase):
         self.html.switchFrame('iframe')
 
         materialName = self.html.getTxtFromTable(2, 1)
-        self.assertEqual(materialName, 'Coca Cola 025l')
+        self.assertEqual(materialName, 'Abszint')
 
         qty = self.html.getTxtFromTable(2, 2)
-        self.assertEqual(qty, '11',)
+        self.assertEqual(qty, '5',)
 
         me = self.html.getTxtFromTable(2, 3)
-        self.assertEqual(me, 'db')
+        self.assertEqual(me, 'liter')
 
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
-        self.stockAssert.assertStock('Coca Cola 025l', 'Dugipia raktár', '11')
+        self.stockAssert.assertStock('Abszint', 'Braktár', '5')
         self.html.clickElement('Raktármozgás', 'a')
 
         self.deleteMovement(warehouse)
 
-        self.stockAssert.assertStock('Coca Cola 025l', 'Dugipia raktár', '0')
+        self.stockAssert.assertStock('Abszint', 'Braktár', '0')
