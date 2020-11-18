@@ -9,7 +9,6 @@ from mainMenu.MainMenuProxy import MainMenuProxy
 from stock.StockAssert import StockAssert
 from Config import read_section
 from shared.BaseTestCase import BaseTestCase
-from shared.DataSeed import DataSeed
 
 
 class RawMaterial(BaseTestCase):
@@ -20,7 +19,6 @@ class RawMaterial(BaseTestCase):
         super().login(self)
 
         self.menu.openStocks()
-        self.data = DataSeed(self.driver)
         self.data.createWarehouse('Araktár')
 
     @classmethod
