@@ -220,6 +220,7 @@ class HtmlProxy:
             self.fillInput('searchinput simpleFilterTerm', value, selector = 'class', element = currWindow)
             self.clickElement('Keresés', element = currWindow)
             self.wait(2)
+            
         else:
             return
 
