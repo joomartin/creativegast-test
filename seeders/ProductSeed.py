@@ -3,7 +3,7 @@ from mainMenu.MainMenuProxy import MainMenuProxy
 from core.Options import Options
 from stock.StockAssert import StockAssert
 
-class ProductSeed():
+class ProductSeed:
 
     def __init__(self, driver):
         self.driver = driver
@@ -153,13 +153,14 @@ class ProductSeed():
         self.html.clickElement('Rögzít')
         self.html.switchFrame('iframe')
 
-        '''
+
         places = self.html.getElement('Eladási ár (Kötelező)', 'td')
         self.html.clickElement('Ár megadása', element=places)
         self.html.fillInput('Nettó', 100)
-        self.html.clickElement('Rögzít')
+        self.html.wait(1)
+        self.html.clickElement('taxPriceSave', 'a', options=Options(htmlAttribute='id'))
         self.html.wait(2)
-        '''
+
 
         self.html.fillAutocomplete('componentName', 'input', component, component, 'li', Options(htmlAttribute='id'))
         self.html.fillInput('componentQty', 2, 'input', options=Options(htmlAttribute='id'))
