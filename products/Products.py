@@ -58,18 +58,20 @@ class Products(BaseTestCase):
         self.html.clickElement('Rögzít')
         self.html.switchFrame('iframe')
 
-        '''
+
         places = self.html.getElement('Eladási ár (Kötelező)', 'td')
         self.html.clickElement('Ár megadása', element=places)
         self.html.fillInput('Nettó', 100)
-        self.html.clickElement('Rögzít')
         self.html.wait(2)
-        '''
+        self.html.clickElement('taxPriceSave', 'a', options=Options(htmlAttribute='id'))
+        self.html.wait(5)
+
 
         self.html.fillAutocomplete('componentName', 'input', 'Captain', 'Captain Morgan 0.7 l', 'li', Options(htmlAttribute='id'))
         self.html.fillInput('componentQty', 2, 'input', options=Options(htmlAttribute='id'))
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
+
 
     '''
     def createTempGroup(self, name):
@@ -96,7 +98,7 @@ class Products(BaseTestCase):
     def testCreate(self):
         name = 'bestProduct'
 
-        self.createProduct(name, 'ideiglenes', 99, '1asd')
+        self.createProduct(name, 'Szeszes italok', 99, '1asd')
         self.productAssert.assertProductExist(name, 'Termékek')
         self.deleteProduct(name)
 
@@ -110,6 +112,7 @@ class Products(BaseTestCase):
         editedCounter = ''
         editedCounterState = 11
         counter = '1asd'
+        material = 'Captain Morgan 0.7 l'
         editedMaterial1 = 'Coca Cola 0.5 l'
 
 
@@ -133,7 +136,7 @@ class Products(BaseTestCase):
         #self.html.fillInput('Számláló neve', editedCounter)
         #self.html.fillInput('Számláló állás', editedCounterState)
 
-        self.html.clickElement('Törlés')
+        #self.html.clickElement('Törlés')
         self.html.fillAutocomplete('componentName', 'input', 'Coca', editedMaterial1, 'li',
                                    Options(htmlAttribute='id'))
         self.html.fillInput('componentQty', 1, 'input', options=Options(htmlAttribute='id'))
@@ -158,6 +161,8 @@ class Products(BaseTestCase):
 
         cName =  self.html.getElementTxtInTable(editedMaterial1, 'components', 'Termékek', attribute='class')
         self.assertEqual(cName, editedMaterial1)
+        cName2 = self.html.getElementTxtInTable(material, 'components', 'Termékek', attribute='class')
+        self.assertEqual(cName2, material)
 
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))

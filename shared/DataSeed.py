@@ -5,7 +5,7 @@ from mainMenu.MainMenuProxy import MainMenuProxy
 from core.Options import Options
 from stock.StockAssert import StockAssert
 
-class DataSeed():
+class DataSeed:
 
     def __init__(self, driver):
         self.driver = driver

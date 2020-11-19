@@ -67,6 +67,7 @@ class TestData:
     Product = {
         'Name': 'TestProduct',
         'Code': '99',
+        'NetPrice': '100',
         'ComponentName': 'TestComponent',
         'Quantity': '2',
         'ModifiedName': 'ModifiedProduct',
