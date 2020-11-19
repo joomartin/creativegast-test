@@ -12,15 +12,27 @@ class Products(BaseTestCase):
         self.pg = pg()
         self.tempGroup = 'ideiglenes'
 
+        self.stockseed.createWarehouse('Araktár')
+        self.stockseed.createRawMaterial('RawMaterial', 'liter', 'Araktár')
+        self.stockseed.createRawMaterial('Modified', 'liter', 'Araktár')
+        self.productseed.createCounter('ProductCounter', 0)
+        self.productseed.createProductGroup('TestGroup')
+        self.productseed.createProductGroup('ModGroup')
         self.menu.openProducts()
 
 
-        #self.createTempGroup(self, self.tempGroup)
+
 
     @classmethod
     def tearDownClass(self):
-        #super().tearDownClass()
-        #self.deleteTempGroup(self.tempGroup)
+        self.stockseed.deleteRawMaterial('RawMaterial')
+        self.stockseed.deleteRawMaterial('Modified')
+        self.stockseed.deleteWarehouse('Araktár')
+        self.productseed.deleteCounter('ProductCounter')
+        self.productseed.deleteProductGroup('TestGroup')
+        self.productseed.deleteProductGroup('ModGroup')
+        super().tearDownClass()
+
         pass
 
     '''
@@ -37,68 +49,12 @@ class Products(BaseTestCase):
         html.wait(2)
     '''
 
-    def createProduct(self, name, group, code, counter):
-        self.html.clickElement('Új termék felvitele', 'a')
-        self.html.switchFrame('iframe')
-
-        self.html.clickDropdown('Nyomtatási részleg', 'Pult')
-        self.html.switchFrame('iframe')
-
-        self.html.clickElement(group, 'a')
-        self.html.clickElement('Rögzít')
-
-        self.html.switchFrame('iframe')
-        self.html.fillInput('Termék neve', name)
-        self.html.fillInput('Kód', code)
-
-        self.html.clickElement('p_counters', 'input', Options(htmlAttribute='id'), waitSeconds = 1)
-        self.html.switchFrame('iframe')
-
-        self.html.clickElement(counter, 'td')
-        self.html.clickElement('Rögzít')
-        self.html.switchFrame('iframe')
-
-        '''
-        places = self.html.getElement('Eladási ár (Kötelező)', 'td')
-        self.html.clickElement('Ár megadása', element=places)
-        self.html.fillInput('Nettó', 100)
-        self.html.clickElement('Rögzít')
-        self.html.wait(2)
-        '''
-
-        self.html.fillAutocomplete('componentName', 'input', 'Captain', 'Captain Morgan 0.7 l', 'li', Options(htmlAttribute='id'))
-        self.html.fillInput('componentQty', 2, 'input', options=Options(htmlAttribute='id'))
-        self.html.clickElement('Hozzáad')
-        self.html.clickElement('Rögzít')
-
-    '''
-    def createTempGroup(self, name):
-        self.html.clickTab('Termékcsoportok')
-        #self.pg.createProductGroup(name)
-        self.createProductGroup(self.html, name)
-        self.html.clickTab('Termékek')
-
-
-    def deleteTempGroup(self, name):
-        self.html.clickTab('Termékcsoportok')
-        self.pg.deleteProductGroup(name)
-        self.html.clickTab('Termékek')
-    '''
-
-    def deleteProduct(self, name):
-        self.html.refresh()
-
-        self.html.clickTableElement('products', 'id', name, 'a', 'Törlés', 'Termékek')
-        self.html.clickElement('Igen', waitSeconds=1)
-        self.html.search('', 'Termékek')
-
-
     def testCreate(self):
         name = 'bestProduct'
 
-        self.createProduct(name, 'ideiglenes', 99, '1asd')
+        self.productseed.createProduct(name, 'TestGroup', 99, 'ProductCounter', 'RawMaterial')
         self.productAssert.assertProductExist(name, 'Termékek')
-        self.deleteProduct(name)
+        self.productseed.deleteProduct(name)
 
     def testEdit(self):
         name = 'bestProduct'
@@ -109,12 +65,11 @@ class Products(BaseTestCase):
         editedPlace = 'Pizza'
         editedCounter = ''
         editedCounterState = 11
-        counter = '1asd'
-        editedMaterial1 = 'Coca Cola 0.5 l'
+        counter = 'ProductCounter'
 
 
 
-        self.createProduct(name, group, 99, counter)
+        self.productseed.createProduct(name, group, 99, counter, 'RawMaterial')
 
         self.html.clickTableElement('products', 'id', name, 'a', 'Szerkeszt', 'Termékek')
         self.html.switchFrame('iframe')
@@ -134,7 +89,7 @@ class Products(BaseTestCase):
         #self.html.fillInput('Számláló állás', editedCounterState)
 
         self.html.clickElement('Törlés')
-        self.html.fillAutocomplete('componentName', 'input', 'Coca', editedMaterial1, 'li',
+        self.html.fillAutocomplete('componentName', 'input', 'Modified', 'Modified', 'li',
                                    Options(htmlAttribute='id'))
         self.html.fillInput('componentQty', 1, 'input', options=Options(htmlAttribute='id'))
         self.html.clickElement('Hozzáad')
@@ -156,12 +111,14 @@ class Products(BaseTestCase):
         self.assertEqual(dGroup, editedGroup)
         self.assertEqual(dCode, editedCode)
 
-        cName =  self.html.getElementTxtInTable(editedMaterial1, 'components', 'Termékek', attribute='class')
-        self.assertEqual(cName, editedMaterial1)
+        cName =  self.html.getElementTxtInTable('Modified', 'components', 'Termékek', attribute='class')
+        self.assertEqual(cName, 'Modified')
 
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
         self.html.search('', 'Termékek')
+
+        self.productseed.deleteProduct('editedProduct')
 
 
 

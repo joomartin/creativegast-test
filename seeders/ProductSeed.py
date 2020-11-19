@@ -130,7 +130,7 @@ class ProductSeed():
         self.html.clickElement('Igen')
 
 
-    def createProduct(self, name, group, code, counter):
+    def createProduct(self, name, group, code, counter, component):
         self.menu.openProducts()
 
         self.html.clickElement('Új termék felvitele', 'a')
@@ -161,7 +161,7 @@ class ProductSeed():
         self.html.wait(2)
         '''
 
-        self.html.fillAutocomplete('componentName', 'input', 'Captain', 'Captain Morgan 0.7 l', 'li', Options(htmlAttribute='id'))
+        self.html.fillAutocomplete('componentName', 'input', component, component, 'li', Options(htmlAttribute='id'))
         self.html.fillInput('componentQty', 2, 'input', options=Options(htmlAttribute='id'))
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
@@ -174,3 +174,23 @@ class ProductSeed():
         self.html.clickTableElement('products', 'id', name, 'a', 'Törlés', 'Termékek')
         self.html.clickElement('Igen', waitSeconds=1)
         self.html.search('', 'Termékek')
+
+    def createCounter(self, name, position):
+        self.menu.openProducts()
+        self.html.clickElement('Számlálók', 'a')
+        self.html.clickElement('Új számláló felvitele', 'a')
+        self.html.switchFrame('iframe')
+
+        self.html.fillInput('Számláló neve', name)
+        self.html.fillInput('Számláló állás', position)
+        self.html.clickElement('Rögzít')
+        self.html.switchFrame()
+
+    def deleteCounter(self, name):
+        self.menu.openProducts()
+        self.html.clickElement('Számlálók', 'a')
+        self.html.refresh()
+
+        self.html.clickTableElement('counters', 'id', name, 'a', 'Törlés', 'Számlálók')
+        self.html.clickElement('Igen', waitSeconds=1)
+        self.html.search('', 'Számlálók')

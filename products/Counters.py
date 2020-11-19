@@ -14,34 +14,18 @@ class Counters(BaseTestCase):
     def tearDownClass(self):
         super().tearDownClass()
 
-    def createCounter(self, name, position):
-        self.html.clickElement('Új számláló felvitele', 'a')
-        self.html.switchFrame('iframe')
-
-        self.html.fillInput('Számláló neve', name)
-        self.html.fillInput('Számláló állás', position)
-        self.html.clickElement('Rögzít')
-        self.html.switchFrame()
-
-    def deleteCounter(self, name):
-        self.html.refresh()
-
-        self.html.clickTableElement('counters', 'id', name, 'a', 'Törlés', 'Számlálók')
-        self.html.clickElement('Igen', waitSeconds=1)
-        self.html.search('', 'Számlálók')
-
     def testCreate(self):
         counter = 'test_counter'
         position = 3
 
-        self.createCounter(counter, position)
+        self.productseed.createCounter(counter, position)
         self.productAssert.assertCounterExists(counter, 'Számlálók')
         self.html.search(counter, 'Számlálók')
         obsPos = self.html.getTxtFromTable('1', '3', 'counters')
         self.assertEqual(int(float(obsPos)), position)
         self.html.search('', 'Számlálók')
 
-        self.deleteCounter(counter)
+        self.productseed.deleteCounter(counter)
         self.productAssert.assertCounterNotExists(counter, 'Számlálók')
         self.html.search('', 'Számlálók')
 
@@ -49,7 +33,7 @@ class Counters(BaseTestCase):
         counter = 'test_counter'
         position = 3
 
-        self.createCounter(counter, position)
+        self.productseed.createCounter(counter, position)
 
         self.html.clickTableElement('counters', 'id', counter, 'a', 'Részletek', 'Számlálók')
         self.html.switchFrame('iframe')
@@ -59,7 +43,7 @@ class Counters(BaseTestCase):
         obsPos = self.html.getTxtFromTable('2', '1')
         self.assertEqual(int(obsPos), position)
 
-        self.deleteCounter(counter)
+        self.productseed.deleteCounter(counter)
         self.html.search('', 'Számlálók')
 
     def testEdit(self):
@@ -69,7 +53,7 @@ class Counters(BaseTestCase):
         newCounter = 'new_counter'
         newPosition = 7
 
-        self.createCounter(counter, position)
+        self.productseed.createCounter(counter, position)
 
         self.html.clickTableElement('counters', 'id', counter, 'a', 'Szerkeszt', 'Számlálók')
         self.html.switchFrame('iframe')
@@ -84,5 +68,5 @@ class Counters(BaseTestCase):
         obsPos = self.html.getTxtFromTable('1', '3', 'counters')
         self.assertEqual(int(float(obsPos)), newPosition)
 
-        self.deleteCounter(newCounter)
+        self.productseed.deleteCounter(newCounter)
         self.html.search('', 'Számlálók')

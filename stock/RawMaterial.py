@@ -26,32 +26,7 @@ class RawMaterial(BaseTestCase):
         self.stockseed.deleteWarehouse('Araktár')
         super().tearDownClass()
 
-    def createRawMaterial(self, materialName, ME):
-        self.html.clickElement('Új nyersanyag felvitele', 'a')
-        self.html.switchFrame('iframe')
 
-        self.html.fillInput('Nyersanyag neve', materialName)
-        self.html.clickDropdown('ME', ME)
-        self.html.clickDropdown('Raktár', 'Pult')
-        self.html.clickElement('Rögzít')
-
-        self.html.switchFrame()
-        self.html.refresh()
-        self.stockAssert.assertMaterialExist(materialName, 'Raktárkészlet')
-
-    def deleteRawMaterial(self, name):
-        self.html.refresh()
-
-        self.html.wait(2)
-        self.html.search(name, 'Raktárkészlet')
-        self.html.wait(2)
-        #currWindow = self.html.getTab('Raktárkészlet')
-        #self.html.clickElement(name, 'td', Options(following='a'), element = currWindow)
-        self.html.clickTableDropdown(name, 'Törlés', 'Raktárkészlet')
-        self.html.clickElement('Igen')
-        self.html.wait(2)
-        self.html.search('', 'Raktárkészlet')
-        self.html.wait(2)
 
     def testCreate(self):
         testName = 'Abszint'
