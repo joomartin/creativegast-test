@@ -29,14 +29,14 @@ class StockSeed():
         self.html.refresh()
         self.stockAssert.assertMaterialExist(materialName, 'Raktárkészlet')
 
-    def createRawMaterialWithOpening(self, testName, grossPrice, openingQty, whName):
+    def createRawMaterialWithOpening(self, testName, grossPrice, openingQty, whName, me='liter'):
         self.menu.openStocks()
         self.html.clickElement('Új nyersanyag felvitele', 'a')
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Nyersanyag neve', testName)
         self.html.fillInput('Bruttó beszerzési egységár', grossPrice)
-        self.html.clickDropdown('ME', 'liter')
+        self.html.clickDropdown('ME', me)
         self.html.fillInput('Nyitó mennyiség', openingQty)
         self.html.clickDropdown('Raktár', whName)
         self.html.clickElement('Rögzít')
