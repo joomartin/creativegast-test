@@ -9,15 +9,14 @@ class Products(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        self.pg = pg()
-        self.tempGroup = 'ideiglenes'
-
+        '''
         self.stockseed.createWarehouse('Araktár')
         self.stockseed.createRawMaterial('RawMaterial', 'liter', 'Araktár')
         self.stockseed.createRawMaterial('Modified', 'liter', 'Araktár')
         self.productseed.createCounter('ProductCounter', 0)
         self.productseed.createProductGroup('TestGroup')
         self.productseed.createProductGroup('ModGroup')
+        '''
         self.menu.openProducts()
 
 
@@ -31,23 +30,8 @@ class Products(BaseTestCase):
         self.productseed.deleteCounter('ProductCounter')
         self.productseed.deleteProductGroup('TestGroup')
         self.productseed.deleteProductGroup('ModGroup')
-        super().tearDownClass()
 
-        pass
 
-    '''
-    @staticmethod
-    def createProductGroup(html, groupName):
-        html.clickElement('Új termékcsoport felvitele', 'a')
-
-        html.switchFrame('iframe')
-
-        html.fillInput('Termékcsoport neve', groupName)
-        html.clickDropdown('Kategória', 'Étel')
-        html.clickElement('Rögzít')
-        html.switchFrame()
-        html.wait(2)
-    '''
 
     def testCreate(self):
         name = 'bestProduct'
@@ -61,15 +45,16 @@ class Products(BaseTestCase):
         editedName = 'editedProduct'
         editedGroup = 'Üdítők'
         group = 'Szeszes italok'
-        editedCode = '11'
+        editedCode = '98'
         editedPlace = 'Pizza'
         editedCounter = ''
-        editedCounterState = 11
+        editedCounterState = 98
         counter = 'ProductCounter'
+        editedPrice = '200'
 
 
-
-        self.productseed.createProduct(name, group, 99, counter, 'RawMaterial')
+        '''
+        self.productseed.createProduct(name, group, 99, 'ProductCounter', 'RawMaterial')
 
         self.html.clickTableElement('products', 'id', name, 'a', 'Szerkeszt', 'Termékek')
         self.html.switchFrame('iframe')
@@ -85,10 +70,17 @@ class Products(BaseTestCase):
         self.html.fillInput('Termék neve', editedName)
         self.html.fillInput('Kód', editedCode)
 
+        places = self.html.getElement('Eladási ár (Kötelező)', 'td')
+        self.html.clickElement('edit actionButton fright editPriceBtn', 'a', options=Options(htmlAttribute='class'), element=places)
+        self.html.fillInput('Nettó', editedPrice)
+        self.html.wait(2)
+        self.html.clickElement('taxPriceSave', 'a', options=Options(htmlAttribute='id'))
+        self.html.wait(2)
+
         #self.html.fillInput('Számláló neve', editedCounter)
         #self.html.fillInput('Számláló állás', editedCounterState)
 
-        self.html.clickElement('Törlés')
+        # self.html.clickElement('Törlés')
         self.html.fillAutocomplete('componentName', 'input', 'Modified', 'Modified', 'li',
                                    Options(htmlAttribute='id'))
         self.html.fillInput('componentQty', 1, 'input', options=Options(htmlAttribute='id'))
@@ -96,7 +88,7 @@ class Products(BaseTestCase):
         self.html.clickElement('Rögzít')
 
         self.productAssert.assertProductExist(editedName, 'Termékek')
-
+        '''
         self.html.search(editedName, 'Termékek')
         self.html.clickTableElement('products', 'id', editedName, 'a', 'Részletek', 'Termékek')
         self.html.switchFrame('iframe')
@@ -106,10 +98,18 @@ class Products(BaseTestCase):
         dPlace = self.html.getElementTxtInTable(editedPlace, 'details', 'Termékek', attribute='class')
         dGroup = self.html.getElementTxtInTable(editedGroup, 'details', 'Termékek', attribute='class')
         dCode = self.html.getElementTxtInTable(editedCode, 'details', 'Termékek', attribute='class')
-        self.assertEqual(dName, editedName)
+        '''self.assertEqual(dName, editedName)
         self.assertEqual(dPlace, editedPlace)
         self.assertEqual(dGroup, editedGroup)
-        self.assertEqual(dCode, editedCode)
+        self.assertEqual(dCode, editedCode)'''
+        self.assertTrue(self.html.getTablePairsExist('Termék neve:', editedName))
+        self.assertTrue(self.html.getTablePairsExist('Nyomtatási részleg:', editedPlace))
+        self.assertTrue(self.html.getTablePairsExist('Termékcsoport:', editedGroup))
+        self.assertTrue(self.html.getTablePairsExist('Kód:', editedCode))
+        self.assertTrue(self.html.getTablePairsExist('Számláló(k):', counter))
+
+        #dPrice = self.html.getElementTxtInTable(editedPrice, 'onefourthTable', 'Termékek', attribute='class')
+        #self.assertEqual(dPrice, editedPrice)
 
         cName =  self.html.getElementTxtInTable('Modified', 'components', 'Termékek', attribute='class')
         self.assertEqual(cName, 'Modified')

@@ -227,3 +227,8 @@ class HtmlProxy:
         a = Alert(self.driver)
         a.accept()
 
+    def getTablePairsExist(self, firstElement, SecondElelment):
+        return self.driver.find_element_by_xpath('//tr[contains(., "' + firstElement + '") and contains(., "' + SecondElelment + '")]').is_displayed()
+
+
+
