@@ -13,61 +13,31 @@ class Pizza(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
+        self.stockseed.createWarehouse('PizzaTest')
+        self.stockseed.createRawMaterialWithOpening('Pizza tészta', '1000', '10', 'PizzaTest', 'db')
+        #self.stockseed.createRawMaterial('Pizza feltét', '500', '100', 'Pizzatest', 'db')
+
         self.menu.openProducts()
         self.html.clickElement('Pizza (testreszabható)', 'a')
 
     @classmethod
     def tearDownClass(self):
+        self.stockseed.deleteRawMaterial('Pizza tészta')
+        self.stockseed.deleteWarehouse('PizzaTest')
         super().tearDownClass()
-
-    def createPizza(self, pizzaName):
-        self.html.clickElement('Új pizza (testreszabható)', 'a')
-
-        self.html.switchFrame('iframe')
-        self.html.clickDropdown('Nyomtatási részleg', 'Pizza')
-        self.html.fillInput('Termék neve', pizzaName)
-        self.html.fillInput('Kód', '1211')
-
-        self.html.clickDropdown('Szósz', 'Paradicsomos alap')
-
-        self.html.fillAutocomplete('baseComponentName', 'input', 'liszt', 'Liszt (teszt)', 'li', Options(htmlAttribute='id'))
-        table = self.html.getElement('baseComponents', 'table', Options(htmlAttribute='id'))
-        self.html.getElement('Hozzáad', 'button', element=table).click()
-
-
-        self.html.fillAutocomplete('toppingComponentName', 'input', 'Sonka', 'Sonka Feltét', 'li', Options(htmlAttribute='id'))
-        table = self.html.getElement('toppingComponents', 'table', Options(htmlAttribute='id'))
-        self.html.getElement('Hozzáad', 'button', element=table).click()
-
-        self.html.clickElement('Mennyiségek', 'a')
-        self.html.wait(2)
-        td = self.html.getElement('Eladási ár(ak)', 'td')
-        self.html.clickElement('edit actionButton fright editPriceBtn', 'a', Options(htmlAttribute='class'))
-
-        self.html.fillInput('Nettó', '1000')
-        self.html.clickElement('Rögzít', 'a')
-        self.html.closeAllert()
-        self.html.clickElement('Rögzít', 'a')
-        self.html.wait(2)
-        self.html.clickElement('Rögzít')
-
-
-    def deletePizza(self, pizzaName):
-        self.html.clickTableElement('customproduct-2', 'id', pizzaName, 'a', 'Törlés', 'Pizza (testreszabható)')
-        self.html.clickElement('Igen')
 
 
     def testCreate(self):
         testName = 'Create pizza'
-        self.createPizza(testName)
+        self.productseed.createPizza(testName, 'Pizza tészta', 'Pizza feltét')
         self.productAssert.assertPizzaExists(testName,'1 270.00')
-        self.deletePizza(testName)
+        self.productseed.deletePizza(testName)
 
     def testUpdate(self):
         testName = 'Update pizza'
         newName = 'Uj pizza'
 
-        self.createPizza(testName)
+        self.productseed.createPizza(testName, 'Pizza tészta', 'Pizza feltét')
 
         self.html.clickTableElement('customproduct-2', 'id', testName, 'a', 'Szerkeszt', 'Pizza (testreszabható)')
 
@@ -87,12 +57,12 @@ class Pizza(BaseTestCase):
 
         self.productAssert.assertPizzaExists(newName, '3 810.00')
 
-        self.deletePizza(newName)
+        self.productseed.deletePizza(newName)
 
     def testWasting(self):
         testName = 'Waste pizza'
 
-        self.createPizza(testName)
+        self.productseed.createPizza(testName, 'Pizza tészta', 'Pizza feltét')
         self.productAssert.assertPizzaExists(testName, '1 270.00')
 
         self.html.clickTableElement('customproduct-2', 'id', testName, 'a', 'Selejt', 'Pizza (testreszabható)')
@@ -114,5 +84,5 @@ class Pizza(BaseTestCase):
 
         self.menu.openProducts()
         self.html.clickElement('Pizza (testreszabható)', 'a')
-        self.deletePizza(testName)
+        self.productseed.deletePizza(testName)
 
