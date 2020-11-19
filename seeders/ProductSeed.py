@@ -34,7 +34,7 @@ class ProductSeed():
         self.html.wait(2)
         self.html.clickElement('Igen')
 
-    def createMenu(self, menuName):
+    def createMenu(self, menuName, firstMeal, secondMeal):
         self.menu.openProducts()
         self.html.clickElement('Menü', 'a')
 
@@ -60,8 +60,8 @@ class ProductSeed():
         self.html.fillInput('Mennyiség', '1')
         self.html.getInput('Mennyiség','label').click()
         self.html.clickElement('Hozzáad')
-        self.html.wait(2)
-        self.html.clickElement('Teszt kaja', 'span')
+        self.html.wait(3)
+        self.html.clickElement(firstMeal, 'span')
 
         self.html.clickElement('icon-hozzaadas addNewComponent', 'i', Options(htmlAttribute='class'))
         self.html.wait(3)
@@ -74,7 +74,7 @@ class ProductSeed():
         self.html.getInput('Mennyiség', 'label', element=tab).click()
         self.html.clickElement('Hozzáad', element=tab)
         self.html.wait(3)
-        self.html.clickElement('Kecskepuding', 'span', element=tab)
+        self.html.clickElement(secondMeal, 'span', element=tab)
 
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
@@ -87,7 +87,7 @@ class ProductSeed():
         self.html.clickTableElement('menu', 'id', menuName, 'span', 'Törlés', 'Menü')
         self.html.clickElement('Igen')
 
-    def createPizza(self, pizzaName):
+    def createPizza(self, pizzaName, baseComponent, topping):
         self.menu.openProducts()
         self.html.clickElement('Pizza (testreszabható)', 'a')
 
@@ -100,14 +100,14 @@ class ProductSeed():
 
         self.html.clickDropdown('Szósz', 'Paradicsomos alap')
 
-        self.html.fillAutocomplete('baseComponentName', 'input', 'liszt', 'Liszt (teszt)', 'li', Options(htmlAttribute='id'))
+        self.html.fillAutocomplete('baseComponentName', 'input', baseComponent, baseComponent, 'li', Options(htmlAttribute='id'))
         table = self.html.getElement('baseComponents', 'table', Options(htmlAttribute='id'))
         self.html.getElement('Hozzáad', 'button', element=table).click()
 
 
-        self.html.fillAutocomplete('toppingComponentName', 'input', 'Sonka', 'Sonka Feltét', 'li', Options(htmlAttribute='id'))
-        table = self.html.getElement('toppingComponents', 'table', Options(htmlAttribute='id'))
-        self.html.getElement('Hozzáad', 'button', element=table).click()
+        # self.html.fillAutocomplete('toppingComponentName', 'input', topping, topping, 'li', Options(htmlAttribute='id'))
+        # table = self.html.getElement('toppingComponents', 'table', Options(htmlAttribute='id'))
+        # self.html.getElement('Hozzáad', 'button', element=table).click()
 
         self.html.clickElement('Mennyiségek', 'a')
         self.html.wait(2)
