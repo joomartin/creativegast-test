@@ -21,16 +21,16 @@ class Test(BaseTestCase):
 
 
     def testCreateWarehouse(self):
-        self.data.createWarehouse("kicsiraktar")
+        self.stockseed.createWarehouse("kicsiraktar")
         self.stockAssert.assertWarehouseExist('kicsiraktar', 'Raktárak')
         self.html.search('', 'Raktárak')
 
 
-        self.data.deleteWarehouse("kicsiraktar")
+        self.stockseed.deleteWarehouse("kicsiraktar")
 
     #@unittest.skip
     def testCantCreate(self):
-        self.data.createWarehouse("nagyraktar")
+        self.stockseed.createWarehouse("nagyraktar")
         self.html.clickElement('Új raktár felvitele', 'a')
         self.html.switchFrame("iframe")
 
@@ -42,11 +42,11 @@ class Test(BaseTestCase):
         self.html.clearInput('Raktár neve')
         self.html.clickElement("Mégsem")
 
-        self.data.deleteWarehouse("nagyraktar")
+        self.stockseed.deleteWarehouse("nagyraktar")
 
     #@unittest.skip
     def testEdit(self):
-        self.data.createWarehouse("joraktar")
+        self.stockseed.createWarehouse("joraktar")
         self.html.clickElement(None,
                                "//tr[contains(., 'joraktar')]//a[contains(@class, 'edit') and contains(@class, 'actionButton')]",
                                Options(uniqueSelector=True))
@@ -61,12 +61,12 @@ class Test(BaseTestCase):
         self.stockAssert.assertWarehouseExist('rosszraktar', 'Raktárak')
         self.html.search('', 'Raktárak')
 
-        self.data.deleteWarehouse("rosszraktar")
+        self.stockseed.deleteWarehouse("rosszraktar")
 
 
     def testDelete(self):
         self.html.refresh()
-        self.data.createWarehouse("csakraktar")
+        self.stockseed.createWarehouse("csakraktar")
         self.html.search('csakraktar', 'Raktárak')
         currWindow = self.html.getElement('tabs-3', 'div', options=Options(htmlAttribute='id'))
         self.html.clickElement('csakraktar', 'td', Options(following='a'), element = currWindow)

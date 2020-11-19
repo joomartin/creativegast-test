@@ -19,11 +19,11 @@ class RawMaterial(BaseTestCase):
         super().login(self)
 
         self.menu.openStocks()
-        self.data.createWarehouse('Araktár')
+        self.stockseed.createWarehouse('Araktár')
 
     @classmethod
     def tearDownClass(self):
-        self.data.deleteWarehouse('Araktár')
+        self.stockseed.deleteWarehouse('Araktár')
         super().tearDownClass()
 
     def createRawMaterial(self, materialName, ME):
@@ -55,8 +55,8 @@ class RawMaterial(BaseTestCase):
 
     def testCreate(self):
         testName = 'Abszint'
-        self.data.createRawMaterial(testName, 'liter', 'Araktár')
-        self.data.deleteRawMaterial(testName)
+        self.stockseed.createRawMaterial(testName, 'liter', 'Araktár')
+        self.stockseed.deleteRawMaterial(testName)
 
 
     def testUpdate(self):
@@ -64,7 +64,7 @@ class RawMaterial(BaseTestCase):
         ME = 'liter'
         price = '1 010.00'
 
-        self.data.createRawMaterial(testName, 'liter', 'Araktár')
+        self.stockseed.createRawMaterial(testName, 'liter', 'Araktár')
         #self.html.search(testName, 'Raktárkészlet')
         #self.html.clickElement(testName, 'td', Options(following='a'))
         self.html.clickTableDropdown(testName, 'Szerkeszt', 'Raktárkészlet')
@@ -79,7 +79,7 @@ class RawMaterial(BaseTestCase):
         new = self.html.getTxtFromTable('1', '6', 'components')
         self.assertEqual(price, new)
 
-        self.data.deleteRawMaterial(testName)
+        self.stockseed.deleteRawMaterial(testName)
 
     def testOpening(self):
         testName = 'Abszint'
@@ -129,7 +129,7 @@ class RawMaterial(BaseTestCase):
 
         self.stockAssert.assertStock(testName, 'Araktár', '10')
 
-        self.data.deleteRawMaterial(testName)
+        self.stockseed.deleteRawMaterial(testName)
 
         self.stockAssert.assertDeletedMaterial(testName, 'Araktár',)
 
@@ -163,13 +163,13 @@ class RawMaterial(BaseTestCase):
         self.html.clickElement('Igen')
         self.html.switchFrame()
 
-        self.data.deleteRawMaterial(testName)
+        self.stockseed.deleteRawMaterial(testName)
 
     def testWastingRawMaterial(self):
         testName = 'Abszint'
         ME = 'liter'
 
-        self.data.createRawMaterial(testName, 'liter', 'Araktár')
+        self.stockseed.createRawMaterial(testName, 'liter', 'Araktár')
         # self.html.search(testName, 'Raktárkészlet')
         # self.html.clickElement(testName, 'td',  Options(following='a'))
         self.html.clickTableDropdown(testName, 'Szerkeszt', 'Raktárkészlet')
@@ -195,7 +195,7 @@ class RawMaterial(BaseTestCase):
 
         self.stockAssert.assertStock(testName, 'Araktár', '5')
 
-        self.data.deleteRawMaterial(testName)
+        self.stockseed.deleteRawMaterial(testName)
 
         self.stockAssert.assertDeletedMaterial(testName, 'Pult',)
 
@@ -203,7 +203,7 @@ class RawMaterial(BaseTestCase):
         testName = 'Abszint'
         ME = 'liter'
         qty = '100'
-        self.data.createRawMaterial(testName, 'liter', 'Araktár')
+        self.stockseed.createRawMaterial(testName, 'liter', 'Araktár')
 
         self.html.clickElement(testName, 'td', Options(following='a'))
         self.html.clickElement('Nyitókészlet', 'a')
@@ -222,7 +222,7 @@ class RawMaterial(BaseTestCase):
         self.html.refresh()
         self.stockAssert.assertStock(testName, 'Araktár', qty)
 
-        self.data.deleteRawMaterial(testName)
+        self.stockseed.deleteRawMaterial(testName)
 
 
 

@@ -10,15 +10,15 @@ class BarCheckings(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        self.data.createWarehouse('Araktár')
-        self.data.createRawMaterialWithOpening('Abszint', '1000', '10', 'Araktár')
+        self.stockseed.createWarehouse('Araktár')
+        self.stockseed.createRawMaterialWithOpening('Abszint', '1000', '10', 'Araktár')
         self.menu.openStocks()
         self.html.clickElement('Standellenőrzések', 'a')
 
     @classmethod
     def tearDownClass(self):
-        self.data.deleteRawMaterial('Abszint')
-        self.data.deleteWarehouse('Araktár')
+        self.stockseed.deleteRawMaterial('Abszint')
+        self.stockseed.deleteWarehouse('Araktár')
         super().tearDownClass()
 
 

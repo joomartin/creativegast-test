@@ -6,7 +6,9 @@ from mainMenu.MainMenuProxy import MainMenuProxy
 from stock.StockAssert import StockAssert
 from products.ProductAssert import ProductAssert
 from Config import read_section
-from shared.DataSeed import DataSeed
+from seeders.StockSeed import StockSeed
+from seeders.ProductSeed import ProductSeed
+
 class BaseTestCase(unittest.TestCase):
 
     @classmethod
@@ -20,7 +22,8 @@ class BaseTestCase(unittest.TestCase):
 
         self.html = HtmlProxy(self.driver)
         self.menu = MainMenuProxy(self.driver)
-        self.data = DataSeed(self.driver)
+        self.stockseed = StockSeed(self.driver)
+        self.productseed = ProductSeed(self.driver)
         self.stockAssert = StockAssert(self.html,self.driver)
         self.productAssert = ProductAssert(self.html,self.driver)
 
