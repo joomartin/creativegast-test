@@ -13,6 +13,8 @@ class TestData:
         'WhValue': '10000',
         'OpenQuantity': '10',
         'Waste': '5',
+
+        'Name2': 'TestRawMaterial2'
     }
 
     WareHouse = {
@@ -72,6 +74,8 @@ class TestData:
         'Quantity': '2',
         'ModifiedName': 'ModifiedProduct',
         'ModifiedCode': '11',
+        'ModifiedPrice': '200',
+        'ModifiedQuantity': '2',
         'ModifiedComponent': 'TestComponent2'
 
     }
