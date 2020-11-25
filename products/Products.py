@@ -10,7 +10,7 @@ class Products(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        
+
         self.stockseed.createWarehouse(td.WareHouse['Name'])
         self.stockseed.createRawMaterial(td.RawMaterial['Name'], td.RawMaterial['ME'], td.WareHouse['Name'])
         self.stockseed.createRawMaterial(td.RawMaterial['Name2'], td.RawMaterial['ME'], td.WareHouse['Name'])
@@ -40,17 +40,7 @@ class Products(BaseTestCase):
         self.productseed.deleteProduct(td.Product['Name'])
 
     def testEdit(self):
-        name = 'bestProduct'
-        editedName = 'editedProduct'
-        editedGroup = 'Üdítők'
-        group = 'Szeszes italok'
-        editedCode = '98'
         editedPlace = 'Pizza'
-        editedCounter = ''
-        editedCounterState = 98
-        counter = 'ProductCounter'
-        editedPrice = '200'
-
 
 
         self.productseed.createProduct(td.Product['Name'], td.ProductGroup['Name'], td.Product['Code'], td.Counter['Name'], td.RawMaterial['Name'])
@@ -100,6 +90,8 @@ class Products(BaseTestCase):
         self.assertTrue(self.html.getRowExist(['Kód:', td.Product['ModifiedCode']]))
         # ez itt egy bug, lehala  teszt
         # self.assertTrue(self.html.getTablePairsExist('Számláló(k):', counter))
+
+        self.assertTrue(self.html.getRowExist(['Eladási ár', td.Product['NetPrice']]))
 
         # dPrice = self.html.getElementTxtInTable(editedPrice, 'onefourthTable', 'Termékek', attribute='class')
         # self.assertEqual(dPrice, editedPrice)

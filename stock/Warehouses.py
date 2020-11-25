@@ -2,7 +2,7 @@ import unittest
 
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
-
+from shared.TestData import TestData as td
 
 class Test(BaseTestCase):
 
@@ -21,59 +21,58 @@ class Test(BaseTestCase):
 
 
     def testCreateWarehouse(self):
-        self.stockseed.createWarehouse("kicsiraktar")
-        self.stockAssert.assertWarehouseExist('kicsiraktar', 'Raktárak')
+        self.stockseed.createWarehouse(td.WareHouse['Name'])
+        self.stockAssert.assertWarehouseExist(td.WareHouse['Name'], 'Raktárak')
         self.html.search('', 'Raktárak')
 
-
-        self.stockseed.deleteWarehouse("kicsiraktar")
+        self.stockseed.deleteWarehouse(td.WareHouse['Name'])
 
     #@unittest.skip
     def testCantCreate(self):
-        self.stockseed.createWarehouse("nagyraktar")
+        self.stockseed.createWarehouse(td.WareHouse['Name'])
         self.html.clickElement('Új raktár felvitele', 'a')
-        self.html.switchFrame("iframe")
+        self.html.switchFrame('iframe')
 
-        self.html.fillInput('Raktár neve', 'nagyraktar', )
-        self.html.clickElement("Rögzít")
+        self.html.fillInput('Raktár neve', td.WareHouse['Name'])
+        self.html.clickElement('Rögzít')
 
         self.stockAssert.assertDialogDisplayed()
 
         self.html.clearInput('Raktár neve')
-        self.html.clickElement("Mégsem")
+        self.html.clickElement('Mégsem')
 
-        self.stockseed.deleteWarehouse("nagyraktar")
+        self.stockseed.deleteWarehouse(td.WareHouse['Name'])
 
     #@unittest.skip
     def testEdit(self):
-        self.stockseed.createWarehouse("joraktar")
+        self.stockseed.createWarehouse(td.WareHouse['Name'])
         self.html.clickElement(None,
-                               "//tr[contains(., 'joraktar')]//a[contains(@class, 'edit') and contains(@class, 'actionButton')]",
+                               "//tr[contains(., " + td.WareHouse['Name'] + ")]//a[contains(@class, 'edit') and contains(@class, 'actionButton')]",
                                Options(uniqueSelector=True))
 
-        self.html.switchFrame("iframe")
-        self.html.fillInput('Raktár neve', 'rosszraktar')
+        self.html.switchFrame('iframe')
+        self.html.fillInput('Raktár neve', td.WareHouse2['Name'])
         self.html.clickElement('Rögzít')
 
         self.html.switchFrame()
         self.html.refresh()
 
-        self.stockAssert.assertWarehouseExist('rosszraktar', 'Raktárak')
+        self.stockAssert.assertWarehouseExist(td.WareHouse2['Name'], 'Raktárak')
         self.html.search('', 'Raktárak')
 
-        self.stockseed.deleteWarehouse("rosszraktar")
+        self.stockseed.deleteWarehouse(td.WareHouse2['Name'])
 
 
     def testDelete(self):
         self.html.refresh()
-        self.stockseed.createWarehouse("csakraktar")
-        self.html.search('csakraktar', 'Raktárak')
+        self.stockseed.createWarehouse(td.WareHouse['Name'])
+        self.html.search(td.WareHouse['Name'], 'Raktárak')
         currWindow = self.html.getElement('tabs-3', 'div', options=Options(htmlAttribute='id'))
-        self.html.clickElement('csakraktar', 'td', Options(following='a'), element = currWindow)
+        self.html.clickElement(td.WareHouse['Name'], 'td', Options(following='a'), element = currWindow)
         self.html.clickElement("Igen", waitSeconds=2)
         self.html.search('', 'Raktárak')
 
-        self.stockAssert.assertWarehouseNotExist('csakraktar', 'Raktárak')
+        self.stockAssert.assertWarehouseNotExist(td.WareHouse['Name'], 'Raktárak')
         self.html.search('', 'Raktárak')
 
 

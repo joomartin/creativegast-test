@@ -1,6 +1,7 @@
 from selenium.webdriver.common.keys import Keys
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
+from shared.TestData import TestData as td
 
 
 class BarCheckings(BaseTestCase):
@@ -10,41 +11,40 @@ class BarCheckings(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        self.stockseed.createWarehouse('Araktár')
-        self.stockseed.createRawMaterialWithOpening('Abszint', '1000', '10', 'Araktár')
+        self.stockseed.createWarehouse(td.WareHouse['Name'])
+        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Name'], td.RawMaterial['GrosPrice'], td.RawMaterial['Quantity'], td.WareHouse['Name'])
         self.menu.openStocks()
         self.html.clickElement('Standellenőrzések', 'a')
 
     @classmethod
     def tearDownClass(self):
-        self.stockseed.deleteRawMaterial('Abszint')
-        self.stockseed.deleteWarehouse('Araktár')
-        super().tearDownClass()
+        #self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
+        #self.stockseed.deleteWarehouse(td.WareHouse['Name'])
+        #super().tearDownClass()
+        pass
 
 
     def deleteChecking(self):
-        warehouse = 'Araktár'
-        self.html.clickTableElement('barchecking', 'id', warehouse, 'a', 'Törlés', 'Standellenőrzések')
+        self.html.clickTableElement('barchecking', 'id', td.WareHouse['Name'], 'a', 'Törlés', 'Standellenőrzések')
         self.html.clickElement('Igen')
         self.html.refresh()
 
     def testCreate(self):
-        warehouse = 'Araktár'
         self.html.clickElement('Új standellenőrzés', 'a')
         self.html.switchFrame('iframe')
 
-        self.html.clickElement(warehouse, 'label', Options(following='label'))
+        self.html.clickElement(td.WareHouse['Name'], 'label', Options(following='label'))
         self.html.clickElement('Indít', waitSeconds=3)
-        qty = int(self.html.getElement('Abszint', 'td', Options(following='td[3]//input')).get_attribute('value'))
+        qty = int(self.html.getElement(td.RawMaterial['Name'], 'td', Options(following='td[3]//input')).get_attribute('value'))
         modqty= qty - 5
-        self.html.getElement('Abszint', 'td', Options(following='td[3]//input')).clear()
-        self.html.getElement('Abszint', 'td', Options(following='td[3]//input')).send_keys(str(modqty))
-        self.html.clickElement('Abszint', 'td', Options(following='button'))
+        self.html.getElement(td.RawMaterial['Name'], 'td', Options(following='td[3]//input')).clear()
+        self.html.getElement(td.RawMaterial['Name'], 'td', Options(following='td[3]//input')).send_keys(str(modqty))
+        self.html.clickElement(td.RawMaterial['Name'], 'td', Options(following='button'))
 
         self.html.clickElement('Lezárás', 'a')
         self.html.refresh()
 
-        self.html.clickTableElement('barchecking', 'id', warehouse, 'a', 'Megtekintés', 'Standellenőrzések')
+        self.html.clickTableElement('barchecking', 'id', td.WareHouse['Name'], 'a', 'Megtekintés', 'Standellenőrzések')
 
         self.html.switchFrame('iframe')
 
@@ -57,10 +57,10 @@ class BarCheckings(BaseTestCase):
         self.html.clickElement('Mégsem')
         self.html.switchFrame()
 
-        self.stockAssert.assertStock('Abszint', 'Araktár', str(modqty))
+        self.stockAssert.assertStock(td.RawMaterial['Name'], td.WareHouse['Name'], str(modqty))
         self.html.clickElement('Standellenőrzések', 'a')
 
         self.deleteChecking()
 
-        self.stockAssert.assertStock('Abszint', 'Araktár', str(qty))
+        self.stockAssert.assertStock(td.RawMaterial['Name'], td.WareHouse['Name'], str(qty))
 

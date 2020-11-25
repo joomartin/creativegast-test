@@ -8,11 +8,14 @@ class TestData:
         'ME': 'liter',
         'Warehouse': 'TestWarehouse',
         'Quantity': '10',
+        'Quantity2': '100',
+        'FloatQuantity': '10.00',
         'NetPrice': '787.40',
         'NetValue': '7 874.02',
         'WhValue': '10000',
         'OpenQuantity': '10',
         'Waste': '5',
+        'FloatWaste': '5.00',
 
         'Name2': 'TestRawMaterial2'
     }
