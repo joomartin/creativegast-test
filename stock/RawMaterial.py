@@ -18,21 +18,17 @@ class RawMaterial(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        self.menu.openStocks()
-        self.stockseed.createWarehouse('Araktár')
+        self.stockseed.createWarehouse('Araktár', module = True )
 
     @classmethod
     def tearDownClass(self):
-        self.stockseed.deleteWarehouse('Araktár')
+        self.stockseed.deleteWarehouse('Araktár', tab=True)
         super().tearDownClass()
-
-
 
     def testCreate(self):
         testName = 'Abszint'
-        self.stockseed.createRawMaterial(testName, 'liter', 'Araktár')
+        self.stockseed.createRawMaterial(testName, 'liter', 'Araktár', module=True)
         self.stockseed.deleteRawMaterial(testName)
-
 
     def testUpdate(self):
         testName = 'Abszint'
@@ -40,8 +36,8 @@ class RawMaterial(BaseTestCase):
         price = '1 010.00'
 
         self.stockseed.createRawMaterial(testName, 'liter', 'Araktár')
-        #self.html.search(testName, 'Raktárkészlet')
-        #self.html.clickElement(testName, 'td', Options(following='a'))
+        # self.html.search(testName, 'Raktárkészlet')
+        # self.html.clickElement(testName, 'td', Options(following='a'))
         self.html.clickTableDropdown(testName, 'Szerkeszt', 'Raktárkészlet')
         self.html.switchFrame('iframe')
 
@@ -106,7 +102,7 @@ class RawMaterial(BaseTestCase):
 
         self.stockseed.deleteRawMaterial(testName)
 
-        self.stockAssert.assertDeletedMaterial(testName, 'Araktár',)
+        self.stockAssert.assertDeletedMaterial(testName, 'Araktár', )
 
     def testDuplicate(self):
         testName = 'Abszint'
@@ -172,7 +168,7 @@ class RawMaterial(BaseTestCase):
 
         self.stockseed.deleteRawMaterial(testName)
 
-        self.stockAssert.assertDeletedMaterial(testName, 'Pult',)
+        self.stockAssert.assertDeletedMaterial(testName, 'Pult', )
 
     def testOpeningButton(self):
         testName = 'Abszint'
@@ -193,16 +189,7 @@ class RawMaterial(BaseTestCase):
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
 
-
         self.html.refresh()
         self.stockAssert.assertStock(testName, 'Araktár', qty)
 
         self.stockseed.deleteRawMaterial(testName)
-
-
-
-
-
-
-
-

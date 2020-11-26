@@ -5,6 +5,7 @@ from mainMenu.MainMenuProxy import MainMenuProxy
 from core.Options import Options
 from stock.StockAssert import StockAssert
 
+
 class StockSeed():
 
     def __init__(self, driver):
@@ -13,9 +14,9 @@ class StockSeed():
         self.menu = MainMenuProxy(self.driver)
         self.stockAssert = StockAssert(self.html, self.driver)
 
-
-    def createRawMaterial(self, materialName, me, wareHouse):
-        self.menu.openStocks()
+    def createRawMaterial(self, materialName, me, wareHouse, module=False):
+        if module:
+            self.menu.openStocks()
 
         self.html.clickElement('Új nyersanyag felvitele', 'a')
         self.html.switchFrame('iframe')
@@ -29,8 +30,9 @@ class StockSeed():
         self.html.refresh()
         self.stockAssert.assertMaterialExist(materialName, 'Raktárkészlet')
 
-    def createRawMaterialWithOpening(self, testName, grossPrice, openingQty, whName, me='liter'):
-        self.menu.openStocks()
+    def createRawMaterialWithOpening(self, testName, grossPrice, openingQty, whName, me='liter', module=False):
+        if module:
+            self.menu.openStocks()
         self.html.clickElement('Új nyersanyag felvitele', 'a')
         self.html.switchFrame('iframe')
 
@@ -42,8 +44,9 @@ class StockSeed():
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
 
-    def deleteRawMaterial(self, name):
-        self.menu.openStocks()
+    def deleteRawMaterial(self, name, module=False):
+        if module:
+            self.menu.openStocks()
 
         self.html.wait(2)
         self.html.search(name, 'Raktárkészlet')
@@ -54,9 +57,14 @@ class StockSeed():
         self.html.search('', 'Raktárkészlet')
         self.html.wait(2)
 
-    def createWarehouse(self, warehouseName):
-        self.menu.openStocks()
-        self.html.clickElement('Raktárak', 'a')
+    def createWarehouse(self, warehouseName, module=False, tab = False):
+
+        if module:
+            self.menu.openStocks()
+            self.html.clickElement('Raktárak', 'a')
+        elif tab:
+            self.html.clickElement('Raktárak', 'a')
+
         self.html.clickElement('Új raktár felvitele', 'a')
         self.html.switchFrame('iframe')
 
@@ -64,11 +72,13 @@ class StockSeed():
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
 
+    def deleteWarehouse(self, warehouseName, module=False, tab = False):
 
-
-    def deleteWarehouse(self, warehouseName):
-        self.menu.openStocks()
-        self.html.clickElement('Raktárak', 'a')
+        if module:
+            self.menu.openStocks()
+            self.html.clickElement('Raktárak', 'a')
+        elif tab:
+            self.html.clickElement('Raktárak', 'a')
 
         self.html.refresh()
         self.html.wait(2)
@@ -76,10 +86,9 @@ class StockSeed():
         self.html.wait(2)
         currWindow = self.html.getElement('tabs-3', 'div', options=Options(htmlAttribute='id'))
         # itt azert adjuk at a currWindow-t, hogy az adott oldalon keressen a td-k kozott
-        self.html.clickElement(warehouseName, 'td', Options(following='a'), element = currWindow)
+        self.html.clickElement(warehouseName, 'td', Options(following='a'), element=currWindow)
         self.html.wait(2)
         self.html.clickElement('Igen')
         self.html.wait(2)
         self.html.search('', 'Raktárak')
         self.html.wait(2)
-

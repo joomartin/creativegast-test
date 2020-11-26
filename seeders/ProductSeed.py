@@ -3,6 +3,7 @@ from mainMenu.MainMenuProxy import MainMenuProxy
 from core.Options import Options
 from stock.StockAssert import StockAssert
 
+
 class ProductSeed:
 
     def __init__(self, driver):
@@ -11,9 +12,13 @@ class ProductSeed:
         self.menu = MainMenuProxy(self.driver)
         self.stockAssert = StockAssert(self.html, self.driver)
 
-    def createProductGroup(self, groupName):
-        self.menu.openProducts()
-        self.html.clickElement('Termékcsoportok', 'a')
+    def createProductGroup(self, groupName, module=False, tab=False):
+
+        if module:
+            self.menu.openProducts()
+            self.html.clickElement('Termékcsoportok', 'a')
+        if tab:
+            self.html.clickElement('Termékcsoportok', 'a')
 
         self.html.clickElement('Új termékcsoport felvitele', 'a')
 
@@ -26,17 +31,23 @@ class ProductSeed:
         self.html.switchFrame()
         self.html.wait(2)
 
-    def deleteProductGroup(self, groupName):
-        self.menu.openProducts()
-        self.html.clickElement('Termékcsoportok', 'a')
+    def deleteProductGroup(self, groupName, module=False, tab=False):
+        if module:
+            self.menu.openProducts()
+            self.html.clickElement('Termékcsoportok', 'a')
+        elif tab:
+            self.html.clickElement('Termékcsoportok', 'a')
 
         self.html.clickTableElement('product_groups', 'id', groupName, 'span', 'Törlés', 'Termékcsoportok')
         self.html.wait(2)
         self.html.clickElement('Igen')
 
-    def createMenu(self, menuName, firstMeal, secondMeal):
-        self.menu.openProducts()
-        self.html.clickElement('Menü', 'a')
+    def createMenu(self, menuName, firstMeal, secondMeal, module=False, tab=False):
+        if module:
+            self.menu.openProducts()
+            self.html.clickElement('Menü', 'a')
+        elif tab:
+            self.html.clickElement('Menü', 'a')
 
         self.html.clickElement('Új menü felvitele', 'a')
 
@@ -58,7 +69,7 @@ class ProductSeed:
         self.html.clickDropdown('Termékcsoport:', 'Étel')
         self.html.clickElement('Ételek')
         self.html.fillInput('Mennyiség', '1')
-        self.html.getInput('Mennyiség','label').click()
+        self.html.getInput('Mennyiség', 'label').click()
         self.html.clickElement('Hozzáad')
         self.html.wait(3)
         self.html.clickElement(firstMeal, 'span')
@@ -66,10 +77,10 @@ class ProductSeed:
         self.html.clickElement('icon-hozzaadas addNewComponent', 'i', Options(htmlAttribute='class'))
         self.html.wait(3)
 
-        tab = self.html.getElement('tabs-2', 'div', Options(htmlAttribute ='id'))
+        tab = self.html.getElement('tabs-2', 'div', Options(htmlAttribute='id'))
         self.html.fillInput('Fogás neve', 'Főétel', element=tab)
         self.html.clickDropdown('Termékcsoport:', 'Étel', element=tab)
-        self.html.clickElement('Ételek',element=tab)
+        self.html.clickElement('Ételek', element=tab)
         self.html.fillInput('Mennyiség', '1', element=tab)
         self.html.getInput('Mennyiség', 'label', element=tab).click()
         self.html.clickElement('Hozzáad', element=tab)
@@ -79,17 +90,22 @@ class ProductSeed:
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
 
-
-    def deleteMenu(self, menuName):
-        self.menu.openProducts()
-        self.html.clickElement('Menü', 'a')
+    def deleteMenu(self, menuName, module=False, tab=False):
+        if module:
+            self.menu.openProducts()
+            self.html.clickElement('Menü', 'a')
+        elif tab:
+            self.html.clickElement('Menü', 'a')
 
         self.html.clickTableElement('menu', 'id', menuName, 'span', 'Törlés', 'Menü')
         self.html.clickElement('Igen')
 
-    def createPizza(self, pizzaName, baseComponent, topping):
-        self.menu.openProducts()
-        self.html.clickElement('Pizza (testreszabható)', 'a')
+    def createPizza(self, pizzaName, baseComponent, topping, module=False, tab=False):
+        if module:
+            self.menu.openProducts()
+            self.html.clickElement('Pizza (testreszabható)', 'a')
+        elif tab:
+            self.html.clickElement('Pizza (testreszabható)', 'a')
 
         self.html.clickElement('Új pizza (testreszabható)', 'a')
 
@@ -100,10 +116,10 @@ class ProductSeed:
 
         self.html.clickDropdown('Szósz', 'Paradicsomos alap')
 
-        self.html.fillAutocomplete('baseComponentName', 'input', baseComponent, baseComponent, 'li', Options(htmlAttribute='id'))
+        self.html.fillAutocomplete('baseComponentName', 'input', baseComponent, baseComponent, 'li',
+                                   Options(htmlAttribute='id'))
         table = self.html.getElement('baseComponents', 'table', Options(htmlAttribute='id'))
         self.html.getElement('Hozzáad', 'button', element=table).click()
-
 
         # self.html.fillAutocomplete('toppingComponentName', 'input', topping, topping, 'li', Options(htmlAttribute='id'))
         # table = self.html.getElement('toppingComponents', 'table', Options(htmlAttribute='id'))
@@ -121,17 +137,19 @@ class ProductSeed:
         self.html.wait(2)
         self.html.clickElement('Rögzít')
 
-
-    def deletePizza(self, pizzaName):
-        self.menu.openProducts()
-        self.html.clickElement('Pizza (testreszabható)', 'a')
+    def deletePizza(self, pizzaName, module=False, tab=False):
+        if module:
+            self.menu.openProducts()
+            self.html.clickElement('Pizza (testreszabható)', 'a')
+        elif tab:
+            self.html.clickElement('Pizza (testreszabható)', 'a')
 
         self.html.clickTableElement('customproduct-2', 'id', pizzaName, 'a', 'Törlés', 'Pizza (testreszabható)')
         self.html.clickElement('Igen')
 
-
-    def createProduct(self, name, group, code, counter, component):
-        self.menu.openProducts()
+    def createProduct(self, name, group, code, counter, component, module=False):
+        if module:
+            self.menu.openProducts()
 
         self.html.clickElement('Új termék felvitele', 'a')
         self.html.switchFrame('iframe')
@@ -146,13 +164,12 @@ class ProductSeed:
         self.html.fillInput('Termék neve', name)
         self.html.fillInput('Kód', code)
 
-        self.html.clickElement('p_counters', 'input', Options(htmlAttribute='id'), waitSeconds = 1)
+        self.html.clickElement('p_counters', 'input', Options(htmlAttribute='id'), waitSeconds=1)
         self.html.switchFrame('iframe')
 
         self.html.clickElement(counter, 'td')
         self.html.clickElement('Rögzít')
         self.html.switchFrame('iframe')
-
 
         places = self.html.getElement('Eladási ár (Kötelező)', 'td')
         self.html.clickElement('Ár megadása', element=places)
@@ -161,14 +178,14 @@ class ProductSeed:
         self.html.clickElement('taxPriceSave', 'a', options=Options(htmlAttribute='id'))
         self.html.wait(2)
 
-
         self.html.fillAutocomplete('componentName', 'input', component, component, 'li', Options(htmlAttribute='id'))
         self.html.fillInput('componentQty', 2, 'input', options=Options(htmlAttribute='id'))
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
 
-    def deleteProduct(self, name):
-        self.menu.openProducts()
+    def deleteProduct(self, name, module=False):
+        if module:
+            self.menu.openProducts()
 
         self.html.refresh()
 
@@ -176,9 +193,13 @@ class ProductSeed:
         self.html.clickElement('Igen', waitSeconds=1)
         self.html.search('', 'Termékek')
 
-    def createCounter(self, name, position):
-        self.menu.openProducts()
-        self.html.clickElement('Számlálók', 'a')
+    def createCounter(self, name, position, module=False, tab=False):
+        if module:
+            self.menu.openProducts()
+            self.html.clickElement('Számlálók', 'a')
+        if tab:
+            self.html.clickElement('Számlálók', 'a')
+
         self.html.clickElement('Új számláló felvitele', 'a')
         self.html.switchFrame('iframe')
 
@@ -187,9 +208,12 @@ class ProductSeed:
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
 
-    def deleteCounter(self, name):
-        self.menu.openProducts()
-        self.html.clickElement('Számlálók', 'a')
+    def deleteCounter(self, name, module=False, tab=False):
+        if module:
+            self.menu.openProducts()
+            self.html.clickElement('Számlálók', 'a')
+        if tab:
+            self.html.clickElement('Számlálók', 'a')
         self.html.refresh()
 
         self.html.clickTableElement('counters', 'id', name, 'a', 'Törlés', 'Számlálók')

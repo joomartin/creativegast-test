@@ -10,16 +10,16 @@ class StockMovement(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        self.stockseed.createWarehouse('Araktár')
+        self.stockseed.createWarehouse('Araktár', module=True)
         self.stockseed.createWarehouse('Braktár')
-        self.stockseed.createRawMaterialWithOpening('Abszint', '1000', '10', 'Araktár')
+        self.stockseed.createRawMaterialWithOpening('Abszint', '1000', '10', 'Araktár', module=True)
 
         self.html.clickElement('Raktármozgás', 'a')
 
     @classmethod
     def tearDownClass(self):
-        self.stockseed.deleteRawMaterial('Abszint')
-        self.stockseed.deleteWarehouse('Araktár')
+        self.stockseed.deleteRawMaterial('Abszint', module=True)
+        self.stockseed.deleteWarehouse('Araktár', tab=True)
         self.stockseed.deleteWarehouse('Braktár')
         super().tearDownClass()
 
