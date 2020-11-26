@@ -68,6 +68,7 @@ class StockAssert(unittest.TestCase):
 
         self.html.clickElement('Raktárak', 'a')
 
+        self.html.search(whName, 'Raktárak')
         self.html.clickElement(None,
                                "//tr[contains(., '"+ whName +"')]//a[contains(@class, 'stock') and contains(@class, 'actionButton')]",
                                Options(uniqueSelector=True))
@@ -90,6 +91,7 @@ class StockAssert(unittest.TestCase):
     def assertDeletedMaterial(self, materialName, whName):
         self.html.clickElement('Raktárak', 'a')
 
+        self.html.search(whName, 'Raktárak')
         self.html.clickElement(None,
                                "//tr[contains(., '" + whName + "')]//a[contains(@class, 'stock') and contains(@class, 'actionButton')]",
                                Options(uniqueSelector=True))

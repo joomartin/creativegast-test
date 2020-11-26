@@ -1,5 +1,6 @@
 from time import sleep
 
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.common.keys import Keys
 from core.Options import Options
@@ -123,7 +124,7 @@ class HtmlProxy:
         return self.driver.find_element_by_xpath('//table[@id="' + id + '"]//td[text() = "' + searchText + '"]')
 
     def getElementTxtInTable(self, searchText, target, tab, attribute='id'):
-        # self.search(searchText, tab)
+        self.search(searchText, tab)
         return self.driver.find_element_by_xpath(
             '//table[@' + attribute + '="' + target + '"]//td[text() = "' + searchText + '"]').text
 
@@ -212,17 +213,15 @@ class HtmlProxy:
         return result
 
     def search(self, value, tab):
-
         self.wait(2)
-        currWindow = self.getTab(tab)
-        searchExist = self.getElement('searchinput simpleFilterTerm', 'input', options=Options(htmlAttribute='class'), element=currWindow)
-        if searchExist is not None:
-            self.fillInput('searchinput simpleFilterTerm', value, selector = 'class', element = currWindow)
-            self.clickElement('Keresés', element = currWindow)
-            self.wait(2)
-            
-        else:
+        try:
+            currWindow = self.getTab(tab)
+        except NoSuchElementException:
             return
+
+        self.fillInput('searchinput simpleFilterTerm', value, selector='class', element=currWindow)
+        self.clickElement('Keresés', element=currWindow)
+        self.wait(2)
 
     def closeAllert(self):
         a = Alert(self.driver)
@@ -231,5 +230,13 @@ class HtmlProxy:
     def getTablePairsExist(self, firstElement, SecondElelment):
         return self.driver.find_element_by_xpath('//tr[contains(., "' + firstElement + '") and contains(., "' + SecondElelment + '")]').is_displayed()
 
+    def getRowExist(self, elements):
+        xPath = ''
+        for index,elem in enumerate(elements):
+            if index != len(elements)-1:
+                xPath += 'contains(., "' + elem + '") and '
+            else:
+                xPath += 'contains(., "' + elem + '")'
 
+        return self.driver.find_element_by_xpath('//tr[' + xPath + ']').is_displayed()
 
