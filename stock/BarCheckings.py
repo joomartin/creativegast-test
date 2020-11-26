@@ -11,7 +11,7 @@ class BarCheckings(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        self.stockseed.createWarehouse(td.WareHouse['Name'])
+        self.stockseed.createWarehouse(td.WareHouse['Name'], module=True)
         self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Name'], td.RawMaterial['GrosPrice'], td.RawMaterial['Quantity'], td.WareHouse['Name'])
         self.menu.openStocks()
         self.stockseed.createWarehouse('Araktár', module=True)

@@ -27,7 +27,7 @@ class TestData:
     }
 
     WareHouse2 = {
-        'Name': 'TestWarehouse2'
+        'Name': 'Warehouse2'
     }
 
     StockMovement = {

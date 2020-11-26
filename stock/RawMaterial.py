@@ -22,7 +22,7 @@ class RawMaterial(BaseTestCase):
 
     def testCreate(self):
         testName = 'Abszint'
-        self.stockseed.createRawMaterial(td.RawMaterial['Name'], td.RawMaterial['ME'], td.WareHouse['Name'])
+        self.stockseed.createRawMaterial(td.RawMaterial['Name'], td.RawMaterial['ME'], td.WareHouse['Name'], module=True)
         self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
 
 
