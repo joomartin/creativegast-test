@@ -1,6 +1,7 @@
 from selenium.webdriver.common.keys import Keys
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
+from shared.TestData import TestData as td
 
 
 class StockMovement(BaseTestCase):
@@ -10,17 +11,17 @@ class StockMovement(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        self.stockseed.createWarehouse('Araktár')
-        self.stockseed.createWarehouse('Braktár')
-        self.stockseed.createRawMaterialWithOpening('Abszint', '1000', '10', 'Araktár')
+        self.stockseed.createWarehouse(td.WareHouse['Name'])
+        self.stockseed.createWarehouse(td.WareHouse2['Name'])
+        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Name'], td.RawMaterial['GrosPrice'], td.RawMaterial['Quantity'], td.WareHouse['Name'])
 
         self.html.clickElement('Raktármozgás', 'a')
 
     @classmethod
     def tearDownClass(self):
-        self.stockseed.deleteRawMaterial('Abszint')
-        self.stockseed.deleteWarehouse('Araktár')
-        self.stockseed.deleteWarehouse('Braktár')
+        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
+        self.stockseed.deleteWarehouse(td.WareHouse['Name'])
+        self.stockseed.deleteWarehouse(td.WareHouse2['Name'])
         super().tearDownClass()
 
     def createNewMovement(self):
@@ -29,14 +30,14 @@ class StockMovement(BaseTestCase):
         self.html.clickElement('Új')
         self.html.switchFrame('iframe')
 
-        self.html.clickDropdown('Forrás raktár','Araktár')
+        self.html.clickDropdown('Forrás raktár',td.WareHouse['Name'])
         self.html.wait()
-        self.html.clickDropdown('Cél raktár', 'Braktár')
+        self.html.clickDropdown('Cél raktár', td.WareHouse2['Name'])
 
-        self.html.fillAutocomplete('Nyersanyag', 'input', 'Abszint','Abszint', 'li', Options(htmlAttribute='data-title'))
+        self.html.fillAutocomplete('Nyersanyag', 'input', td.RawMaterial['Name'], td.RawMaterial['Name'], 'li', Options(htmlAttribute='data-title'))
         self.html.getElement('Maximum', 'input', Options(htmlAttribute='data-title')).click()
         self.html.wait()
-        self.html.fillInput('Mennyiség', '5', 'data-title')
+        self.html.fillInput('Mennyiség', td.WareHouse['MoveQuantity'], 'data-title')
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
 
@@ -48,32 +49,30 @@ class StockMovement(BaseTestCase):
         self.html.clickElement('Igen')
 
     def testCreate(self):
-        warehouse = 'Araktár'
         self.createNewMovement()
-        self.deleteMovement(warehouse)
+        self.deleteMovement(td.WareHouse['Name'])
 
     def testView(self):
-        warehouse = 'Araktár'
         self.createNewMovement()
 
-        self.html.clickTableElement('storagemove', 'id', warehouse, 'span', 'Megtekintés', 'Raktármozgás')
+        self.html.clickTableElement('storagemove', 'id', td.WareHouse['Name'], 'span', 'Megtekintés', 'Raktármozgás')
 
         self.html.switchFrame('iframe')
 
         materialName = self.html.getTxtFromTable(2, 1)
-        self.assertEqual(materialName, 'Abszint')
+        self.assertEqual(materialName, td.RawMaterial['Name'])
 
         qty = self.html.getTxtFromTable(2, 2)
-        self.assertEqual(qty, '5',)
+        self.assertEqual(qty, td.WareHouse['MoveQuantity'])
 
         me = self.html.getTxtFromTable(2, 3)
-        self.assertEqual(me, 'liter')
+        self.assertEqual(me, td.RawMaterial['ME'])
 
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
-        self.stockAssert.assertStock('Abszint', 'Braktár', '5')
+        self.stockAssert.assertStock(td.RawMaterial['Name'], td.WareHouse2['Name'], int(td.RawMaterial['Quantity']) - int(td.WareHouse['MoveQuantity']))
         self.html.clickElement('Raktármozgás', 'a')
 
-        self.deleteMovement(warehouse)
+        self.deleteMovement(td.WareHouse['Name'])
 
-        self.stockAssert.assertStock('Abszint', 'Braktár', '0')
+        self.stockAssert.assertStock(td.RawMaterial['Name'], td.WareHouse2['Name'], int(td.RawMaterial['Quantity']) - int(td.WareHouse['MoveQuantity'])*2)

@@ -23,6 +23,7 @@ class TestData:
     WareHouse = {
         'Name': 'TestWarehouse',
         'ModifiedName': 'ModifiedWarehouse',
+        'MoveQuantity': '5'
     }
 
     WareHouse2 = {
