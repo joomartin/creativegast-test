@@ -11,16 +11,16 @@ class StockMovement(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        self.stockseed.createWarehouse(td.WareHouse['Name'])
+        self.stockseed.createWarehouse(td.WareHouse['Name'], module=True)
         self.stockseed.createWarehouse(td.WareHouse2['Name'])
-        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Name'], td.RawMaterial['GrosPrice'], td.RawMaterial['Quantity'], td.WareHouse['Name'])
+        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Name'], td.RawMaterial['GrosPrice'], td.RawMaterial['Quantity'], td.WareHouse['Name'], module=True)
 
         self.html.clickElement('Raktármozgás', 'a')
 
     @classmethod
     def tearDownClass(self):
-        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
-        self.stockseed.deleteWarehouse(td.WareHouse['Name'])
+        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'], module=True)
+        self.stockseed.deleteWarehouse(td.WareHouse['Name'], tab=True)
         self.stockseed.deleteWarehouse(td.WareHouse2['Name'])
         super().tearDownClass()
 

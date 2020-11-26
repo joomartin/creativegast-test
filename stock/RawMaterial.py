@@ -10,13 +10,12 @@ class RawMaterial(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        self.stockseed.createWarehouse(td.WareHouse['Name'])
+        self.stockseed.createWarehouse(td.WareHouse['Name'], module=True)
 
-        self.menu.openStocks()
 
     @classmethod
     def tearDownClass(self):
-        self.stockseed.deleteWarehouse(td.WareHouse['Name'])
+        self.stockseed.deleteWarehouse(td.WareHouse['Name'], tab=True)
         super().tearDownClass()
         pass
 
