@@ -62,8 +62,10 @@ class TestData:
         'BaseComponentName': 'LisztTest',
         'ToppingComponentName': 'SonkaTeszt',
         'NetPrice': '1000',
+        'GrossPrice': '1 270.00',
         'ModifiedName': 'ModifiedPizza',
         'ModifiedNetPrice': '3000',
+        'ModifiedGrossPrice': '3 810.00',
         'WasteQuantity': '10',
     }
 
