@@ -70,9 +70,11 @@ class StockMovement(BaseTestCase):
 
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
-        self.stockAssert.assertStock(td.RawMaterial['Name'], td.WareHouse2['Name'], int(td.RawMaterial['Quantity']) - int(td.WareHouse['MoveQuantity']))
+        qty = str(int(td.RawMaterial['Quantity']) - int(td.WareHouse['MoveQuantity']))
+        self.stockAssert.assertStock(td.RawMaterial['Name'], td.WareHouse2['Name'], qty)
         self.html.clickElement('Raktármozgás', 'a')
 
         self.deleteMovement(td.WareHouse['Name'])
 
-        self.stockAssert.assertStock(td.RawMaterial['Name'], td.WareHouse2['Name'], int(td.RawMaterial['Quantity']) - int(td.WareHouse['MoveQuantity'])*2)
+        qty2 = str(int(td.RawMaterial['Quantity']) - int(td.WareHouse['MoveQuantity'])*2)
+        self.stockAssert.assertStock(td.RawMaterial['Name'], td.WareHouse2['Name'], qty2)
