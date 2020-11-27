@@ -2,7 +2,7 @@
 class TestData:
 
     RawMaterial = {
-        'Name': 'TestRawMaterial',
+        'Name': 'TestRawMaterial1',
         'GrosPrice': '1000',
         'ModifiedGrossPrice': '1 010.00',
         'ME': 'liter',
@@ -21,7 +21,7 @@ class TestData:
     }
 
     WareHouse = {
-        'Name': 'TestWarehouse',
+        'Name': 'TestWarehouse1',
         'ModifiedName': 'ModifiedWarehouse',
         'MoveQuantity': '5'
     }
@@ -46,12 +46,14 @@ class TestData:
         'Name': 'TestMenu',
         'Code': '1212',
         'Price': '100',
+        'GrossPrice': '127.00',
         'MenuComponentName': 'Előétel',
         'MenuComponentUnit': '1',
         'MenuComponentName2': 'Főétel',
         'MenuComponentUnit2': '1',
         'ModifiedName': 'ModifiedName',
-        'ModifiedPrice': '300'
+        'ModifiedPrice': '300',
+        'ModifiedGrossPrice': '381.00'
     }
 
     Pizza = {
@@ -71,8 +73,10 @@ class TestData:
     }
 
     Product = {
-        'Name': 'TestProduct',
+        'Name': 'TestProduct1',
+        'Name2': 'TestProduct2',
         'Code': '99',
+        'Code2': '3131999',
         'NetPrice': '100',
         'ComponentName': 'TestComponent',
         'Quantity': '2',

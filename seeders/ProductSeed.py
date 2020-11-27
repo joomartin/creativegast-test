@@ -2,6 +2,7 @@ from core.HtmlProxy import HtmlProxy
 from mainMenu.MainMenuProxy import MainMenuProxy
 from core.Options import Options
 from stock.StockAssert import StockAssert
+from shared.TestData import TestData as td
 
 
 class ProductSeed:
@@ -63,11 +64,11 @@ class ProductSeed:
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Kód', '1212')
-        self.html.getElement('27%', 'td', Options(following='td//input')).send_keys('100')
+        self.html.getElement('27%', 'td', Options(following='td//input')).send_keys(price)
 
         self.html.fillInput('Fogás neve', 'Előétel')
-        self.html.clickDropdown('Termékcsoport:', 'Étel')
-        self.html.clickElement('Ételek')
+        self.html.clickDropdown('Termékcsoport:', td.ProductGroup['Name'])
+        self.html.clickElement(td.ProductGroup['Name'])
         self.html.fillInput('Mennyiség', '1')
         self.html.getInput('Mennyiség', 'label').click()
         self.html.clickElement('Hozzáad')
@@ -79,8 +80,8 @@ class ProductSeed:
 
         tab = self.html.getElement('tabs-2', 'div', Options(htmlAttribute='id'))
         self.html.fillInput('Fogás neve', 'Főétel', element=tab)
-        self.html.clickDropdown('Termékcsoport:', 'Étel', element=tab)
-        self.html.clickElement('Ételek', element=tab)
+        self.html.clickDropdown('Termékcsoport:', td.ProductGroup['Name'], element=tab)
+        self.html.clickElement(td.ProductGroup['Name'], element=tab)
         self.html.fillInput('Mennyiség', '1', element=tab)
         self.html.getInput('Mennyiség', 'label', element=tab).click()
         self.html.clickElement('Hozzáad', element=tab)
