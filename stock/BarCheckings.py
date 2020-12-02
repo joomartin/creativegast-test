@@ -8,23 +8,26 @@ class BarCheckings(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
+
         super().setUpClass()
         super().login(self)
 
         self.stockseed.createWarehouse(td.WareHouse['Name'], module=True)
         self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Name'], td.RawMaterial['GrosPrice'], td.RawMaterial['Quantity'], td.WareHouse['Name'])
+
         self.menu.openStocks()
         self.stockseed.createWarehouse('Araktár', module=True)
         self.stockseed.createRawMaterialWithOpening('Abszint', '1000', '10', 'Araktár', module=True)
 
         self.html.clickElement('Standellenőrzések', 'a')
 
+        pass
+
     @classmethod
     def tearDownClass(self):
-        #self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
-        #self.stockseed.deleteWarehouse(td.WareHouse['Name'])
-        #super().tearDownClass()
-        pass
+        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
+        self.stockseed.deleteWarehouse(td.WareHouse['Name'])
+        super().tearDownClass()
 
         self.stockseed.deleteRawMaterial('Abszint', module=True)
         self.stockseed.deleteWarehouse('Araktár', tab=True)
@@ -39,6 +42,11 @@ class BarCheckings(BaseTestCase):
         self.html.clickElement('Új standellenőrzés', 'a')
         self.html.switchFrame('iframe')
 
+        self.html.clickElement('Kérem válassza ki az ellenőrizni kívánt raktárat(kat):', 'p')
+        self.html.scroll()
+
+        #content = self.html.getElement(td.WareHouse['Name'], 'label', Options(following='label'))
+        #self.html.scrollToElement(content)
         self.html.clickElement(td.WareHouse['Name'], 'label', Options(following='label'))
         self.html.clickElement('Indít', waitSeconds=3)
         qty = int(self.html.getElement(td.RawMaterial['Name'], 'td', Options(following='td[3]//input')).get_attribute('value'))
