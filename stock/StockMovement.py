@@ -19,10 +19,12 @@ class StockMovement(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
+
         self.stockseed.deleteRawMaterial(td.RawMaterial['Name'], module=True)
         self.stockseed.deleteWarehouse(td.WareHouse['Name'], tab=True)
         self.stockseed.deleteWarehouse(td.WareHouse2['Name'])
         super().tearDownClass()
+
 
     def createNewMovement(self):
         self.html.wait()
