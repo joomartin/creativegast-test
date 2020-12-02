@@ -240,3 +240,11 @@ class HtmlProxy:
 
         return self.driver.find_element_by_xpath('//tr[' + xPath + ']').is_displayed()
 
+    # currently it doesn't work
+    def scrollToElement(self, element):
+        self.driver.execute_script('arguments[0].scrollIntoView;', element)
+
+    def scroll(self):
+        html = self.driver.find_element_by_tag_name('html')
+        html.send_keys(Keys.END)
+        self.wait(1)
