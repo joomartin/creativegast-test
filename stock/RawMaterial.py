@@ -165,7 +165,7 @@ class RawMaterial(BaseTestCase):
 
         self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
 
-        self.stockAssert.assertDeletedMaterial(td.RawMaterial['Name'], 'Pult',)
+        self.stockAssert.assertDeletedMaterial(td.RawMaterial['Name'], td.WareHouse['Name'],)
 
     def testOpeningButton(self):
         ME = 'liter'

@@ -13,11 +13,9 @@ class BarCheckings(BaseTestCase):
         super().login(self)
 
         self.stockseed.createWarehouse(td.WareHouse['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Name'], td.RawMaterial['GrosPrice'], td.RawMaterial['Quantity'], td.WareHouse['Name'])
+        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Name'], td.RawMaterial['GrosPrice'], td.RawMaterial['Quantity'], td.WareHouse['Name'], module=True)
 
         self.menu.openStocks()
-        self.stockseed.createWarehouse('Araktár', module=True)
-        self.stockseed.createRawMaterialWithOpening('Abszint', '1000', '10', 'Araktár', module=True)
 
         self.html.clickElement('Standellenőrzések', 'a')
 
@@ -25,13 +23,10 @@ class BarCheckings(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
-        self.stockseed.deleteWarehouse(td.WareHouse['Name'])
+        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'], module=True)
+        self.stockseed.deleteWarehouse(td.WareHouse['Name'],tab=True)
         super().tearDownClass()
 
-        self.stockseed.deleteRawMaterial('Abszint', module=True)
-        self.stockseed.deleteWarehouse('Araktár', tab=True)
-        super().tearDownClass()
 
     def deleteChecking(self):
         self.html.clickTableElement('barchecking', 'id', td.WareHouse['Name'], 'a', 'Törlés', 'Standellenőrzések')
