@@ -19,7 +19,6 @@ class BarCheckings(BaseTestCase):
 
         self.html.clickElement('Standellenőrzések', 'a')
 
-        pass
 
     @classmethod
     def tearDownClass(self):
