@@ -13,8 +13,8 @@ class Pizza(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        self.stockseed.createWarehouse(td.WareHouse['Name'])
-        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Name'], td.RawMaterial['GrosPrice'], td.RawMaterial['Quantity'], td.WareHouse['Name'], td.RawMaterial['ME'])
+        self.stockseed.createWarehouse(td.WareHouse['Name'], module=True)
+        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Name'], td.RawMaterial['GrosPrice'], td.RawMaterial['Quantity'], td.WareHouse['Name'], td.RawMaterial['ME'], module=True)
         #self.stockseed.createRawMaterial('Pizza feltét', '500', '100', 'Pizzatest', 'db')
 
         self.menu.openProducts()
@@ -22,8 +22,8 @@ class Pizza(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
-        self.stockseed.deleteWarehouse(td.WareHouse['Name'])
+        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'], module=True)
+        self.stockseed.deleteWarehouse(td.WareHouse['Name'], tab=True)
         super().tearDownClass()
 
 
@@ -54,6 +54,7 @@ class Pizza(BaseTestCase):
         self.html.clickElement('Rögzít', 'a')
 
         self.html.clickElement('Rögzít')
+        self.html.refresh()
 
         self.productAssert.assertPizzaExists(td.Pizza['ModifiedName'], td.Pizza['ModifiedGrossPrice'])
 

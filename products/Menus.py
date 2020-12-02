@@ -12,24 +12,24 @@ class Menus(BaseTestCase):
     def setUpClass(self):
         super().setUpClass()
         super().login(self)
-        self.stockseed.createWarehouse(td.WareHouse['Name'])
-        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Name'], td.RawMaterial['GrosPrice'], td.RawMaterial['Quantity'], td.WareHouse['Name'], td.RawMaterial['ME'])
-        self.productseed.createCounter(td.Counter['Name'], td.Counter['Position'])
-        self.productseed.createProductGroup(td.ProductGroup['Name'])
-        self.productseed.createProduct(td.Product['Name'], td.ProductGroup['Name'], td.Product['Code'], td.Counter['Name'], td.RawMaterial['Name'])
-        self.productseed.createProduct(td.Product['Name2'], td.ProductGroup['Name'], td.Product['Code2'], td.Counter['Name'], td.RawMaterial['Name'])
-        self.menu.openProducts()
+        self.stockseed.createWarehouse(td.WareHouse['Name'], module=True)
+        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Name'], td.RawMaterial['GrosPrice'], td.RawMaterial['Quantity'], td.WareHouse['Name'], td.RawMaterial['ME'], module=True)
+        self.productseed.createCounter(td.Counter['Name'], td.Counter['Position'], module=True)
+        self.productseed.createProductGroup(td.ProductGroup['Name'], tab=True)
+        self.productseed.createProduct(td.Product['Name'], td.ProductGroup['Name'], td.Product['Code'], td.Counter['Name'], td.RawMaterial['Name'], module=True)
+        self.productseed.createProduct(td.Product['Name2'], td.ProductGroup['Name'], td.Product['Code2'], td.Counter['Name'], td.RawMaterial['Name'], module=True)
+        self.html.refresh()
         self.html.clickElement('Menü', 'a')
 
     @classmethod
     def tearDownClass(self):
 
-        self.productseed.deleteProduct(td.Product['Name'])
+        self.productseed.deleteProduct(td.Product['Name'], module=True)
         self.productseed.deleteProduct(td.Product['Name2'])
-        self.productseed.deleteCounter(td.Counter['Name'])
-        self.productseed.deleteProductGroup(td.ProductGroup['Name'])
-        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
-        self.stockseed.deleteWarehouse(td.WareHouse['Name'])
+        self.productseed.deleteCounter(td.Counter['Name'], module=True)
+        self.productseed.deleteProductGroup(td.ProductGroup['Name'], module=True)
+        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'], module=True)
+        self.stockseed.deleteWarehouse(td.WareHouse['Name'], tab=True)
         super().tearDownClass()
 
 

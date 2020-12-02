@@ -11,11 +11,11 @@ class Products(BaseTestCase):
         super().login(self)
 
 
-        self.stockseed.createWarehouse(td.WareHouse['Name'])
-        self.stockseed.createRawMaterial(td.RawMaterial['Name'], td.RawMaterial['ME'], td.WareHouse['Name'])
+        self.stockseed.createWarehouse(td.WareHouse['Name'], module=True)
+        self.stockseed.createRawMaterial(td.RawMaterial['Name'], td.RawMaterial['ME'], td.WareHouse['Name'], module=True)
         self.stockseed.createRawMaterial(td.RawMaterial['Name2'], td.RawMaterial['ME'], td.WareHouse['Name'])
-        self.productseed.createCounter(td.Counter['Name'], td.Counter['Position'])
-        self.productseed.createProductGroup(td.ProductGroup['Name'])
+        self.productseed.createCounter(td.Counter['Name'], td.Counter['Position'], module=True)
+        self.productseed.createProductGroup(td.ProductGroup['Name'], tab=True)
         self.productseed.createProductGroup(td.ProductGroup['ModifiedName'])
 
         self.menu.openProducts()
@@ -25,11 +25,11 @@ class Products(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
+        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'], module=True)
         self.stockseed.deleteRawMaterial(td.RawMaterial['Name2'])
-        self.stockseed.deleteWarehouse(td.WareHouse['Name'])
-        self.productseed.deleteCounter(td.Counter['Name'])
-        self.productseed.deleteProductGroup(td.ProductGroup['Name'])
+        self.stockseed.deleteWarehouse(td.WareHouse['Name'], tab=True)
+        self.productseed.deleteCounter(td.Counter['Name'], tab=True)
+        self.productseed.deleteProductGroup(td.ProductGroup['Name'], tab=True)
         self.productseed.deleteProductGroup(td.ProductGroup['ModifiedName'])
 
 

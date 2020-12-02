@@ -64,7 +64,7 @@ class ProductSeed:
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Kód', '1212')
-        self.html.getElement('27%', 'td', Options(following='td//input')).send_keys(price)
+        self.html.getElement('27%', 'td', Options(following='td//input')).send_keys('100')
 
         self.html.fillInput('Fogás neve', 'Előétel')
         self.html.clickDropdown('Termékcsoport:', td.ProductGroup['Name'])

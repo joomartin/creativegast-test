@@ -2,7 +2,7 @@
 class TestData:
 
     RawMaterial = {
-        'Name': 'TestRawMaterial1',
+        'Name': 'TestRawMaterial2',
         'GrosPrice': '1000',
         'ModifiedGrossPrice': '1 010.00',
         'ME': 'liter',
@@ -17,17 +17,17 @@ class TestData:
         'Waste': '5',
         'FloatWaste': '5.00',
 
-        'Name2': 'TestRawMaterial2'
+        'Name2': 'TestRawMaterial3'
     }
 
     WareHouse = {
-        'Name': 'TestWarehouse1',
+        'Name': 'TestWarehouse2',
         'ModifiedName': 'ModifiedWarehouse',
         'MoveQuantity': '5'
     }
 
     WareHouse2 = {
-        'Name': 'Warehouse2'
+        'Name': 'Warehouse3'
     }
 
     StockMovement = {
@@ -75,8 +75,8 @@ class TestData:
     }
 
     Product = {
-        'Name': 'TestProduct1',
-        'Name2': 'TestProduct2',
+        'Name': 'TestProduct2',
+        'Name2': 'TestProduct3',
         'Code': '99',
         'Code2': '3131999',
         'NetPrice': '100',

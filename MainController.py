@@ -2,8 +2,7 @@ from stock.StockController import StockController
 from products.ProductController import ProductController
 
 sc = StockController()
-#pc = ProductController()
-
+pc = ProductController()
 
 sc.run()
-#pc.run()
+pc.run()
