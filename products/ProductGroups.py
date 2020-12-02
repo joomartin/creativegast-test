@@ -10,6 +10,7 @@ from products.ProductAssert import ProductAssert
 from stock.StockAssert import StockAssert
 from Config import read_section
 from shared.BaseTestCase import BaseTestCase
+from shared.TestData import TestData as td
 
 
 class ProductGroups(BaseTestCase):
@@ -28,7 +29,7 @@ class ProductGroups(BaseTestCase):
 
 
     def testCreate(self):
-        testName = 'testGroup'
+        testName = td.ProductGroup['Name']
         self.productseed.createProductGroup(testName)
         self.html.search(testName,'Termékcsoportok')
         self.productAssert.assertGroupExists(testName)
@@ -36,7 +37,7 @@ class ProductGroups(BaseTestCase):
 
 
     def testCreateWithParentGroup(self):
-        testName = 'testGroupWithParent'
+        testName = td.ProductGroup['Name']
         self.html.clickElement('Új termékcsoport felvitele', 'a')
 
         self.html.switchFrame('iframe')
@@ -54,8 +55,8 @@ class ProductGroups(BaseTestCase):
         self.productseed.deleteProductGroup(testName)
 
     def testUpdateGroup(self):
-        testName = 'testGroup'
-        newName = 'modifiedName'
+        testName = td.ProductGroup['Name']
+        newName = td.ProductGroup['ModifiedName']
         self.productseed.createProductGroup(testName)
         self.html.search(testName, 'Termékcsoportok')
         self.productAssert.assertGroupExists(testName)
