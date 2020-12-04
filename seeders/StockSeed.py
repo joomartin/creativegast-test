@@ -52,6 +52,7 @@ class StockSeed():
         self.html.search(name, 'Raktárkészlet')
         self.html.wait(2)
         self.html.clickTableDropdown(name, 'Törlés', 'Raktárkészlet')
+        self.html.wait(2)
         self.html.clickElement('Igen')
         self.html.wait(2)
         self.html.search('', 'Raktárkészlet')

@@ -26,12 +26,13 @@ class Pizza(BaseTestCase):
         self.stockseed.deleteWarehouse(td.WareHouse['Name'], tab=True)
         super().tearDownClass()
 
-
+    '''
     def testCreate(self):
         testName = 'Create pizza'
         self.productseed.createPizza(td.Pizza['Name'], td.RawMaterial['Name'], 'Pizza feltét')
         self.productAssert.assertPizzaExists(td.Pizza['Name'], td.Pizza['GrossPrice'])
         self.productseed.deletePizza(td.Pizza['Name'])
+    '''
 
     def testUpdate(self):
         testName = 'Update pizza'

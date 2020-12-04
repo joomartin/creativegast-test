@@ -52,7 +52,7 @@ class ProductGroups(BaseTestCase):
 
         self.productAssert.asseretParentGroup(testName, 'Ételek')
 
-        self.productseed.deleteProductGroup(testName)
+        self.productseed.deleteProductGroup(testName, module=True)
 
     def testUpdateGroup(self):
         testName = td.ProductGroup['Name']

@@ -26,11 +26,12 @@ class Products(BaseTestCase):
     @classmethod
     def tearDownClass(self):
         self.stockseed.deleteRawMaterial(td.RawMaterial['Name'], module=True)
-        self.stockseed.deleteRawMaterial(td.RawMaterial['Name2'])
+        self.stockseed.deleteRawMaterial(td.RawMaterial['Name2'], module=True)
         self.stockseed.deleteWarehouse(td.WareHouse['Name'], tab=True)
-        self.productseed.deleteCounter(td.Counter['Name'], tab=True)
-        self.productseed.deleteProductGroup(td.ProductGroup['Name'], tab=True)
-        self.productseed.deleteProductGroup(td.ProductGroup['ModifiedName'])
+        self.productseed.deleteCounter(td.Counter['Name'], module=True)
+        self.productseed.deleteProductGroup(td.ProductGroup['Name'], module=True)
+        self.productseed.deleteProductGroup(td.ProductGroup['ModifiedName'], module=True)
+        super().tearDownClass()
 
 
 

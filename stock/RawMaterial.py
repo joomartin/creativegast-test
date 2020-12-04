@@ -17,7 +17,6 @@ class RawMaterial(BaseTestCase):
     def tearDownClass(self):
         self.stockseed.deleteWarehouse(td.WareHouse['Name'], tab=True)
         super().tearDownClass()
-        pass
 
 
     def testCreate(self):
@@ -31,7 +30,7 @@ class RawMaterial(BaseTestCase):
         ME = 'liter'
         price = '1 010.00'
 
-        self.stockseed.createRawMaterial(td.RawMaterial['Name'], td.RawMaterial['ME'], td.WareHouse['Name'])
+        self.stockseed.createRawMaterial(td.RawMaterial['Name'], td.RawMaterial['ME'], td.WareHouse['Name'], module=True)
         #self.html.search(testName, 'Raktárkészlet')
         #self.html.clickElement(testName, 'td', Options(following='a'))
         self.html.clickTableDropdown(td.RawMaterial['Name'], 'Szerkeszt', 'Raktárkészlet')
@@ -50,6 +49,8 @@ class RawMaterial(BaseTestCase):
 
     def testOpening(self):
         testName = 'Abszint'
+
+        self.menu.openStocks()
 
         self.html.clickElement('Új nyersanyag felvitele', 'a')
         self.html.switchFrame('iframe')
@@ -104,6 +105,7 @@ class RawMaterial(BaseTestCase):
     def testDuplicate(self):
         testName = 'Abszint'
 
+        self.menu.openStocks()
         self.html.clickElement('Új nyersanyag felvitele', 'a')
         self.html.switchFrame('iframe')
 
@@ -137,7 +139,7 @@ class RawMaterial(BaseTestCase):
         testName = 'Abszint'
         ME = 'liter'
 
-        self.stockseed.createRawMaterial(td.RawMaterial['Name'], td.RawMaterial['ME'], td.WareHouse['Name'])
+        self.stockseed.createRawMaterial(td.RawMaterial['Name'], td.RawMaterial['ME'], td.WareHouse['Name'], module=True)
         # self.html.search(testName, 'Raktárkészlet')
         # self.html.clickElement(testName, 'td',  Options(following='a'))
         self.html.clickTableDropdown(td.RawMaterial['Name'], 'Szerkeszt', 'Raktárkészlet')
@@ -170,7 +172,7 @@ class RawMaterial(BaseTestCase):
     def testOpeningButton(self):
         ME = 'liter'
         qty = '100'
-        self.stockseed.createRawMaterial(td.RawMaterial['Name'], td.RawMaterial['ME'], td.WareHouse['Name'])
+        self.stockseed.createRawMaterial(td.RawMaterial['Name'], td.RawMaterial['ME'], td.WareHouse['Name'], module=True)
 
         self.html.search(td.RawMaterial['Name'], 'Raktárkészlet')
         self.html.clickElement(td.RawMaterial['Name'], 'td', Options(following='a'))
