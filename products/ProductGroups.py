@@ -49,7 +49,7 @@ class ProductGroups(BaseTestCase):
         self.html.wait(5)
 
         self.html.switchFrame()
-
+        self.html.wait(8)
         self.productAssert.asseretParentGroup(testName, 'Ételek')
 
         self.productseed.deleteProductGroup(testName, module=True)

@@ -22,6 +22,7 @@ class ProductController(Controller):
 
         # create a test suite combining search_text and home_page_test
         test_suite = unittest.TestSuite([products, productGroups, menus, pizza])
+        #test_suite = unittest.TestSuite([productGroups])
         #test_suite = unittest.TestSuite([menus, pizza])
 
 
