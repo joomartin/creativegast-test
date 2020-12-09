@@ -46,6 +46,7 @@ class Test(BaseTestCase):
     #@unittest.skip
     def testEdit(self):
         self.stockseed.createWarehouse(td.WareHouse['Name'])
+        self.html.search(td.WareHouse['Name'], 'Raktárak')
         self.html.clickElement(None,
                                "//tr[contains(., " + td.WareHouse['Name'] + ")]//a[contains(@class, 'edit') and contains(@class, 'actionButton')]",
                                Options(uniqueSelector=True))
