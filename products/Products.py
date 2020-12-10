@@ -10,17 +10,13 @@ class Products(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-
         self.stockseed.createWarehouse(td.WareHouse['Name'], module=True)
         self.stockseed.createRawMaterial(td.RawMaterial['Name'], td.RawMaterial['ME'], td.WareHouse['Name'], module=True)
         self.stockseed.createRawMaterial(td.RawMaterial['Name2'], td.RawMaterial['ME'], td.WareHouse['Name'])
         self.productseed.createCounter(td.Counter['Name'], td.Counter['Position'], module=True)
         self.productseed.createProductGroup(td.ProductGroup['Name'], tab=True)
         self.productseed.createProductGroup(td.ProductGroup['ModifiedName'])
-
         self.menu.openProducts()
-
-
 
 
     @classmethod
@@ -37,6 +33,11 @@ class Products(BaseTestCase):
 
     def testCreate(self):
         self.productseed.createProduct(td.Product['Name'], td.ProductGroup['Name'], td.Product['Code'], td.Counter['Name'], td.RawMaterial['Name'])
+        self.productAssert.assertProductExist(td.Product['Name'], 'Termékek')
+        self.productseed.deleteProduct(td.Product['Name'])
+
+    def testCreateConvenience(self):
+        self.productseed.createProductConveniencies(td.Product['Name'], td.ProductGroup['Conveniences'], td.Product['Code'], td.Counter['Name'], td.RawMaterial['Name'])
         self.productAssert.assertProductExist(td.Product['Name'], 'Termékek')
         self.productseed.deleteProduct(td.Product['Name'])
 

@@ -184,6 +184,38 @@ class ProductSeed:
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
 
+    def createProductConveniencies(self, name, group, code, counter, component, module=False):
+        if module:
+            self.menu.openProducts()
+
+        self.html.clickElement('Új termék felvitele', 'a')
+        self.html.switchFrame('iframe')
+
+        self.html.clickDropdown('Nyomtatási részleg', 'Pult')
+        self.html.switchFrame('iframe')
+
+        self.html.clickElement(group, 'a')
+        self.html.clickElement('Rögzít')
+
+        self.html.switchFrame('iframe')
+        self.html.fillInput('Termék neve', name)
+        self.html.fillInput('Kód', code)
+
+        self.html.clickElement('p_counters', 'input', Options(htmlAttribute='id'), waitSeconds=1)
+        self.html.switchFrame('iframe')
+
+        self.html.clickElement(counter, 'td')
+        self.html.clickElement('Rögzít')
+        self.html.switchFrame('iframe')
+
+        self.html.clickElement(None, './/label[contains(.,"Gyártás termék") and @class="radio formStyle"]', options=Options(uniqueSelector=True))
+        self.html.fillInput('Recept adag', '1')
+
+        self.html.fillAutocomplete('componentName', 'input', component, component, 'li', Options(htmlAttribute='id'))
+        self.html.fillInput('componentQty', 2, 'input', options=Options(htmlAttribute='id'))
+        self.html.clickElement('Hozzáad')
+        self.html.clickElement('Rögzít')
+
     def deleteProduct(self, name, module=False):
         if module:
             self.menu.openProducts()

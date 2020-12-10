@@ -72,6 +72,7 @@ class TestData:
     ProductGroup = {
         'Name': 'TestGroup',
         'ModifiedName': 'ModifiedGroup',
+        'Conveniences': 'Gyártmányok'
     }
 
     Product = {
