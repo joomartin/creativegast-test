@@ -5,9 +5,11 @@ from core.HtmlProxy import HtmlProxy
 from mainMenu.MainMenuProxy import MainMenuProxy
 from stock.StockAssert import StockAssert
 from products.ProductAssert import ProductAssert
+from receiving.ReceivingAssert import ReceivingAssert
 from Config import read_section
 from seeders.StockSeed import StockSeed
 from seeders.ProductSeed import ProductSeed
+from seeders.ReceivingSeed import ReceivingSeed
 
 class BaseTestCase(unittest.TestCase):
 
@@ -24,8 +26,10 @@ class BaseTestCase(unittest.TestCase):
         self.menu = MainMenuProxy(self.driver)
         self.stockseed = StockSeed(self.driver)
         self.productseed = ProductSeed(self.driver)
+        self.receivingseed= ReceivingSeed(self.driver)
         self.stockAssert = StockAssert(self.html,self.driver)
         self.productAssert = ProductAssert(self.html,self.driver)
+        self.receivingAssert=ReceivingAssert(self.html,self.driver)
 
     @classmethod
     def tearDownClass(self):
