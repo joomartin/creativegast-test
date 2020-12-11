@@ -89,3 +89,8 @@ class TestData:
         'ModifiedComponent': 'TestComponent2'
 
     }
+
+    Partner={
+        'Name': 'testPartner',
+        'Id': '01'
+    }
