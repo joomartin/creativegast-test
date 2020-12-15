@@ -1,6 +1,6 @@
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
-from shared.TestData import TestData as td
+from shared.TestData import TestData as data
 
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
@@ -12,44 +12,44 @@ class Menus(BaseTestCase):
     def setUpClass(self):
         super().setUpClass()
         super().login(self)
-        self.stockseed.createWarehouse(td.WareHouse['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Name'], td.RawMaterial['GrosPrice'], td.RawMaterial['Quantity'], td.WareHouse['Name'], td.RawMaterial['ME'], module=True)
-        self.productseed.createCounter(td.Counter['Name'], td.Counter['Position'], module=True)
-        self.productseed.createProductGroup(td.ProductGroup['Name'], tab=True)
-        self.productseed.createProduct(td.Product['Name'], td.ProductGroup['Name'], td.Product['Code'], td.Counter['Name'], td.RawMaterial['Name'], module=True)
-        self.productseed.createProduct(td.Product['Name2'], td.ProductGroup['Name'], td.Product['Code2'], td.Counter['Name'], td.RawMaterial['Name'], module=True)
+        self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
+        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrosPrice'], data.RawMaterial['Bundas_kenyer']['Quantity'], data.WareHouses['Szeszraktár']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], module=True)
+        self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'], module=True)
+        self.productseed.createProductGroup(data.ProductGroup['Egyeb']['Name'], tab=True)
+        self.productseed.createProduct(data.Product['Babgulyás']['Name'], data.ProductGroup['Egyeb']['Name'], data.Product['Babgulyás']['Code'], data.Counter['TestCounter']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+        self.productseed.createProduct(data.Product['Palacsinta']['Name'], data.ProductGroup['Egyeb']['Name'], data.Product['Palacsinta']['Code'], data.Counter['TestCounter']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.html.refresh()
         self.html.clickElement('Menü', 'a')
 
     @classmethod
     def tearDownClass(self):
 
-        self.productseed.deleteProduct(td.Product['Name'], module=True)
-        self.productseed.deleteProduct(td.Product['Name2'])
-        self.productseed.deleteCounter(td.Counter['Name'], module=True)
-        self.productseed.deleteProductGroup(td.ProductGroup['Name'], module=True)
-        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'], module=True)
-        self.stockseed.deleteWarehouse(td.WareHouse['Name'], tab=True)
+        self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True)
+        self.productseed.deleteProduct(data.Product['Palacsinta']['Name2'])
+        self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], module=True)
+        self.productseed.deleteProductGroup(data.ProductGroup['Egyeb']['Name'], module=True)
+        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+        self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         super().tearDownClass()
 
 
 
     def testCreate(self):
-        self.productseed.createMenu(td.Menu['Name'], td.Product['Name'], td.Product['Name2'], td.Menu['Price'])
-        self.productAssert.assertMenuExists(td.Menu['Name'], td.Menu['GrossPrice'])
-        self.productseed.deleteMenu(td.Menu['Name'])
+        self.productseed.createMenu(data.Menu['NapiMenu']['Name'], data.Product['Babgulyás']['Name'], data.Product['Palacsinta']['Name'], data.Menu['Napimenu']['Price'])
+        self.productAssert.assertMenuExists(data.Menu['NapiMenu']['Name'], data.Menu['NapiMenu']['GrossPrice'])
+        self.productseed.deleteMenu(data.Menu['NapiMenu']['Name'])
 
     def testUpdateMenu(self):
         modName = 'Modified menu'
         modPrice= 300
-        self.productseed.createMenu(td.Menu['Name'], td.Product['Name'], td.Product['Name2'], td.Menu['Price'])
+        self.productseed.createMenu(data.Menu['NapiMenu']['Name'], data.Product['Babgulyás']['Name'], data.Product['Palacsinta']['Name'], data.Menu['NapiMenu']['Price'])
 
-        self.html.clickTableElement('menu', 'id', td.Menu['Name'], 'span', 'Szerkeszt', 'Menü')
+        self.html.clickTableElement('menu', 'id', data.Menu['Napimenu']['Name'], 'span', 'Szerkeszt', 'Menü')
         self.html.switchFrame('iframe')
 
-        self.html.fillInput('Termék neve', td.Menu['ModifiedName'])
+        self.html.fillInput('Termék neve', data.Menu['Napimenu']['ModifiedName'])
         self.html.getElement('27%', 'td', Options(following='td//input')).clear()
-        self.html.getElement('27%', 'td', Options(following='td//input')).send_keys(td.Menu['ModifiedPrice'])
+        self.html.getElement('27%', 'td', Options(following='td//input')).send_keys(data.Menu['Napimenu']['ModifiedPrice'])
         self.html.clickElement('Rögzít')
         self.html.wait(2)
 
@@ -62,8 +62,8 @@ class Menus(BaseTestCase):
             self.html.switchFrame()
 
         self.html.refresh()
-        self.html.search(td.Menu['ModifiedName'], 'Menü')
+        self.html.search(data.Menu['Napimenu']['ModifiedName'], 'Menü')
         self.html.wait(3)
-        self.productAssert.assertMenuExists(td.Menu['ModifiedName'], '381.00')
+        self.productAssert.assertMenuExists(data.Menu['Napimenu']['ModifiedName'], '381.00')
 
-        self.productseed.deleteMenu(td.Menu['ModifiedName'])
+        self.productseed.deleteMenu(data.Menu['Napimenu']['ModifiedName'])

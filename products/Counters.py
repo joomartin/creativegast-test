@@ -1,5 +1,5 @@
 from shared.BaseTestCase import BaseTestCase
-from shared.TestData import TestData as td
+from shared.TestData import TestData as data
 
 class Counters(BaseTestCase):
 
@@ -17,48 +17,48 @@ class Counters(BaseTestCase):
 
     def testCreate(self):
 
-        self.productseed.createCounter(td.Counter['Name'], td.Counter['Position'])
-        self.productAssert.assertCounterExists(td.Counter['Name'], 'Számlálók')
-        self.html.search(td.Counter['Name'], 'Számlálók')
+        self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'])
+        self.productAssert.assertCounterExists(data.Counter['TestCounter']['Name'], 'Számlálók')
+        self.html.search(data.Counter['TestCounter']['Name'], 'Számlálók')
         obsPos = self.html.getTxtFromTable('1', '3', 'counters')
-        self.assertEqual(str(int(float(obsPos))), td.Counter['Position'])
+        self.assertEqual(str(int(float(obsPos))), data.Counter['TestCounter']['Position'])
         self.html.search('', 'Számlálók')
 
-        self.productseed.deleteCounter(td.Counter['Name'])
-        self.productAssert.assertCounterNotExists(td.Counter['Name'], 'Számlálók')
+        self.productseed.deleteCounter(data.Counter['TestCounter']['Name'])
+        self.productAssert.assertCounterNotExists(data.Counter['TestCounter']['Name'], 'Számlálók')
         self.html.search('', 'Számlálók')
 
     def testDetails(self):
 
-        self.productseed.createCounter(td.Counter['Name'], td.Counter['Position'])
+        self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'])
 
-        self.html.clickTableElement('counters', 'id', td.Counter['Name'], 'a', 'Részletek', 'Számlálók')
+        self.html.clickTableElement('counters', 'id', data.Counter['TestCounter']['Name'], 'a', 'Részletek', 'Számlálók')
         self.html.switchFrame('iframe')
 
         obsCounter = self.html.getTxtFromTable('1', '1')
-        self.assertEqual(obsCounter, td.Counter['Name'])
+        self.assertEqual(obsCounter, data.Counter['TestCounter']['Name'])
         obsPos = self.html.getTxtFromTable('2', '1')
-        self.assertEqual(str(int(obsPos)), td.Counter['Position'])
+        self.assertEqual(str(int(obsPos)), data.Counter['TestCounter']['Position'])
 
-        self.productseed.deleteCounter(td.Counter['Name'])
+        self.productseed.deleteCounter(data.Counter['TestCounter']['Name'])
         self.html.search('', 'Számlálók')
 
     def testEdit(self):
 
-        self.productseed.createCounter(td.Counter['Name'], td.Counter['Position'])
+        self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'])
 
-        self.html.clickTableElement('counters', 'id', td.Counter['Name'], 'a', 'Szerkeszt', 'Számlálók')
+        self.html.clickTableElement('counters', 'id', data.Counter['TestCounter']['Name'], 'a', 'Szerkeszt', 'Számlálók')
         self.html.switchFrame('iframe')
 
-        self.html.fillInput('Számláló neve', td.Counter['ModifiedName'])
-        self.html.fillInput('Számláló állás', td.Counter['ModifiedPosition'])
+        self.html.fillInput('Számláló neve', data.Counter['TestCounter']['ModifiedName'])
+        self.html.fillInput('Számláló állás', data.Counter['TestCounter']['ModifiedPosition'])
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
 
-        self.productAssert.assertCounterExists(td.Counter['ModifiedName'], 'Számlálók')
-        self.html.search(td.Counter['ModifiedName'], 'Számlálók')
+        self.productAssert.assertCounterExists(data.Counter['TestCounter']['ModifiedName'], 'Számlálók')
+        self.html.search(data.Counter['TestCounter']['ModifiedName'], 'Számlálók')
         obsPos = self.html.getTxtFromTable('1', '3', 'counters')
-        self.assertEqual(str(int(float(obsPos))), td.Counter['ModifiedPosition'])
+        self.assertEqual(str(int(float(obsPos))), data.Counter['TestCounter']['ModifiedPosition'])
 
-        self.productseed.deleteCounter(td.Counter['ModifiedName'])
+        self.productseed.deleteCounter(data.Counter['TestCounter']['ModifiedName'])
         self.html.search('', 'Számlálók')

@@ -67,7 +67,7 @@ class ProductSeed:
         self.html.getElement('27%', 'td', Options(following='td//input')).send_keys('100')
 
         self.html.fillInput('Fogás neve', 'Előétel')
-        self.html.clickDropdown('Termékcsoport:', td.ProductGroup['Name'])
+        self.html.clickDropdown('Termékcsoport:', td.ProductGroup['Egyeb']['Name'])
         self.html.clickElement(td.ProductGroup['Name'])
         self.html.fillInput('Mennyiség', '1')
         self.html.getInput('Mennyiség', 'label').click()

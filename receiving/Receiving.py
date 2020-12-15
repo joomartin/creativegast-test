@@ -28,7 +28,7 @@ class Receiving(BaseTestCase):
     def createReceiving(self, billName,):
         self.menu.openReceiving()
         self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        self.html.clickElement('Új')
+        # self.html.clickElement('Új')
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Számla azonosító', billName)
@@ -51,6 +51,10 @@ class Receiving(BaseTestCase):
         self.createReceiving(name)
         self.html.wait(2)
         self.receivingAssert.assertReceivingExists(td.Partner['Name'])
+        self.stockAssert.assertStock(td.RawMaterial['Name'],td.WareHouse['Name'],'110')
+        self.menu.openReceiving()
+        self.html.clickElement('Keresés')
+        self.html.wait(2)
         self.html.clickElement('Törlés', 'span')
         self.html.clickElement('Igen')
 
@@ -66,6 +70,10 @@ class Receiving(BaseTestCase):
 
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+        self.stockAssert.assertStock(td.RawMaterial['Name'], td.WareHouse['Name'], '110')
+        self.menu.openReceiving()
+        self.html.clickElement('Keresés')
+        self.html.wait(2)
         self.html.clickElement('Törlés', 'span')
         self.html.clickElement('Igen')
 
