@@ -1,6 +1,6 @@
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
-from shared.TestData import TestData as td
+from shared.TestData import TestData as data
 
 
 class RawMaterial(BaseTestCase):
@@ -10,19 +10,19 @@ class RawMaterial(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        self.stockseed.createWarehouse(td.WareHouse['Name'], module=True)
+        self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
 
 
     @classmethod
     def tearDownClass(self):
-        self.stockseed.deleteWarehouse(td.WareHouse['Name'], tab=True)
+        self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         super().tearDownClass()
 
 
     def testCreate(self):
         testName = 'Abszint'
-        self.stockseed.createRawMaterial(td.RawMaterial['Name'], td.RawMaterial['ME'], td.WareHouse['Name'], module=True)
-        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
+        self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
+        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
 
     def testUpdate(self):
@@ -30,22 +30,22 @@ class RawMaterial(BaseTestCase):
         ME = 'liter'
         price = '1 010.00'
 
-        self.stockseed.createRawMaterial(td.RawMaterial['Name'], td.RawMaterial['ME'], td.WareHouse['Name'], module=True)
+        self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
         #self.html.search(testName, 'Raktárkészlet')
         #self.html.clickElement(testName, 'td', Options(following='a'))
-        self.html.clickTableDropdown(td.RawMaterial['Name'], 'Szerkeszt', 'Raktárkészlet')
+        self.html.clickTableDropdown(data.RawMaterial['Bundas_kenyer']['Name'], 'Szerkeszt', 'Raktárkészlet')
         self.html.switchFrame('iframe')
 
-        self.html.fillInput('Bruttó beszerzési egységár', td.RawMaterial['ModifiedGrossPrice'])
+        self.html.fillInput('Bruttó beszerzési egységár', data.RawMaterial['Bundas_kenyer']['ModifiedGrossPrice'])
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
         self.html.refresh()
 
-        self.html.search(td.RawMaterial['Name'], 'Raktárkészlet')
+        self.html.search(data.RawMaterial['Bundas_kenyer']['Name'], 'Raktárkészlet')
         new = self.html.getTxtFromTable('1', '6', 'components')
-        self.assertEqual(td.RawMaterial['ModifiedGrossPrice'], new)
+        self.assertEqual(data.RawMaterial['Bundas_kenyer']['ModifiedGrossPrice'], new)
 
-        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
+        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
     def testOpening(self):
         testName = 'Abszint'
@@ -55,40 +55,40 @@ class RawMaterial(BaseTestCase):
         self.html.clickElement('Új nyersanyag felvitele', 'a')
         self.html.switchFrame('iframe')
 
-        self.html.fillInput('Nyersanyag neve', td.RawMaterial['Name'])
-        self.html.fillInput('Bruttó beszerzési egységár', td.RawMaterial['GrosPrice'])
-        self.html.clickDropdown('ME', td.RawMaterial['ME'])
-        self.html.fillInput('Nyitó mennyiség', td.RawMaterial['Quantity'])
-        self.html.clickDropdown('Raktár', td.WareHouse['Name'])
+        self.html.fillInput('Nyersanyag neve', data.RawMaterial['Bundas_kenyer']['Name'])
+        self.html.fillInput('Bruttó beszerzési egységár', data.RawMaterial['Bundas_kenyer']['GrosPrice'])
+        self.html.clickDropdown('ME', data.RawMaterial['Bundas_kenyer']['ME'])
+        self.html.fillInput('Nyitó mennyiség', data.RawMaterial['Bundas_kenyer']['Quantity'])
+        self.html.clickDropdown('Raktár', data.WareHouses['Szeszraktár']['Name'])
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
         self.html.refresh()
 
-        self.html.search(td.RawMaterial['Name'], 'Raktárkészlet')
+        self.html.search(data.RawMaterial['Bundas_kenyer']['Name'], 'Raktárkészlet')
         quantity = self.html.getTxtFromTable(1, 3, 'components')
         #self.assertEqual('10.00', quantity)
-        self.assertEqual(td.RawMaterial['FloatQuantity'], quantity)
+        self.assertEqual(data.RawMaterial['Bundas_kenyer']['FloatQuantity'], quantity)
 
         netPrice = self.html.getTxtFromTable(1, 5, 'components')
-        self.assertEqual(td.RawMaterial['NetPrice'], '787.40')
+        self.assertEqual(data.RawMaterial['Bundas_kenyer']['NetPrice'], '787.40')
 
         nettValue = self.html.getTxtFromTable(1, 7, 'components')
-        self.assertEqual(td.RawMaterial['NetValue'], '7 874.02')
+        self.assertEqual(data.RawMaterial['Bundas_kenyer']['NetValue'], '7 874.02')
 
-        self.html.clickTableDropdown(td.RawMaterial['Name'], 'Raktárak', 'Raktárkészlet')
+        self.html.clickTableDropdown(data.RawMaterial['Bundas_kenyer']['Name'], 'Raktárak', 'Raktárkészlet')
         self.html.switchFrame('iframe')
 
         whause = self.html.getTxtFromTable(2, 2)
-        self.assertEqual(whause, td.WareHouse['Name'])
+        self.assertEqual(whause, data.WareHouses['Szeszraktár']['Name'])
 
         grossPrice = self.html.getTxtFromTable(2, 3)
-        self.assertEqual(grossPrice, td.RawMaterial['GrosPrice'])
+        self.assertEqual(grossPrice, data.RawMaterial['Bundas_kenyer']['GrosPrice'])
 
         qty = self.html.getTxtFromTable(2, 4)
-        self.assertEqual(qty, td.RawMaterial['Quantity'])
+        self.assertEqual(qty, data.RawMaterial['Bundas_kenyer']['Quantity'])
 
         whValue = self.html.getTxtFromTable(2, 5)
-        self.assertEqual(whValue, td.RawMaterial['WhValue'])
+        self.assertEqual(whValue, data.RawMaterial['Bundas_kenyer']['WhValue'])
 
         # self.html.pressKey('iframe', 'body', Keys.ESCAPE, Options(htmlAttribute='class'))
         # self.html.switchFrame()
@@ -96,11 +96,11 @@ class RawMaterial(BaseTestCase):
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
 
-        self.stockAssert.assertStock(td.RawMaterial['Name'], td.WareHouse['Name'], td.RawMaterial['Quantity'])
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'], data.RawMaterial['Bundas_kenyer']['Quantity'])
 
-        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
+        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
-        self.stockAssert.assertDeletedMaterial(td.RawMaterial['Name'], td.WareHouse['Name'])
+        self.stockAssert.assertDeletedMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'])
 
     def testDuplicate(self):
         testName = 'Abszint'
@@ -109,22 +109,22 @@ class RawMaterial(BaseTestCase):
         self.html.clickElement('Új nyersanyag felvitele', 'a')
         self.html.switchFrame('iframe')
 
-        self.html.fillInput('Nyersanyag neve', td.RawMaterial['Name'])
-        self.html.clickDropdown('ME', td.RawMaterial['ME'])
-        self.html.clickDropdown('Raktár', td.WareHouse['Name'])
+        self.html.fillInput('Nyersanyag neve', data.RawMaterial['Bundas_kenyer']['Name'])
+        self.html.clickDropdown('ME', data.RawMaterial['Bundas_kenyer']['ME'])
+        self.html.clickDropdown('Raktár', data.WareHouses['Szeszraktár']['Name'])
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
 
         self.html.refresh()
-        self.html.search(td.RawMaterial['Name'], 'Raktárkészlet')
-        self.stockAssert.assertMaterialExist(td.RawMaterial['Name'], 'Raktárkészlet')
+        self.html.search(data.RawMaterial['Bundas_kenyer']['Name'], 'Raktárkészlet')
+        self.stockAssert.assertMaterialExist(data.RawMaterial['Bundas_kenyer']['Name'], 'Raktárkészlet')
 
         self.html.clickElement('Új nyersanyag felvitele', 'a')
         self.html.switchFrame('iframe')
 
-        self.html.fillInput('Nyersanyag neve', td.RawMaterial['Name'])
-        self.html.clickDropdown('ME', td.RawMaterial['ME'])
-        self.html.clickDropdown('Raktár', td.WareHouse['Name'])
+        self.html.fillInput('Nyersanyag neve', data.RawMaterial['Bundas_kenyer']['Name'])
+        self.html.clickDropdown('ME', data.RawMaterial['Bundas_kenyer']['ME'])
+        self.html.clickDropdown('Raktár', data.WareHouses['Szeszraktár']['Name'])
         self.html.clickElement('Rögzít')
 
         self.stockAssert.assertDialogDisplayed()
@@ -133,56 +133,56 @@ class RawMaterial(BaseTestCase):
         self.html.clickElement('Igen')
         self.html.switchFrame()
 
-        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
+        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
     def testWastingRawMaterial(self):
         testName = 'Abszint'
         ME = 'liter'
 
-        self.stockseed.createRawMaterial(td.RawMaterial['Name'], td.RawMaterial['ME'], td.WareHouse['Name'], module=True)
+        self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
         # self.html.search(testName, 'Raktárkészlet')
         # self.html.clickElement(testName, 'td',  Options(following='a'))
-        self.html.clickTableDropdown(td.RawMaterial['Name'], 'Szerkeszt', 'Raktárkészlet')
+        self.html.clickTableDropdown(data.RawMaterial['Bundas_kenyer']['Name'], 'Szerkeszt', 'Raktárkészlet')
         self.html.switchFrame('iframe')
 
-        self.html.fillInput('Nyitó mennyiség', td.RawMaterial['Quantity'])
-        self.html.clickDropdown('Raktár', td.WareHouse['Name'])
+        self.html.fillInput('Nyitó mennyiség', data.RawMaterial['Bundas_kenyer']['Quantity'])
+        self.html.clickDropdown('Raktár', data.WareHouses['Szeszraktár']['Name'])
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
 
-        self.html.clickTableDropdown(td.RawMaterial['Name'], 'Selejt', 'Raktárkészlet')
+        self.html.clickTableDropdown(data.RawMaterial['Bundas_kenyer']['Name'], 'Selejt', 'Raktárkészlet')
         self.html.switchFrame('iframe')
 
-        self.html.clickDropdown('Raktár', td.WareHouse['Name'])
-        self.html.fillInput('Mennyiség', td.RawMaterial['Waste'])
+        self.html.clickDropdown('Raktár', data.WareHouses['Szeszraktár']['Name'])
+        self.html.fillInput('Mennyiség', data.RawMaterial['Bundas_kenyer']['Waste'])
         self.html.clickElement('Üveg összetört')
         self.html.switchFrame()
         self.html.refresh()
 
-        self.html.search(td.RawMaterial['Name'], 'Raktárkészlet')
+        self.html.search(data.RawMaterial['Bundas_kenyer']['Name'], 'Raktárkészlet')
         qty = self.html.getTxtFromTable(1, 3, 'components')
-        self.assertEqual(qty, td.RawMaterial['FloatWaste'])
+        self.assertEqual(qty, data.RawMaterial['Bundas_kenyer']['FloatWaste'])
 
-        self.stockAssert.assertStock(td.RawMaterial['Name'], td.WareHouse['Name'], td.RawMaterial['Waste'])
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'], data.RawMaterial['Bundas_kenyer']['Waste'])
 
-        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
+        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
-        self.stockAssert.assertDeletedMaterial(td.RawMaterial['Name'], td.WareHouse['Name'],)
+        self.stockAssert.assertDeletedMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'], )
 
     def testOpeningButton(self):
         ME = 'liter'
         qty = '100'
-        self.stockseed.createRawMaterial(td.RawMaterial['Name'], td.RawMaterial['ME'], td.WareHouse['Name'], module=True)
+        self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
 
-        self.html.search(td.RawMaterial['Name'], 'Raktárkészlet')
-        self.html.clickElement(td.RawMaterial['Name'], 'td', Options(following='a'))
+        self.html.search(data.RawMaterial['Bundas_kenyer']['Name'], 'Raktárkészlet')
+        self.html.clickElement(data.RawMaterial['Bundas_kenyer']['Name'], 'td', Options(following='a'))
         self.html.clickElement('Nyitókészlet', 'a')
 
         self.html.switchFrame('iframe')
-        input = self.html.getElement(td.RawMaterial['Name'], 'td', Options(following='input'))
-        input.send_keys(td.RawMaterial['Quantity2'])
+        input = self.html.getElement(data.RawMaterial['Bundas_kenyer']['Name'], 'td', Options(following='input'))
+        input.send_keys(data.RawMaterial['Bundas_kenyer']['Quantity2'])
 
-        self.html.clickDropdown(td.RawMaterial['Name'], td.WareHouse['Name'], 'td')
+        self.html.clickDropdown(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'], 'td')
         self.html.clickElement('Rögzít', 'span', waitSeconds=2)
 
         self.html.switchFrame()
@@ -190,9 +190,9 @@ class RawMaterial(BaseTestCase):
 
 
         self.html.refresh()
-        self.stockAssert.assertStock(td.RawMaterial['Name'], td.WareHouse['Name'], td.RawMaterial['Quantity2'])
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'], data.RawMaterial['Bundas_kenyer']['Quantity2'])
 
-        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'])
+        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
 
 

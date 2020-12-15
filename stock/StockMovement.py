@@ -1,7 +1,7 @@
 from selenium.webdriver.common.keys import Keys
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
-from shared.TestData import TestData as td
+from shared.TestData import TestData as data
 
 
 class StockMovement(BaseTestCase):
@@ -11,18 +11,18 @@ class StockMovement(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        self.stockseed.createWarehouse(td.WareHouse['Name'], module=True)
-        self.stockseed.createWarehouse(td.WareHouse2['Name'])
-        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Name'], td.RawMaterial['GrosPrice'], td.RawMaterial['Quantity'], td.WareHouse['Name'], module=True)
+        self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
+        self.stockseed.createWarehouse(data.WareHouses['Tartalékraktár']['Name'])
+        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrosPrice'], data.RawMaterial['Bundas_kenyer']['Quantity'], data.WareHouses['Szeszraktár']['Name'], module=True)
 
         self.html.clickElement('Raktármozgás', 'a')
 
     @classmethod
     def tearDownClass(self):
 
-        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'], module=True)
-        self.stockseed.deleteWarehouse(td.WareHouse['Name'], tab=True)
-        self.stockseed.deleteWarehouse(td.WareHouse2['Name'])
+        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+        self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
+        self.stockseed.deleteWarehouse(data.WareHouses['Tartalékraktár']['Name'])
         super().tearDownClass()
 
 
@@ -32,14 +32,14 @@ class StockMovement(BaseTestCase):
         self.html.clickElement('Új')
         self.html.switchFrame('iframe')
 
-        self.html.clickDropdown('Forrás raktár',td.WareHouse['Name'])
+        self.html.clickDropdown('Forrás raktár', data.WareHouses['Szeszraktár']['Name'])
         self.html.wait()
-        self.html.clickDropdown('Cél raktár', td.WareHouse2['Name'])
+        self.html.clickDropdown('Cél raktár', data.WareHouses['Tartalékraktár']['Name'])
 
-        self.html.fillAutocomplete('Nyersanyag', 'input', td.RawMaterial['Name'], td.RawMaterial['Name'], 'li', Options(htmlAttribute='data-title'))
+        self.html.fillAutocomplete('Nyersanyag', 'input', data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], 'li', Options(htmlAttribute='data-title'))
         self.html.getElement('Maximum', 'input', Options(htmlAttribute='data-title')).click()
         self.html.wait()
-        self.html.fillInput('Mennyiség', td.WareHouse['MoveQuantity'], 'data-title')
+        self.html.fillInput('Mennyiség', data.WareHouses['Szeszraktár']['MoveQuantity'], 'data-title')
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
 
@@ -52,31 +52,31 @@ class StockMovement(BaseTestCase):
 
     def testCreate(self):
         self.createNewMovement()
-        self.deleteMovement(td.WareHouse['Name'])
+        self.deleteMovement(data.WareHouses['Szeszraktár']['Name'])
 
     def testView(self):
         self.createNewMovement()
 
-        self.html.clickTableElement('storagemove', 'id', td.WareHouse['Name'], 'span', 'Megtekintés', 'Raktármozgás')
+        self.html.clickTableElement('storagemove', 'id', data.WareHouses['Szeszraktár']['Name'], 'span', 'Megtekintés', 'Raktármozgás')
 
         self.html.switchFrame('iframe')
 
         materialName = self.html.getTxtFromTable(2, 1)
-        self.assertEqual(materialName, td.RawMaterial['Name'])
+        self.assertEqual(materialName, data.RawMaterial['Bundas_kenyer']['Name'])
 
         qty = self.html.getTxtFromTable(2, 2)
-        self.assertEqual(qty, td.WareHouse['MoveQuantity'])
+        self.assertEqual(qty, data.WareHouses['Szeszraktár']['MoveQuantity'])
 
         me = self.html.getTxtFromTable(2, 3)
-        self.assertEqual(me, td.RawMaterial['ME'])
+        self.assertEqual(me, data.RawMaterial['Bundas_kenyer']['ME'])
 
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
-        qty = str(int(td.RawMaterial['Quantity']) - int(td.WareHouse['MoveQuantity']))
-        self.stockAssert.assertStock(td.RawMaterial['Name'], td.WareHouse2['Name'], qty)
+        qty = str(int(data.RawMaterial['Bundas_kenyer']['Quantity']) - int(data.WareHouses['Szeszraktár']['MoveQuantity']))
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Tartalékraktár']['Name'], qty)
         self.html.clickElement('Raktármozgás', 'a')
 
-        self.deleteMovement(td.WareHouse['Name'])
+        self.deleteMovement(data.WareHouses['Szeszraktár']['Name'])
 
-        qty2 = str(int(td.RawMaterial['Quantity']) - int(td.WareHouse['MoveQuantity'])*2)
-        self.stockAssert.assertStock(td.RawMaterial['Name'], td.WareHouse2['Name'], qty2)
+        qty2 = str(int(data.RawMaterial['Bundas_kenyer']['Quantity']) - int(data.WareHouses['Szeszraktár']['MoveQuantity']) * 2)
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Tartalékraktár']['Name'], qty2)
