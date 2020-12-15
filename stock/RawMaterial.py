@@ -36,27 +36,29 @@ class RawMaterial(BaseTestCase):
         self.html.clickTableDropdown(data.RawMaterial['Bundas_kenyer']['Name'], 'Szerkeszt', 'Raktárkészlet')
         self.html.switchFrame('iframe')
 
-        self.html.fillInput('Bruttó beszerzési egységár', data.RawMaterial['Bundas_kenyer']['ModifiedGrossPrice'])
+        self.html.fillInput('Bruttó beszerzési egységár', data.RawMaterial['Bundas_kenyer']['GrossPrice'])
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
         self.html.refresh()
 
         self.html.search(data.RawMaterial['Bundas_kenyer']['Name'], 'Raktárkészlet')
         new = self.html.getTxtFromTable('1', '6', 'components')
-        self.assertEqual(data.RawMaterial['Bundas_kenyer']['ModifiedGrossPrice'], new)
+        self.assertEqual(data.RawMaterial['Bundas_kenyer']['GrossPrice'], new)
 
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
     def testOpening(self):
-        testName = 'Abszint'
-
+        extended_round = lambda x, n: eval('"%.' + str(int(n)) + 'f" % ' + repr(x))
+        calcNetPrice = extended_round(int(float(data.RawMaterial['Bundas_kenyer']['GrossPrice'].replace(' ', ''))) / 1.27, 2)
+        calcNetValue = extended_round((int(float(data.RawMaterial['Bundas_kenyer']['GrossPrice'].replace(' ', ''))) / 1.27) * int(float(data.RawMaterial['Bundas_kenyer']['Quantity'].replace(' ', ''))), 2)
+        calcWhValue = int(float(data.RawMaterial['Bundas_kenyer']['GrossPrice'].replace(' ', ''))) * int(float(data.RawMaterial['Bundas_kenyer']['Quantity'].replace(' ', '')))
         self.menu.openStocks()
 
         self.html.clickElement('Új nyersanyag felvitele', 'a')
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Nyersanyag neve', data.RawMaterial['Bundas_kenyer']['Name'])
-        self.html.fillInput('Bruttó beszerzési egységár', data.RawMaterial['Bundas_kenyer']['GrosPrice'])
+        self.html.fillInput('Bruttó beszerzési egységár', data.RawMaterial['Bundas_kenyer']['GrossPrice'])
         self.html.clickDropdown('ME', data.RawMaterial['Bundas_kenyer']['ME'])
         self.html.fillInput('Nyitó mennyiség', data.RawMaterial['Bundas_kenyer']['Quantity'])
         self.html.clickDropdown('Raktár', data.WareHouses['Szeszraktár']['Name'])
@@ -67,13 +69,13 @@ class RawMaterial(BaseTestCase):
         self.html.search(data.RawMaterial['Bundas_kenyer']['Name'], 'Raktárkészlet')
         quantity = self.html.getTxtFromTable(1, 3, 'components')
         #self.assertEqual('10.00', quantity)
-        self.assertEqual(data.RawMaterial['Bundas_kenyer']['FloatQuantity'], quantity)
+        self.assertEqual(data.RawMaterial['Bundas_kenyer']['Quantity'], quantity.replace(' ', ''))
 
         netPrice = self.html.getTxtFromTable(1, 5, 'components')
-        self.assertEqual(data.RawMaterial['Bundas_kenyer']['NetPrice'], '787.40')
+        self.assertEqual(calcNetPrice, netPrice.replace(' ', ''))
 
         nettValue = self.html.getTxtFromTable(1, 7, 'components')
-        self.assertEqual(data.RawMaterial['Bundas_kenyer']['NetValue'], '7 874.02')
+        self.assertEqual(calcNetValue, nettValue.replace(' ', ''))
 
         self.html.clickTableDropdown(data.RawMaterial['Bundas_kenyer']['Name'], 'Raktárak', 'Raktárkészlet')
         self.html.switchFrame('iframe')
@@ -82,13 +84,13 @@ class RawMaterial(BaseTestCase):
         self.assertEqual(whause, data.WareHouses['Szeszraktár']['Name'])
 
         grossPrice = self.html.getTxtFromTable(2, 3)
-        self.assertEqual(grossPrice, data.RawMaterial['Bundas_kenyer']['GrosPrice'])
+        self.assertEqual(grossPrice, str(int(float(data.RawMaterial['Bundas_kenyer']['GrossPrice'].replace(' ', '')))))
 
         qty = self.html.getTxtFromTable(2, 4)
-        self.assertEqual(qty, data.RawMaterial['Bundas_kenyer']['Quantity'])
+        self.assertEqual(qty, str(int(float(data.RawMaterial['Bundas_kenyer']['Quantity'].replace(' ', '')))))
 
         whValue = self.html.getTxtFromTable(2, 5)
-        self.assertEqual(whValue, data.RawMaterial['Bundas_kenyer']['WhValue'])
+        self.assertEqual(whValue, str(calcWhValue))
 
         # self.html.pressKey('iframe', 'body', Keys.ESCAPE, Options(htmlAttribute='class'))
         # self.html.switchFrame()

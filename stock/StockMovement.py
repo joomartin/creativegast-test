@@ -5,6 +5,7 @@ from shared.TestData import TestData as data
 
 
 class StockMovement(BaseTestCase):
+    moveQuantity = 5
 
     @classmethod
     def setUpClass(self):
@@ -13,7 +14,7 @@ class StockMovement(BaseTestCase):
 
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.createWarehouse(data.WareHouses['Tartalékraktár']['Name'])
-        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrosPrice'], data.RawMaterial['Bundas_kenyer']['Quantity'], data.WareHouses['Szeszraktár']['Name'], module=True)
+        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrossPrice'], data.RawMaterial['Bundas_kenyer']['Quantity'], data.WareHouses['Szeszraktár']['Name'], module=True)
 
         self.html.clickElement('Raktármozgás', 'a')
 
@@ -27,6 +28,8 @@ class StockMovement(BaseTestCase):
 
 
     def createNewMovement(self):
+
+
         self.html.wait()
         self.html.clickElement('Új raktármozgás', 'a', waitSeconds=2)
         self.html.clickElement('Új')
@@ -39,7 +42,7 @@ class StockMovement(BaseTestCase):
         self.html.fillAutocomplete('Nyersanyag', 'input', data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], 'li', Options(htmlAttribute='data-title'))
         self.html.getElement('Maximum', 'input', Options(htmlAttribute='data-title')).click()
         self.html.wait()
-        self.html.fillInput('Mennyiség', data.WareHouses['Szeszraktár']['MoveQuantity'], 'data-title')
+        self.html.fillInput('Mennyiség', self.moveQuantity, 'data-title')
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
 
@@ -72,11 +75,11 @@ class StockMovement(BaseTestCase):
 
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
-        qty = str(int(data.RawMaterial['Bundas_kenyer']['Quantity']) - int(data.WareHouses['Szeszraktár']['MoveQuantity']))
+        qty = str(int(float(data.RawMaterial['Bundas_kenyer']['Quantity'])) - self.moveQuantity)
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Tartalékraktár']['Name'], qty)
         self.html.clickElement('Raktármozgás', 'a')
 
         self.deleteMovement(data.WareHouses['Szeszraktár']['Name'])
 
-        qty2 = str(int(data.RawMaterial['Bundas_kenyer']['Quantity']) - int(data.WareHouses['Szeszraktár']['MoveQuantity']) * 2)
+        qty2 = str(int(float(data.RawMaterial['Bundas_kenyer']['Quantity'])) - self.moveQuantity * 2)
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Tartalékraktár']['Name'], qty2)

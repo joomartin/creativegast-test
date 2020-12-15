@@ -46,6 +46,7 @@ class Test(BaseTestCase):
 
     #@unittest.skip
     def testEdit(self):
+
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'])
         self.html.search(data.WareHouses['Szeszraktár']['Name'], 'Raktárak')
         self.html.clickElement(None,

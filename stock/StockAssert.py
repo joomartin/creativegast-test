@@ -18,7 +18,7 @@ class StockAssert(unittest.TestCase):
         self.cg = cg()
 
     def assertWarehouseExist(self, name, tab):
-        self.assertTrue(self.html.getElementInTable(name, 'storages', tab, search=self.cg.search).is_displayed())
+        self.assertTrue(self.html.getElementInTable(name, 'storages', tab).is_displayed())
 
     def assertWarehouseNotExist(self, name, tab):
         with self.assertRaises(NoSuchElementException):

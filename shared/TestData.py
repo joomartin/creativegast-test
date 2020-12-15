@@ -5,20 +5,19 @@ class TestData:
         'Bundas_kenyer':
             {
                 'Name': 'Bundas_kenyer',
-                'GrosPrice': '1000',
+                'GrossPrice': '1 000.00',
                 'ModifiedGrossPrice': '1 010.00',
                 'ME': 'liter',
                 'Warehouse': 'Szeszraktár',
-                'Quantity': '10',
+                'Quantity': '10.00',
                 'Quantity2': '100',
-                'FloatQuantity': '10.00',
+                #'FloatQuantity': '10.00',
                 'NetPrice': '787.40',
                 'NetValue': '7 874.02',
                 'WhValue': '10000',
                 'OpenQuantity': '10',
                 'Waste': '5',
                 'FloatWaste': '5.00',
-
                 'Name2': 'TestRawMaterial3'
             }
     }
@@ -27,7 +26,6 @@ class TestData:
         'Szeszraktár':
             {
                 'Name': 'Szeszraktár',
-                'ModifiedName': 'ModifiedWarehouse',
                 'MoveQuantity': '5'
             },
 

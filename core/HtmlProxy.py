@@ -119,9 +119,9 @@ class HtmlProxy:
         else:
             return './/' + tag + '[contains(.,"' + target + '")]'
 
-    def getElementInTable(self, searchText, id, tab, search):
-        search(searchText, tab)
-        #self.search(searchText, tab)
+    def getElementInTable(self, searchText, id, tab):
+        #search(searchText, tab)
+        self.search(searchText, tab)
         return self.driver.find_element_by_xpath('//table[@id="' + id + '"]//td[text() = "' + searchText + '"]')
 
     def getElementTxtInTable(self, searchText, target, tab, attribute='id'):
