@@ -88,24 +88,43 @@ class TestData:
     }
 
     ProductGroup = {
-        'Name': 'TestGroup',
-        'ModifiedName': 'ModifiedGroup',
-        'Conveniences': 'Gyártmányok'
+        'Egyeb':
+            {
+                'Name': 'Egyeb',
+                'ModifiedName': 'ModifiedGroup',
+                'Conveniences': 'Gyártmányok'
+            }
     }
 
     Product = {
-        'Name': 'TestProduct2',
-        'Name2': 'TestProduct3',
-        'Code': '99',
-        'Code2': '3131999',
-        'NetPrice': '100',
-        'ComponentName': 'TestComponent',
-        'Quantity': '2',
-        'ModifiedName': 'ModifiedProduct',
-        'ModifiedCode': '11',
-        'ModifiedPrice': '200',
-        'ModifiedQuantity': '2',
-        'ModifiedComponent': 'TestComponent2'
+        'Babgulyás':
+            {
+                'Name': 'Babgulyás',
+                'Code': '99',
+                'Code2': '3131999',
+                'NetPrice': '100',
+                'ComponentName': 'TestComponent',
+                'Quantity': '2',
+                'ModifiedName': 'ModifiedProduct',
+                'ModifiedCode': '11',
+                'ModifiedPrice': '200',
+                'ModifiedQuantity': '2',
+                'ModifiedComponent': 'TestComponent2'
+            },
+        'Palacsinta':
+            {
+                'Name': 'Palacsinta',
+                'Code': '73',
+                'Code2': '71717171',
+                'NetPrice': '100',
+                'ComponentName': 'TestComponent',
+                'Quantity': '2',
+                'ModifiedName': 'ModifiedProduct',
+                'ModifiedCode': '11',
+                'ModifiedPrice': '200',
+                'ModifiedQuantity': '2',
+                'ModifiedComponent': 'TestComponent2'
+            }
 
     }
 
