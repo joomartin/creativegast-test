@@ -68,7 +68,7 @@ class ProductSeed:
 
         self.html.fillInput('Fogás neve', 'Előétel')
         self.html.clickDropdown('Termékcsoport:', td.ProductGroup['Egyeb']['Name'])
-        self.html.clickElement(td.ProductGroup['Name'])
+        self.html.clickElement(td.ProductGroup['Egyeb']['Name'])
         self.html.fillInput('Mennyiség', '1')
         self.html.getInput('Mennyiség', 'label').click()
         self.html.clickElement('Hozzáad')
@@ -80,8 +80,8 @@ class ProductSeed:
 
         tab = self.html.getElement('tabs-2', 'div', Options(htmlAttribute='id'))
         self.html.fillInput('Fogás neve', 'Főétel', element=tab)
-        self.html.clickDropdown('Termékcsoport:', td.ProductGroup['Name'], element=tab)
-        self.html.clickElement(td.ProductGroup['Name'], element=tab)
+        self.html.clickDropdown('Termékcsoport:', td.ProductGroup['Egyeb']['Name'], element=tab)
+        self.html.clickElement(td.ProductGroup['Egyeb']['Name'], element=tab)
         self.html.fillInput('Mennyiség', '1', element=tab)
         self.html.getInput('Mennyiség', 'label', element=tab).click()
         self.html.clickElement('Hozzáad', element=tab)
