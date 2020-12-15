@@ -6,6 +6,7 @@ from selenium import webdriver
 
 from core.Options import Options
 from mainMenu.MainMenuProxy import MainMenuProxy
+from core.CGSpecific import CGSpecific as cg
 
 
 class StockAssert(unittest.TestCase):
@@ -14,13 +15,14 @@ class StockAssert(unittest.TestCase):
         super().__init__()
         self.html = htmlProxy
         self.menu = MainMenuProxy(driver)
+        self.cg = cg()
 
     def assertWarehouseExist(self, name, tab):
-        self.assertTrue(self.html.getElementInTable(name, 'storages', tab).is_displayed())
+        self.assertTrue(self.html.getElementInTable(name, 'storages', tab, search=self.cg.search).is_displayed())
 
     def assertWarehouseNotExist(self, name, tab):
         with self.assertRaises(NoSuchElementException):
-            self.html.getElementInTable(name, 'storages', tab)
+            self.html.getElementInTable(name, 'storages', tab, search=self.cg.search)
 
     def assertDialogDisplayed(self):
         self.assertTrue(self.html.getElement('iframe', 'body', Options(htmlAttribute='class')).is_displayed())
