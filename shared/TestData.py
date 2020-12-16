@@ -12,10 +12,10 @@ class TestData:
                 'Quantity': '10.00',
                 'Quantity2': '100',
                 #'FloatQuantity': '10.00',
-                'NetPrice': '787.40',
-                'NetValue': '7 874.02',
-                'WhValue': '10000',
-                'OpenQuantity': '10',
+                #'NetPrice': '787.40',
+                #'NetValue': '7 874.02',
+                #'WhValue': '10000',
+                #'OpenQuantity': '10',
                 'Waste': '5',
                 'FloatWaste': '5.00',
                 'Name2': 'TestRawMaterial3'
@@ -26,7 +26,6 @@ class TestData:
         'Szeszraktár':
             {
                 'Name': 'Szeszraktár',
-                'MoveQuantity': '5'
             },
 
         'Tartalékraktár':

@@ -44,21 +44,23 @@ class Counters(BaseTestCase):
         self.html.search('', 'Számlálók')
 
     def testEdit(self):
+        modifiedName = 'ModifiedCounter'
+        modifiedPosition = 7
 
         self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'])
 
         self.html.clickTableElement('counters', 'id', data.Counter['TestCounter']['Name'], 'a', 'Szerkeszt', 'Számlálók')
         self.html.switchFrame('iframe')
 
-        self.html.fillInput('Számláló neve', data.Counter['TestCounter']['ModifiedName'])
-        self.html.fillInput('Számláló állás', data.Counter['TestCounter']['ModifiedPosition'])
+        self.html.fillInput('Számláló neve', modifiedName)
+        self.html.fillInput('Számláló állás', modifiedPosition)
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
 
-        self.productAssert.assertCounterExists(data.Counter['TestCounter']['ModifiedName'], 'Számlálók')
-        self.html.search(data.Counter['TestCounter']['ModifiedName'], 'Számlálók')
+        self.productAssert.assertCounterExists(modifiedName, 'Számlálók')
+        self.html.search(modifiedName, 'Számlálók')
         obsPos = self.html.getTxtFromTable('1', '3', 'counters')
-        self.assertEqual(str(int(float(obsPos))), data.Counter['TestCounter']['ModifiedPosition'])
+        self.assertEqual(str(int(float(obsPos))), str(modifiedPosition))
 
-        self.productseed.deleteCounter(data.Counter['TestCounter']['ModifiedName'])
+        self.productseed.deleteCounter(modifiedName)
         self.html.search('', 'Számlálók')

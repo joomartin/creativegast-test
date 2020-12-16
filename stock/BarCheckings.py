@@ -14,7 +14,7 @@ class BarCheckings(BaseTestCase):
 
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
-                                                    data.RawMaterial['Bundas_kenyer']['GrosPrice'],
+                                                    data.RawMaterial['Bundas_kenyer']['GrossPrice'],
                                                     data.RawMaterial['Bundas_kenyer']['Quantity'],
                                                     data.WareHouses['Szeszraktár']['Name'], module=True)
 

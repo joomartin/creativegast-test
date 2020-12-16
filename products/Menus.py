@@ -13,7 +13,7 @@ class Menus(BaseTestCase):
         super().setUpClass()
         super().login(self)
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrosPrice'], data.RawMaterial['Bundas_kenyer']['Quantity'], data.WareHouses['Szeszraktár']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], module=True)
+        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrossPrice'], data.RawMaterial['Bundas_kenyer']['Quantity'], data.WareHouses['Szeszraktár']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], module=True)
         self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'], module=True)
         self.productseed.createProductGroup(data.ProductGroup['Egyeb']['Name'], tab=True)
         self.productseed.createProduct(data.Product['Babgulyás']['Name'], data.ProductGroup['Egyeb']['Name'], data.Product['Babgulyás']['Code'], data.Counter['TestCounter']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], module=True)

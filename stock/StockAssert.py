@@ -22,7 +22,7 @@ class StockAssert(unittest.TestCase):
 
     def assertWarehouseNotExist(self, name, tab):
         with self.assertRaises(NoSuchElementException):
-            self.html.getElementInTable(name, 'storages', tab, search=self.cg.search)
+            self.html.getElementInTable(name, 'storages', tab)
 
     def assertDialogDisplayed(self):
         self.assertTrue(self.html.getElement('iframe', 'body', Options(htmlAttribute='class')).is_displayed())
