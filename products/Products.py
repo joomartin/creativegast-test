@@ -43,6 +43,10 @@ class Products(BaseTestCase):
 
     def testEdit(self):
         editedPlace = 'Pizza'
+        editedName = 'Bableves'
+        editedCode = '3131999'
+        editedQuantity = '3'
+
 
 
         self.productseed.createProduct(td.Product['Babgulyás']['Name'], td.ProductGroup['Egyeb']['Name'], td.Product['Babgulyás']['Code'], td.Counter['TestCounter']['Name'], td.RawMaterial['Bundas_kenyer']['Name'])
@@ -58,8 +62,8 @@ class Products(BaseTestCase):
         self.html.clickElement('Rögzít')
 
         self.html.switchFrame('iframe')
-        self.html.fillInput('Termék neve', td.Product['Babgulyás']['ModifiedName'])
-        self.html.fillInput('Kód', td.Product['Babgulyás']['ModifiedCode'])
+        self.html.fillInput('Termék neve', editedName)
+        self.html.fillInput('Kód', editedCode)
 
         places = self.html.getElement('Eladási ár (Kötelező)', 'td')
         self.html.clickElement('edit actionButton fright editPriceBtn', 'a', options=Options(htmlAttribute='class'), element=places)
@@ -74,22 +78,22 @@ class Products(BaseTestCase):
         # self.html.clickElement('Törlés')
         self.html.fillAutocomplete('componentName', 'input', td.RawMaterial['Alma']['Name'], td.RawMaterial['Alma']['Name'], 'li',
                                    Options(htmlAttribute='id'))
-        self.html.fillInput('componentQty', td.Product['Babgulyás']['ModifiedQuantity'], 'input', options=Options(htmlAttribute='id'))
+        self.html.fillInput('componentQty', editedQuantity, 'input', options=Options(htmlAttribute='id'))
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
 
-        self.productAssert.assertProductExist(td.Product['Babgulyás']['ModifiedName'], 'Termékek')
+        self.productAssert.assertProductExist(editedName, 'Termékek')
 
-        self.html.search(td.Product['Babgulyás']['ModifiedName'], 'Termékek')
-        self.html.clickTableElement('products', 'id', td.Product['Babgulyás']['ModifiedName'], 'a', 'Részletek', 'Termékek')
+        self.html.search(editedName, 'Termékek')
+        self.html.clickTableElement('products', 'id', editedName, 'a', 'Részletek', 'Termékek')
         self.html.switchFrame('iframe')
 
-        dName = self.html.getElementTxtInTable(td.Product['Babgulyás']['ModifiedName'], 'details', 'Termékek', attribute='class')
-        self.assertEqual(dName, td.Product['Babgulyás']['ModifiedName'])
-        self.assertTrue(self.html.getRowExist(['Termék neve:', td.Product['Babgulyás']['ModifiedName']]))
+        dName = self.html.getElementTxtInTable(editedName, 'details', 'Termékek', attribute='class')
+        self.assertEqual(dName, editedName)
+        self.assertTrue(self.html.getRowExist(['Termék neve:', editedName]))
         self.assertTrue(self.html.getRowExist(['Nyomtatási részleg:', editedPlace]))
         self.assertTrue(self.html.getRowExist(['Termékcsoport:', td.ProductGroup['Öntetek']['Name']]))
-        self.assertTrue(self.html.getRowExist(['Kód:', td.Product['Babgulyás']['ModifiedCode']]))
+        self.assertTrue(self.html.getRowExist(['Kód:', editedCode]))
         # ez itt egy bug, lehala  teszt
         # self.assertTrue(self.html.getTablePairsExist('Számláló(k):', counter))
 
@@ -99,8 +103,8 @@ class Products(BaseTestCase):
         # self.assertEqual(dPrice, editedPrice)
 
         # csekkoljuk, hogy a nyersanyagok megvannak e
-        self.assertTrue(self.html.getRowExist([td.RawMaterial['Bundas_kenyer']['Name'], '2', td.RawMaterial['Bundas_kenyer']['ME'], '0']))
-        self.assertTrue(self.html.getRowExist([td.RawMaterial['Alma']['Name'], '2', td.RawMaterial['Alma']['ME'], '0']))
+        self.assertTrue(self.html.getRowExist([td.RawMaterial['Bundas_kenyer']['Name'], td.Product['Babgulyás']['Quantity'], td.RawMaterial['Bundas_kenyer']['ME'], '0']))
+        self.assertTrue(self.html.getRowExist([td.RawMaterial['Alma']['Name'], editedQuantity, td.RawMaterial['Alma']['ME'], '0']))
         # cName =  self.html.getElementTxtInTable('Modified', 'components', 'Termékek', attribute='class')
         # self.assertEqual(cName, 'Modified')
 
@@ -108,7 +112,7 @@ class Products(BaseTestCase):
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
         self.html.search('', 'Termékek')
 
-        self.productseed.deleteProduct(td.Product['Babgulyás']['ModifiedName'])
+        self.productseed.deleteProduct(editedName)
 
 
 

@@ -63,9 +63,9 @@ class TestData:
         'TestCounter':
             {
                 'Name': 'TestCounter',
-                'Position': '0',
-                'ModifiedName': 'ModifiedCounter',
-                'ModifiedPosition': '7'
+                'Position': '0'
+                #'ModifiedName': 'ModifiedCounter',
+                #'ModifiedPosition': '7'
             }
     }
 
@@ -94,10 +94,10 @@ class TestData:
                 'BaseComponentName': 'LisztTest',
                 'ToppingComponentName': 'SonkaTeszt',
                 'NetPrice': '1000',
-                'GrossPrice': '1 270.00',
-                'ModifiedName': 'ModifiedPizza',
-                'ModifiedNetPrice': '3000',
-                'ModifiedGrossPrice': '3 810.00',
+                'GrossPrice': '1270.00',
+                #'ModifiedName': 'ModifiedPizza',
+                #'ModifiedNetPrice': '3000',
+                #'ModifiedGrossPrice': '3 810.00',
                 'WasteQuantity': '10',
             }
     }
@@ -120,29 +120,29 @@ class TestData:
             {
                 'Name': 'Babgulyás',
                 'Code': '99',
-                'Code2': '3131999',
+                #'Code2': '3131999',
                 'NetPrice': '100',
                 'ComponentName': 'TestComponent',
                 'Quantity': '2',
-                'ModifiedName': 'ModifiedProduct',
-                'ModifiedCode': '11',
-                'ModifiedPrice': '200',
-                'ModifiedQuantity': '2',
-                'ModifiedComponent': 'TestComponent2'
+                #'ModifiedName': 'ModifiedProduct',
+                #'ModifiedCode': '11',
+                #'ModifiedPrice': '200',
+                #'ModifiedQuantity': '2',
+                #'ModifiedComponent': 'TestComponent2'
             },
         'Palacsinta':
             {
                 'Name': 'Palacsinta',
                 'Code': '73',
-                'Code2': '71717171',
+                #'Code2': '71717171',
                 'NetPrice': '100',
                 'ComponentName': 'TestComponent',
                 'Quantity': '2',
-                'ModifiedName': 'ModifiedProduct',
-                'ModifiedCode': '11',
-                'ModifiedPrice': '200',
-                'ModifiedQuantity': '2',
-                'ModifiedComponent': 'TestComponent2'
+                #'ModifiedName': 'ModifiedProduct',
+                #'ModifiedCode': '11',
+                #'ModifiedPrice': '200',
+                #'ModifiedQuantity': '2',
+                #'ModifiedComponent': 'TestComponent2'
             }
 
     }
