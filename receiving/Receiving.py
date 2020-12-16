@@ -11,18 +11,18 @@ class Receiving(BaseTestCase):
     def setUpClass(self):
         super().setUpClass()
         super().login(self)
-        self.stockseed.createWarehouse(td.WareHouse['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Name'], td.RawMaterial['GrosPrice'], td.RawMaterial['Quantity'], td.WareHouse['Name'], module=True)
-        self.receivingseed.createPartner(td.Partner['Name'],td.Partner['Id'], module=True)
+        self.stockseed.createWarehouse(td.WareHouses['Szeszraktár']['Name'], module=True)
+        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Bundas_kenyer']['Name'], td.RawMaterial['Bundas_kenyer']['GrosPrice'], td.RawMaterial['Bundas_kenyer']['Quantity'], td.WareHouses['Szeszraktár']['Name'], module=True)
+        self.receivingseed.createPartner(td.Partner['Szallito']['Name'],td.Partner['Szallito']['Id'], module=True)
 
 
 
 
     @classmethod
     def tearDownClass(self):
-        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'], module=True)
-        self.stockseed.deleteWarehouse(td.WareHouse['Name'], module=True)
-        self.receivingseed.deleteParter(td.Partner['Name'], module=True)
+        self.stockseed.deleteRawMaterial(td.RawMaterial['Bundas_kenyer']['Name'], module=True)
+        self.stockseed.deleteWarehouse(td.WareHouses['Szeszraktár']['Name'], module=True)
+        self.receivingseed.deleteParter(td.Partner['Szallito']['Name'], module=True)
         super().tearDownClass()
 
     def createReceiving(self, billName,):
@@ -33,12 +33,12 @@ class Receiving(BaseTestCase):
 
         self.html.fillInput('Számla azonosító', billName)
         self.html.clickDropdown('Fizetési mód', 'Készpénz')
-        self.html.clickDropdown('Beszállító', td.Partner['Name'])
-        self.html.fillAutocomplete('Nyersanyag neve', 'input', td.RawMaterial['Name'], td.RawMaterial['Name'], 'li',
+        self.html.clickDropdown('Beszállító', td.Partner['Szallito']['Name'])
+        self.html.fillAutocomplete('Nyersanyag neve', 'input', td.RawMaterial['Bundas_kenyer']['Name'], td.RawMaterial['Bundas_kenyer']['Name'], 'li',
                                    Options(htmlAttribute='data-title'))
         self.html.fillInput('Mennyiség', '100', 'data-title')
         self.html.clickElement('Válassz...')
-        self.html.clickElement(td.WareHouse['Name'], 'label')
+        self.html.clickElement(td.WareHouses['Szeszraktár']['Name'], 'label')
 
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
@@ -50,8 +50,8 @@ class Receiving(BaseTestCase):
         name= 'testBill'
         self.createReceiving(name)
         self.html.wait(2)
-        self.receivingAssert.assertReceivingExists(td.Partner['Name'])
-        self.stockAssert.assertStock(td.RawMaterial['Name'],td.WareHouse['Name'],'110')
+        self.receivingAssert.assertReceivingExists(td.Partner['Szallito']['Name'])
+        self.stockAssert.assertStock(td.RawMaterial['Bundas_kenyer']['Name'],td.WareHouses['Szeszraktár']['Name'],'110')
         self.menu.openReceiving()
         self.html.clickElement('Keresés')
         self.html.wait(2)
@@ -63,14 +63,14 @@ class Receiving(BaseTestCase):
         name = 'testBill'
         self.createReceiving(name)
         self.html.wait(2)
-        self.receivingAssert.assertReceivingExists(td.Partner['Name'])
+        self.receivingAssert.assertReceivingExists(td.Partner['Szallito']['Name'])
         self.html.clickElement('Részletek', 'span')
         self.html.switchFrame('iframe')
-        self.receivingAssert.assertReceivingDetails(td.RawMaterial['Name'], '100')
+        self.receivingAssert.assertReceivingDetails(td.RawMaterial['Bundas_kenyer']['Name'], '100')
 
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
-        self.stockAssert.assertStock(td.RawMaterial['Name'], td.WareHouse['Name'], '110')
+        self.stockAssert.assertStock(td.RawMaterial['Bundas_kenyer']['Name'], td.WareHouses['Szeszraktár']['Name'], '110')
         self.menu.openReceiving()
         self.html.clickElement('Keresés')
         self.html.wait(2)
