@@ -1,6 +1,6 @@
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
-from shared.TestData import TestData as td
+from shared.TestData import TestData as data
 from seeders.ReceivingSeed import ReceivingSeed
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
@@ -22,8 +22,8 @@ class Partners(BaseTestCase):
 
 
     def testCreate(self):
-        partnerName = td.Partner['Name']
-        partnerId = td.Partner['Id']
+        partnerName = data.Partner['Szallito']['Name']
+        partnerId = data.Partner['Szallito']['Id']
         self.receivingseed.createPartner(partnerName, partnerId)
         self.receivingseed.deleteParter(partnerName)
 

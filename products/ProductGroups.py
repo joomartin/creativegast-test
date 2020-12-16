@@ -29,7 +29,7 @@ class ProductGroups(BaseTestCase):
 
 
     def testCreate(self):
-        testName = td.ProductGroup['Name']
+        testName = td.ProductGroup['Egyeb']['Name']
         self.productseed.createProductGroup(testName)
         self.html.search(testName,'Termékcsoportok')
         self.productAssert.assertGroupExists(testName)
@@ -37,7 +37,7 @@ class ProductGroups(BaseTestCase):
 
 
     def testCreateWithParentGroup(self):
-        testName = td.ProductGroup['Name']
+        testName = td.ProductGroup['Egyeb']['Name']
         self.html.clickElement('Új termékcsoport felvitele', 'a')
 
         self.html.switchFrame('iframe')
@@ -55,8 +55,8 @@ class ProductGroups(BaseTestCase):
         self.productseed.deleteProductGroup(testName, module=True)
 
     def testUpdateGroup(self):
-        testName = td.ProductGroup['Name']
-        newName = td.ProductGroup['ModifiedName']
+        testName = td.ProductGroup['Egyeb']['Name']
+        newName = td.ProductGroup['Egyeb']['ModifiedName']
         self.productseed.createProductGroup(testName)
         self.html.search(testName, 'Termékcsoportok')
         self.productAssert.assertGroupExists(testName)
