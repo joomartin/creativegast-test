@@ -2,7 +2,7 @@
 
 class Options:
 
-    def __init__(self, following='', exactMatch=False, uniqueSelector=False, htmlAttribute=''):
+    def __init__(self, following='', exactMatch=False, uniqueSelector=False, htmlAttribute='',element=None):
         '''
 
         :param following:
@@ -18,4 +18,5 @@ class Options:
         self.exactMatch = exactMatch
         self.uniqueSelector = uniqueSelector
         self.htmlAttribute = htmlAttribute
+        self.element = element
 

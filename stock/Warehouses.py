@@ -69,7 +69,7 @@ class Test(BaseTestCase):
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'])
         self.html.search(data.WareHouses['Szeszraktár']['Name'], 'Raktárak')
         currWindow = self.html.getElement('tabs-3', 'div', options=Options(htmlAttribute='id'))
-        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'td', Options(following='a'), element = currWindow)
+        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'td', Options(following='a', element = currWindow))
         self.html.clickElement("Igen", waitSeconds=2)
         self.html.search('', 'Raktárak')
 
