@@ -10,15 +10,15 @@ class TestData:
                 'ME': 'liter',
                 'Warehouse': 'Szeszraktár',
                 'Quantity': '10.00',
-                'Quantity2': '100',
+                'Quantity2': '100.00',
                 #'FloatQuantity': '10.00',
                 #'NetPrice': '787.40',
                 #'NetValue': '7 874.02',
                 #'WhValue': '10000',
                 #'OpenQuantity': '10',
-                'Waste': '5',
+                'Waste': '5.00',
                 'FloatWaste': '5.00',
-                'Name2': 'TestRawMaterial3'
+                #'Name2': 'TestRawMaterial3'
 
             },
         'Alma':
@@ -30,11 +30,11 @@ class TestData:
                 'Warehouse': 'Szeszraktár',
                 'Quantity': '10',
                 'Quantity2': '100',
-                'FloatQuantity': '10.00',
-                'NetPrice': '787.40',
-                'NetValue': '7 874.02',
-                'WhValue': '10000',
-                'OpenQuantity': '10',
+                #'FloatQuantity': '10.00',
+                #'NetPrice': '787.40',
+                #'NetValue': '7 874.02',
+                #'WhValue': '10000',
+                #'OpenQuantity': '10',
                 'Waste': '5',
                 'FloatWaste': '5.00',
             }
@@ -80,9 +80,9 @@ class TestData:
                 'MenuComponentUnit': '1',
                 'MenuComponentName2': 'Főétel',
                 'MenuComponentUnit2': '1',
-                'ModifiedName': 'ModifiedName',
-                'ModifiedPrice': '300',
-                'ModifiedGrossPrice': '381.00'
+                #'ModifiedName': 'ModifiedName',
+                #'ModifiedPrice': '300',
+                #'ModifiedGrossPrice': '381.00'
             }
     }
 

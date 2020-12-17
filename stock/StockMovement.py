@@ -68,7 +68,7 @@ class StockMovement(BaseTestCase):
         self.assertEqual(materialName, data.RawMaterial['Bundas_kenyer']['Name'])
 
         qty = self.html.getTxtFromTable(2, 2)
-        self.assertEqual(qty, data.WareHouses['Szeszraktár']['MoveQuantity'])
+        self.assertEqual(qty, str(self.moveQuantity))
 
         me = self.html.getTxtFromTable(2, 3)
         self.assertEqual(me, data.RawMaterial['Bundas_kenyer']['ME'])

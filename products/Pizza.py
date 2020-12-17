@@ -27,16 +27,16 @@ class Pizza(BaseTestCase):
 
     def testCreate(self):
         testName = 'Create pizza'
-        self.productseed.createPizza(td.Pizza['Name'], td.RawMaterial['Name'], 'Pizza feltét')
-        self.productAssert.assertPizzaExists(td.Pizza['Name'], td.Pizza['GrossPrice'])
-        self.productseed.deletePizza(td.Pizza['Name'])
+        self.productseed.createPizza(data.Pizza['Sonkas_pizza']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], 'Pizza feltét')
+        self.productAssert.assertPizzaExists(data.Pizza['Sonkas_pizza']['Name'], data.Pizza['Sonkas_pizza']['GrossPrice'])
+        self.productseed.deletePizza(data.Pizza['Sonkas_pizza']['Name'])
 
 
     def testUpdate(self):
         modofiedName = 'Gumicukros pizza'
         modifiedNetPrice = 3000
         extended_round = lambda x, n: eval('"%.' + str(int(n)) + 'f" % ' + repr(x))
-        modifiedGrossPrice = extended_round(modifiedNetPrice * 1.27, 2)
+        modifiedGrossPrice = self.html.extendedRound(modifiedNetPrice * 1.27, 2)
 
         self.productseed.createPizza(data.Pizza['Sonkas_pizza']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], 'Pizza feltét')
 

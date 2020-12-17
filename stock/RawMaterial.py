@@ -31,8 +31,6 @@ class RawMaterial(BaseTestCase):
         price = '1 010.00'
 
         self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
-        #self.html.search(testName, 'Raktárkészlet')
-        #self.html.clickElement(testName, 'td', Options(following='a'))
         self.html.clickTableDropdown(data.RawMaterial['Bundas_kenyer']['Name'], 'Szerkeszt', 'Raktárkészlet')
         self.html.switchFrame('iframe')
 
@@ -48,9 +46,8 @@ class RawMaterial(BaseTestCase):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
     def testOpening(self):
-        extended_round = lambda x, n: eval('"%.' + str(int(n)) + 'f" % ' + repr(x))
-        calcNetPrice = extended_round(int(float(data.RawMaterial['Bundas_kenyer']['GrossPrice'].replace(' ', ''))) / 1.27, 2)
-        calcNetValue = extended_round((int(float(data.RawMaterial['Bundas_kenyer']['GrossPrice'].replace(' ', ''))) / 1.27) * int(float(data.RawMaterial['Bundas_kenyer']['Quantity'].replace(' ', ''))), 2)
+        calcNetPrice = self.html.extendedRound(int(float(data.RawMaterial['Bundas_kenyer']['GrossPrice'].replace(' ', ''))) / 1.27, 2)
+        calcNetValue = self.html.extendedRound((int(float(data.RawMaterial['Bundas_kenyer']['GrossPrice'].replace(' ', ''))) / 1.27) * int(float(data.RawMaterial['Bundas_kenyer']['Quantity'].replace(' ', ''))), 2)
         calcWhValue = int(float(data.RawMaterial['Bundas_kenyer']['GrossPrice'].replace(' ', ''))) * int(float(data.RawMaterial['Bundas_kenyer']['Quantity'].replace(' ', '')))
         self.menu.openStocks()
 
@@ -98,7 +95,9 @@ class RawMaterial(BaseTestCase):
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
 
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'], data.RawMaterial['Bundas_kenyer']['Quantity'])
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
+                                     data.WareHouses['Szeszraktár']['Name'],
+                                     str(int(float(data.RawMaterial['Bundas_kenyer']['Quantity']))))
 
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
@@ -163,13 +162,15 @@ class RawMaterial(BaseTestCase):
 
         self.html.search(data.RawMaterial['Bundas_kenyer']['Name'], 'Raktárkészlet')
         qty = self.html.getTxtFromTable(1, 3, 'components')
-        self.assertEqual(qty, data.RawMaterial['Bundas_kenyer']['FloatWaste'])
+        self.assertEqual(qty, data.RawMaterial['Bundas_kenyer']['Waste'])
 
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'], data.RawMaterial['Bundas_kenyer']['Waste'])
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
+                                     data.WareHouses['Szeszraktár']['Name'],
+                                     str(int(float(data.RawMaterial['Bundas_kenyer']['Waste']))))
 
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
-        self.stockAssert.assertDeletedMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'], )
+        self.stockAssert.assertDeletedMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'])
 
     def testOpeningButton(self):
         ME = 'liter'
@@ -192,7 +193,9 @@ class RawMaterial(BaseTestCase):
 
 
         self.html.refresh()
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'], data.RawMaterial['Bundas_kenyer']['Quantity2'])
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
+                                     data.WareHouses['Szeszraktár']['Name'],
+                                     str(int(float(data.RawMaterial['Bundas_kenyer']['Quantity2']))))
 
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 

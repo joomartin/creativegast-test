@@ -35,6 +35,7 @@ class Menus(BaseTestCase):
 
 
     def testCreate(self):
+        grossPrice = ''
         self.productseed.createMenu(data.Menu['NapiMenu']['Name'], data.Product['Babgulyás']['Name'], data.Product['Palacsinta']['Name'], data.Menu['NapiMenu']['Price'])
         self.productAssert.assertMenuExists(data.Menu['NapiMenu']['Name'], data.Menu['NapiMenu']['GrossPrice'])
         self.productseed.deleteMenu(data.Menu['NapiMenu']['Name'])
@@ -43,7 +44,7 @@ class Menus(BaseTestCase):
         modifiedName = 'Heti menu'
         modifiedPrice= '300'
         extended_round = lambda x, n: eval('"%.' + str(int(n)) + 'f" % ' + repr(x))
-        modifiedGrossPrice = extended_round(int(modifiedPrice) * 1.27, 2)
+        modifiedGrossPrice = self.html.extendedRound(int(modifiedPrice) * 1.27, 2)
 
         self.productseed.createMenu(data.Menu['NapiMenu']['Name'], data.Product['Babgulyás']['Name'], data.Product['Palacsinta']['Name'], data.Menu['NapiMenu']['Price'])
 
