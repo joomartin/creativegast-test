@@ -4,7 +4,7 @@ from selenium.webdriver.common.keys import Keys
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
 from datetime import datetime
-from shared.TestData import TestData as td
+from shared.TestData import TestData as data
 
 class Pizza(BaseTestCase):
 
@@ -13,8 +13,8 @@ class Pizza(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        self.stockseed.createWarehouse(td.WareHouse['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Name'], td.RawMaterial['GrosPrice'], td.RawMaterial['Quantity'], td.WareHouse['Name'], td.RawMaterial['ME'], module=True)
+        self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
+        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrosPrice'], data.RawMaterial['Bundas_kenyer']['Quantity'], data.WareHouses['Szeszraktár']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], module=True)
         #self.stockseed.createRawMaterial('Pizza feltét', '500', '100', 'Pizzatest', 'db')
 
         self.menu.openProducts()
@@ -22,8 +22,8 @@ class Pizza(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.stockseed.deleteRawMaterial(td.RawMaterial['Name'], module=True)
-        self.stockseed.deleteWarehouse(td.WareHouse['Name'], tab=True)
+        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+        self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         super().tearDownClass()
 
     '''
@@ -38,18 +38,18 @@ class Pizza(BaseTestCase):
         testName = 'Update pizza'
         newName = 'Uj pizza'
 
-        self.productseed.createPizza(td.Pizza['Name'], td.RawMaterial['Name'], 'Pizza feltét')
+        self.productseed.createPizza(data.Pizza['Sonkas_pizza']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], 'Pizza feltét')
 
-        self.html.clickTableElement('customproduct-2', 'id', td.Pizza['Name'], 'a', 'Szerkeszt', 'Pizza (testreszabható)')
+        self.html.clickTableElement('customproduct-2', 'id', data.Pizza['Sonkas_pizza']['Name'], 'a', 'Szerkeszt', 'Pizza (testreszabható)')
 
         self.html.switchFrame('iframe')
-        self.html.fillInput('Termék neve', td.Pizza['ModifiedName'])
+        self.html.fillInput('Termék neve', data.Pizza['Sonkas_pizza']['ModifiedName'])
 
         self.html.clickElement('Mennyiségek', 'a')
         # td = self.html.getElement('Eladási ár(ak)', 'td')
         self.html.clickElement('edit actionButton fright editPriceBtn', 'a', Options(htmlAttribute='class'))
 
-        self.html.fillInput('Nettó', td.Pizza['ModifiedNetPrice'])
+        self.html.fillInput('Nettó', data.Pizza['Sonkas_pizza']['ModifiedNetPrice'])
         self.html.clickElement('Rögzít', 'a')
         self.html.closeAllert()
         self.html.clickElement('Rögzít', 'a')
@@ -57,21 +57,21 @@ class Pizza(BaseTestCase):
         self.html.clickElement('Rögzít')
         self.html.refresh()
 
-        self.productAssert.assertPizzaExists(td.Pizza['ModifiedName'], td.Pizza['ModifiedGrossPrice'])
+        self.productAssert.assertPizzaExists(data.Pizza['Sonkas_pizza']['ModifiedName'], data.Pizza['Sonkas_pizza']['ModifiedGrossPrice'])
 
-        self.productseed.deletePizza(td.Pizza['ModifiedName'])
+        self.productseed.deletePizza(data.Pizza['Sonkas_pizza']['ModifiedName'])
 
     def testWasting(self):
         testName = 'Waste pizza'
 
-        self.productseed.createPizza(td.Pizza['Name'], td.RawMaterial['Name'], 'Pizza feltét')
-        self.productAssert.assertPizzaExists(td.Pizza['Name'], td.Pizza['GrossPrice'])
+        self.productseed.createPizza(data.Pizza['Sonkas_pizza']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], 'Pizza feltét')
+        self.productAssert.assertPizzaExists(data.Pizza['Sonkas_pizza']['Name'], data.Pizza['Sonkas_pizza']['GrossPrice'])
 
-        self.html.clickTableElement('customproduct-2', 'id', td.Pizza['Name'], 'a', 'Selejt', 'Pizza (testreszabható)')
+        self.html.clickTableElement('customproduct-2', 'id', data.Pizza['Sonkas_pizza']['Name'], 'a', 'Selejt', 'Pizza (testreszabható)')
         self.html.switchFrame('iframe')
 
         time = datetime.now().strftime('%Y-%m-%d %H:%M')
-        self.html.fillInput('Selejt darabszám', td.Pizza['WasteQuantity'], 'placeholder')
+        self.html.fillInput('Selejt darabszám', data.Pizza['Sonkas_pizza']['WasteQuantity'], 'placeholder')
         self.html.clickElement('Minőségi kifogás')
 
         self.html.switchFrame()
@@ -82,9 +82,9 @@ class Pizza(BaseTestCase):
 
         self.html.clickElement('Mehet', waitSeconds=3)
 
-        self.productAssert.assertWastingExists(td.Pizza['Name'], time)
+        self.productAssert.assertWastingExists(data.Pizza['Sonkas_pizza']['Name'], time)
 
         self.menu.openProducts()
         self.html.clickElement('Pizza (testreszabható)', 'a')
-        self.productseed.deletePizza(td.Pizza['Name'])
+        self.productseed.deletePizza(data.Pizza['Sonkas_pizza']['Name'])
 
