@@ -30,8 +30,8 @@ class ReceivingAssert(unittest.TestCase):
     def assertReceivingDetails(self, materialName, qty,):
 
         table = self.html.getElement('noHover', 'table', options=Options(htmlAttribute='class'))
-        name=self.html.getElement(materialName, 'td', element=table).text
+        name=self.html.getElement(materialName, 'td', Options(element=table)).text
         self.assertEqual(name,materialName)
 
-        actqty=self.html.getElement(materialName, 'td', Options(following='td'), element=table).text
+        actqty=self.html.getElement(materialName, 'td', Options(following='td'), Options(element=table)).text
         self.assertEqual(actqty,qty)

@@ -53,9 +53,9 @@ class HtmlProxy:
         :param selectValue: This is what we want to select
         :type selectValue: String
         """
-        if not self.getOption(options,'element'):
-            self.getElement(target, selector, Options(following='button')).click()
-            element = self.getElement(target, selector, Options(following='ul'))
+        if self.getOption(options,'element') is not None:
+            self.getElement(target, selector, Options(following='button',element=self.getOption(options,'element'))).click()
+            element = self.getElement(target, selector, Options(following='ul', element=self.getOption(options,'element')))
             element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
         else:
             self.getElement(target, selector, Options(following='button')).click()
@@ -76,7 +76,10 @@ class HtmlProxy:
         self.wait(2)
 
     def getElement(self, target, tag, options=Options()):
-        element = self.getOption(options,'element') if self.getOption(options,'element') else self.driver
+        if self.getOption(options,'element') is not None:
+            element = self.getOption(options, 'element')
+        else:
+            element=self.driver
         if self.getOption(options,'uniqueSelector'):
                 return element.find_element_by_xpath(tag)
 
