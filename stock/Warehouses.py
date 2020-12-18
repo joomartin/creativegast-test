@@ -16,8 +16,7 @@ class Test(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
-        #super().tearDownClass()
-        pass
+        super().tearDownClass()
 
 
 
