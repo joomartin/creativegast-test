@@ -6,6 +6,6 @@ sc = StockController()
 pc = ProductController()
 rc= ReceivingController()
 
-sc.run()
+#sc.run()
 #pc.run()
 rc.run()

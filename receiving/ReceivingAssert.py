@@ -33,5 +33,5 @@ class ReceivingAssert(unittest.TestCase):
         name=self.html.getElement(materialName, 'td', Options(element=table)).text
         self.assertEqual(name,materialName)
 
-        actqty=self.html.getElement(materialName, 'td', Options(following='td'), Options(element=table)).text
+        actqty=self.html.getElement(materialName, 'td', Options(following='td', element=table)).text
         self.assertEqual(actqty,qty)
