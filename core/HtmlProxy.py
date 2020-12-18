@@ -12,22 +12,22 @@ class HtmlProxy:
     def __init__(self, driver):
         self.driver = driver
 
-    def clickElement(self, target, tag='button', options=Options(), waitSeconds=0, element = None):
-        self.getElement(target, tag, options, element).click()
+    def clickElement(self, target, tag='button', options=Options(), waitSeconds=0,):
+        self.getElement(target, tag, options).click()
         self.wait(waitSeconds)
 
-    def getInput(self, target, selector, options=Options(), element=None):
+    def getInput(self, target, selector, options=Options()):
         if selector != 'label':
             if self.getOption(options, 'htmlAttribute'):
                 htmlAttribute = self.getOption(options, 'htmlAttribute')
-                return self.getElement(target, selector, Options(htmlAttribute=htmlAttribute), element)
+                return self.getElement(target, selector, Options(htmlAttribute=htmlAttribute, element=self.getOption(options,'element')))
             else:
-                return self.getElement(target, 'input', Options(htmlAttribute=selector), element)
+                return self.getElement(target, 'input', Options(htmlAttribute=selector, element=self.getOption(options,'element')))
 
         options.following = 'input'
-        return self.getElement(target, selector, options, element)
+        return self.getElement(target, selector, options)
 
-    def fillInput(self, target, value, selector='label', options=Options(), element = None):
+    def fillInput(self, target, value, selector='label', options=Options()):
         '''
         :param target: The value that we are looking for
         :type target: String
@@ -41,11 +41,11 @@ class HtmlProxy:
         :rtype:
         '''
 
-        elem = self.getInput(target,selector,options, element)
-        self.clearInput(target,selector,options, element)
+        elem = self.getInput(target,selector,options)
+        self.clearInput(target,selector,options)
         elem.send_keys(value)
 
-    def clickDropdown(self, target, selectValue, selector='label', element=None):
+    def clickDropdown(self, target, selectValue, selector='label',options=Options()):
         """
         Select value from dropdown button
         :param target: It's next to dropdown button
@@ -53,13 +53,13 @@ class HtmlProxy:
         :param selectValue: This is what we want to select
         :type selectValue: String
         """
-        if not element:
-            self.getElement(target, selector, Options(following='button')).click()
-            element = self.getElement(target, selector, Options(following='ul'))
+        if self.getOption(options,'element') is not None:
+            self.getElement(target, selector, Options(following='button',element=self.getOption(options,'element'))).click()
+            element = self.getElement(target, selector, Options(following='ul', element=self.getOption(options,'element')))
             element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
         else:
-            self.getElement(target, selector, Options(following='button'), element).click()
-            element = self.getElement(target, selector, Options(following='ul'), element)
+            self.getElement(target, selector, Options(following='button')).click()
+            element = self.getElement(target, selector, Options(following='ul',element=self.getOption(options,'element')))
             element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
 
     def switchFrame(self, tagName=None):
@@ -75,12 +75,13 @@ class HtmlProxy:
 
         self.wait(2)
 
-    def getElement(self, target, tag, options=Options(), element=None):
+    def getElement(self, target, tag, options=Options()):
+        if self.getOption(options,'element') is not None:
+            element = self.getOption(options, 'element')
+        else:
+            element=self.driver
         if self.getOption(options,'uniqueSelector'):
-            if element:
                 return element.find_element_by_xpath(tag)
-            else:
-                return self.driver.find_element_by_xpath(tag)
 
         htmlAttribute = self.getOption(options,'htmlAttribute')
         exactMatch = self.getOption(options,'exactMatch')
@@ -92,18 +93,15 @@ class HtmlProxy:
             xpath = './/' + tag + '[@' + htmlAttribute + '="' + target + '"]'
             xpath = self.appendFollowing(xpath, options)
 
-            if element:
-                return element.find_element_by_xpath(xpath)
-            else:
-                return self.driver.find_element_by_xpath(xpath)
+            return element.find_element_by_xpath(xpath)
+
 
         xpath = self.getXpathByExactMatch(tag, target, options)
         xpath = self.appendFollowing(xpath, options)
 
-        if element:
-            return element.find_element_by_xpath(xpath)
-        else:
-            return self.driver.find_element_by_xpath(xpath)
+
+        return element.find_element_by_xpath(xpath)
+
 
     def appendFollowing(self, xpath, options=Options()):
         following = self.getOption(options, 'following')
@@ -129,7 +127,7 @@ class HtmlProxy:
         return self.driver.find_element_by_xpath(
             '//table[@' + attribute + '="' + target + '"]//td[text() = "' + searchText + '"]').text
 
-    def getTxtFromTable(self, row, col, tableId = '', element = None):
+    def getTxtFromTable(self, row, col, tableId = '',options=Options()):
         """
         We can get a value from table that depends on params
         :param row: Table row number
@@ -139,6 +137,7 @@ class HtmlProxy:
         :return: Cell value
         :rtype: String
         """
+        element = self.getOption(options,'element')
         if element is None:
             if tableId == '':
                 return self.driver.find_element_by_xpath('//table//tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
@@ -152,8 +151,8 @@ class HtmlProxy:
             else:
                 return element.find_element_by_xpath('./table[@id="' + tableId + '"]/tbody/tr[' + str(row) + ']/td[' + str(col) + ']').text
 
-    def clearInput(self, target, selector='label', options=Options(), element = None):
-        input  = self.getInput(target, selector, options, element)
+    def clearInput(self, target, selector='label', options=Options()):
+        input  = self.getInput(target, selector, options)
         input.clear()
 
         if input.get_attribute('value'):
@@ -176,10 +175,10 @@ class HtmlProxy:
         self.driver.refresh()
         self.wait(2)
 
-    def fillAutocomplete(self, target, tag, value, selectValue, selectTag, options, element = None):
-        self.getElement(target, tag, options, element=element).send_keys(value)
+    def fillAutocomplete(self, target, tag, value, selectValue, selectTag, options,):
+        self.getElement(target, tag, options).send_keys(value)
         self.wait(3)
-        self.clickElement(selectValue, selectTag, element=element)
+        self.clickElement(selectValue, selectTag)
 
     def clickTableElement(self, atrName, atrType, tdText, followingType, targetText, tab=None):
         if tab != None:
@@ -200,12 +199,12 @@ class HtmlProxy:
 
     def clickTab(self, tab):
         tabList = self.getElement('ui-tabs-nav ui-state-default', 'ul', options=Options(htmlAttribute='class'))
-        self.clickElement(tab, 'a', element=tabList)
+        self.clickElement(tab, 'a', Options(element=tabList))
 
     def getTab(self, tab):
         # az osszes tabot tartalmazo ul lista // azert, mert mashol is elofprdulhat a tabnev
         tabList = self.getElement('ui-tabs-nav ui-state-default', 'ul', options=Options(htmlAttribute='class'))
-        var = self.getElement(tab, 'a', element = tabList)
+        var = self.getElement(tab, 'a', Options(element=tabList))
         href = var.get_attribute('href')
         subResult = href.split('#')
 
@@ -220,8 +219,8 @@ class HtmlProxy:
         except NoSuchElementException:
             return
 
-        self.fillInput('searchinput simpleFilterTerm', value, selector='class', element=currWindow)
-        self.clickElement('Keresés', element=currWindow)
+        self.fillInput('searchinput simpleFilterTerm', value, selector='class', options=Options(element=currWindow))
+        self.clickElement('Keresés', options=Options(element=currWindow))
         self.wait(2)
 
     def closeAllert(self):

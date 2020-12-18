@@ -87,7 +87,7 @@ class StockSeed():
         self.html.wait(2)
         currWindow = self.html.getElement('tabs-3', 'div', options=Options(htmlAttribute='id'))
         # itt azert adjuk at a currWindow-t, hogy az adott oldalon keressen a td-k kozott
-        self.html.clickElement(warehouseName, 'td', Options(following='a'), element=currWindow)
+        self.html.clickElement(warehouseName, 'td', Options(following='a', element=currWindow))
         self.html.wait(2)
         self.html.clickElement('Igen')
         self.html.wait(2)

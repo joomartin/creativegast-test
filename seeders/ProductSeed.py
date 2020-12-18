@@ -79,14 +79,14 @@ class ProductSeed:
         self.html.wait(3)
 
         tab = self.html.getElement('tabs-2', 'div', Options(htmlAttribute='id'))
-        self.html.fillInput('Fogás neve', 'Főétel', element=tab)
-        self.html.clickDropdown('Termékcsoport:', td.ProductGroup['Egyeb']['Name'], element=tab)
-        self.html.clickElement(td.ProductGroup['Egyeb']['Name'], element=tab)
-        self.html.fillInput('Mennyiség', '1', element=tab)
-        self.html.getInput('Mennyiség', 'label', element=tab).click()
-        self.html.clickElement('Hozzáad', element=tab)
+        self.html.fillInput('Fogás neve', 'Főétel', options=Options(element=tab))
+        self.html.clickDropdown('Termékcsoport:', td.ProductGroup['Egyeb']['Name'], options=Options(element=tab))
+        self.html.clickElement(td.ProductGroup['Egyeb']['Name'], options=Options(element=tab))
+        self.html.fillInput('Mennyiség', '1', options=Options(element=tab))
+        self.html.getInput('Mennyiség', 'label', options=Options(element=tab)).click()
+        self.html.clickElement('Hozzáad', options=Options(element=tab))
         self.html.wait(3)
-        self.html.clickElement(secondMeal, 'span', element=tab)
+        self.html.clickElement(secondMeal, 'span', options=Options(element=tab))
 
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
@@ -120,7 +120,7 @@ class ProductSeed:
         self.html.fillAutocomplete('baseComponentName', 'input', baseComponent, baseComponent, 'li',
                                    Options(htmlAttribute='id'))
         table = self.html.getElement('baseComponents', 'table', Options(htmlAttribute='id'))
-        self.html.getElement('Hozzáad', 'button', element=table).click()
+        self.html.getElement('Hozzáad', 'button', Options(element=table)).click()
 
         # self.html.fillAutocomplete('toppingComponentName', 'input', topping, topping, 'li', Options(htmlAttribute='id'))
         # table = self.html.getElement('toppingComponents', 'table', Options(htmlAttribute='id'))
@@ -173,7 +173,7 @@ class ProductSeed:
         self.html.switchFrame('iframe')
 
         places = self.html.getElement('Eladási ár (Kötelező)', 'td')
-        self.html.clickElement('Ár megadása', element=places)
+        self.html.clickElement('Ár megadása',options=Options(element=places))
         self.html.fillInput('Nettó', 100)
         self.html.wait(1)
         self.html.clickElement('taxPriceSave', 'a', options=Options(htmlAttribute='id'))
