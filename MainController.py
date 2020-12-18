@@ -8,4 +8,4 @@ rc= ReceivingController()
 
 sc.run()
 #pc.run()
-#rc.run()
+rc.run()

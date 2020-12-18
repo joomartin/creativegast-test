@@ -62,7 +62,7 @@ class Products(BaseTestCase):
         self.html.fillInput('Kód', td.Product['Babgulyás']['ModifiedCode'])
 
         places = self.html.getElement('Eladási ár (Kötelező)', 'td')
-        self.html.clickElement('edit actionButton fright editPriceBtn', 'a', options=Options(htmlAttribute='class'), element=places)
+        self.html.clickElement('edit actionButton fright editPriceBtn', 'a', options=Options(htmlAttribute='class', element=places))
         self.html.fillInput('Nettó', td.Product['Babgulyás']['NetPrice'])
         self.html.wait(2)
         self.html.clickElement('taxPriceSave', 'a', options=Options(htmlAttribute='id'))
