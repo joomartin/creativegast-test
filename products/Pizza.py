@@ -25,6 +25,7 @@ class Pizza(BaseTestCase):
         super().tearDownClass()
 
 
+
     def testCreate(self):
         testName = 'Create pizza'
         self.productseed.createPizza(data.Pizza['Sonkas_pizza']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], 'Pizza feltét')

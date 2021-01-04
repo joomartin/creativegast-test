@@ -7,5 +7,5 @@ pc = ProductController()
 rc = ReceivingController()
 
 sc.run()
-pc.run()
+#pc.run()
 rc.run()
