@@ -12,7 +12,7 @@ class Receiving(BaseTestCase):
         super().setUpClass()
         super().login(self)
         self.stockseed.createWarehouse(td.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Bundas_kenyer']['Name'], td.RawMaterial['Bundas_kenyer']['GrosPrice'], td.RawMaterial['Bundas_kenyer']['Quantity'], td.WareHouses['Szeszraktár']['Name'], module=True)
+        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Bundas_kenyer']['Name'], td.RawMaterial['Bundas_kenyer']['GrossPrice'], td.RawMaterial['Bundas_kenyer']['Quantity'], td.WareHouses['Szeszraktár']['Name'], module=True)
         self.receivingseed.createPartner(td.Partner['Szallito']['Name'],td.Partner['Szallito']['Id'], module=True)
 
 
