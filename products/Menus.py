@@ -13,7 +13,7 @@ class Menus(BaseTestCase):
         super().setUpClass()
         super().login(self)
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrosPrice'], data.RawMaterial['Bundas_kenyer']['Quantity'], data.WareHouses['Szeszraktár']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], module=True)
+        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrossPrice'], data.RawMaterial['Bundas_kenyer']['Quantity'], data.WareHouses['Szeszraktár']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], module=True)
         self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'], module=True)
         self.productseed.createProductGroup(data.ProductGroup['Egyeb']['Name'], tab=True)
         self.productseed.createProduct(data.Product['Babgulyás']['Name'], data.ProductGroup['Egyeb']['Name'], data.Product['Babgulyás']['Code'], data.Counter['TestCounter']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], module=True)
@@ -35,21 +35,25 @@ class Menus(BaseTestCase):
 
 
     def testCreate(self):
+        grossPrice = ''
         self.productseed.createMenu(data.Menu['NapiMenu']['Name'], data.Product['Babgulyás']['Name'], data.Product['Palacsinta']['Name'], data.Menu['NapiMenu']['Price'])
         self.productAssert.assertMenuExists(data.Menu['NapiMenu']['Name'], data.Menu['NapiMenu']['GrossPrice'])
         self.productseed.deleteMenu(data.Menu['NapiMenu']['Name'])
 
     def testUpdateMenu(self):
-        modName = 'Modified menu'
-        modPrice= 300
+        modifiedName = 'Heti menu'
+        modifiedPrice= '300'
+        extended_round = lambda x, n: eval('"%.' + str(int(n)) + 'f" % ' + repr(x))
+        modifiedGrossPrice = self.html.extendedRound(int(modifiedPrice) * 1.27, 2)
+
         self.productseed.createMenu(data.Menu['NapiMenu']['Name'], data.Product['Babgulyás']['Name'], data.Product['Palacsinta']['Name'], data.Menu['NapiMenu']['Price'])
 
         self.html.clickTableElement('menu', 'id', data.Menu['NapiMenu']['Name'], 'span', 'Szerkeszt', 'Menü')
         self.html.switchFrame('iframe')
 
-        self.html.fillInput('Termék neve', data.Menu['NapiMenu']['ModifiedName'])
+        self.html.fillInput('Termék neve', modifiedName)
         self.html.getElement('27%', 'td', Options(following='td//input')).clear()
-        self.html.getElement('27%', 'td', Options(following='td//input')).send_keys(data.Menu['NapiMenu']['ModifiedPrice'])
+        self.html.getElement('27%', 'td', Options(following='td//input')).send_keys(modifiedPrice)
         self.html.clickElement('Rögzít')
         self.html.wait(2)
 
@@ -62,8 +66,8 @@ class Menus(BaseTestCase):
             self.html.switchFrame()
 
         self.html.refresh()
-        self.html.search(data.Menu['NapiMenu']['ModifiedName'], 'Menü')
+        self.html.search(modifiedName, 'Menü')
         self.html.wait(3)
-        self.productAssert.assertMenuExists(data.Menu['NapiMenu']['ModifiedName'], '381.00')
+        self.productAssert.assertMenuExists(modifiedName, str(modifiedGrossPrice))
 
-        self.productseed.deleteMenu(data.Menu['NapiMenu']['ModifiedName'])
+        self.productseed.deleteMenu(modifiedName)

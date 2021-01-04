@@ -1,14 +1,4 @@
-import unittest
 
-from time import sleep
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from core.HtmlProxy import HtmlProxy
-from core.Options import Options
-from mainMenu.MainMenuProxy import MainMenuProxy
-from products.ProductAssert import ProductAssert
-from stock.StockAssert import StockAssert
-from Config import read_section
 from shared.BaseTestCase import BaseTestCase
 from shared.TestData import TestData as td
 
@@ -31,11 +21,11 @@ class ProductGroups(BaseTestCase):
     def testCreate(self):
         testName = td.ProductGroup['Egyeb']['Name']
         self.productseed.createProductGroup(testName)
-        self.html.search(testName,'Termékcsoportok')
+        self.html.search(testName, 'Termékcsoportok')
         self.productAssert.assertGroupExists(testName)
         self.productseed.deleteProductGroup(testName)
 
-
+    '''
     def testCreateWithParentGroup(self):
         testName = td.ProductGroup['Egyeb']['Name']
         self.html.clickElement('Új termékcsoport felvitele', 'a')
@@ -53,10 +43,12 @@ class ProductGroups(BaseTestCase):
         self.productAssert.asseretParentGroup(testName, 'Ételek')
 
         self.productseed.deleteProductGroup(testName, module=True)
+    '''
 
     def testUpdateGroup(self):
         testName = td.ProductGroup['Egyeb']['Name']
-        newName = td.ProductGroup['Egyeb']['ModifiedName']
+        modifiedName = 'egzotikus fuszerek'
+
         self.productseed.createProductGroup(testName)
         self.html.search(testName, 'Termékcsoportok')
         self.productAssert.assertGroupExists(testName)
@@ -64,12 +56,12 @@ class ProductGroups(BaseTestCase):
 
         self.html.switchFrame('iframe')
 
-        self.html.fillInput('Termékcsoport neve', newName)
+        self.html.fillInput('Termékcsoport neve', modifiedName)
         self.html.clickElement('Rögzít')
         self.html.wait(3)
         self.html.switchFrame()
         self.html.refresh()
-        self.html.search(newName, 'Termékcsoportok')
-        self.productAssert.assertGroupExists(newName)
+        self.html.search(modifiedName, 'Termékcsoportok')
+        self.productAssert.assertGroupExists(modifiedName)
 
-        self.productseed.deleteProductGroup(newName)
+        self.productseed.deleteProductGroup(modifiedName)

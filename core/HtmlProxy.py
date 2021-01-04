@@ -118,6 +118,7 @@ class HtmlProxy:
             return './/' + tag + '[contains(.,"' + target + '")]'
 
     def getElementInTable(self, searchText, id, tab):
+        #search(searchText, tab)
         self.search(searchText, tab)
         return self.driver.find_element_by_xpath('//table[@id="' + id + '"]//td[text() = "' + searchText + '"]')
 
@@ -162,7 +163,7 @@ class HtmlProxy:
         self.getElement(target, tag, options).send_keys(key)
 
     def getOption(self, options, key):
-        if not options :
+        if not options:
             options = Options()
 
         return getattr(options, key)
@@ -247,3 +248,7 @@ class HtmlProxy:
         html = self.driver.find_element_by_tag_name('html')
         html.send_keys(Keys.END)
         self.wait(1)
+
+    def extendedRound(self, number, decimals):
+        return eval('"%.' + str(int(decimals)) + 'f" % ' + repr(number))
+

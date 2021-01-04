@@ -5,19 +5,20 @@ class TestData:
         'Bundas_kenyer':
             {
                 'Name': 'Bundas_kenyer',
-                'GrosPrice': '1000',
+                'GrossPrice': '1 000.00',
                 'ModifiedGrossPrice': '1 010.00',
                 'ME': 'liter',
                 'Warehouse': 'Szeszraktár',
-                'Quantity': '10',
-                'Quantity2': '100',
-                'FloatQuantity': '10.00',
-                'NetPrice': '787.40',
-                'NetValue': '7 874.02',
-                'WhValue': '10000',
-                'OpenQuantity': '10',
-                'Waste': '5',
+                'Quantity': '10.00',
+                'Quantity2': '100.00',
+                #'FloatQuantity': '10.00',
+                #'NetPrice': '787.40',
+                #'NetValue': '7 874.02',
+                #'WhValue': '10000',
+                #'OpenQuantity': '10',
+                'Waste': '5.00',
                 'FloatWaste': '5.00',
+                #'Name2': 'TestRawMaterial3'
 
             },
         'Alma':
@@ -29,11 +30,11 @@ class TestData:
                 'Warehouse': 'Szeszraktár',
                 'Quantity': '10',
                 'Quantity2': '100',
-                'FloatQuantity': '10.00',
-                'NetPrice': '787.40',
-                'NetValue': '7 874.02',
-                'WhValue': '10000',
-                'OpenQuantity': '10',
+                #'FloatQuantity': '10.00',
+                #'NetPrice': '787.40',
+                #'NetValue': '7 874.02',
+                #'WhValue': '10000',
+                #'OpenQuantity': '10',
                 'Waste': '5',
                 'FloatWaste': '5.00',
             }
@@ -43,8 +44,6 @@ class TestData:
         'Szeszraktár':
             {
                 'Name': 'Szeszraktár',
-                'ModifiedName': 'ModifiedWarehouse',
-                'MoveQuantity': '5'
             },
 
         'Tartalékraktár':
@@ -64,9 +63,9 @@ class TestData:
         'TestCounter':
             {
                 'Name': 'TestCounter',
-                'Position': '0',
-                'ModifiedName': 'ModifiedCounter',
-                'ModifiedPosition': '7'
+                'Position': '0'
+                #'ModifiedName': 'ModifiedCounter',
+                #'ModifiedPosition': '7'
             }
     }
 
@@ -81,9 +80,9 @@ class TestData:
                 'MenuComponentUnit': '1',
                 'MenuComponentName2': 'Főétel',
                 'MenuComponentUnit2': '1',
-                'ModifiedName': 'ModifiedName',
-                'ModifiedPrice': '300',
-                'ModifiedGrossPrice': '381.00'
+                #'ModifiedName': 'ModifiedName',
+                #'ModifiedPrice': '300',
+                #'ModifiedGrossPrice': '381.00'
             }
     }
 
@@ -95,10 +94,10 @@ class TestData:
                 'BaseComponentName': 'LisztTest',
                 'ToppingComponentName': 'SonkaTeszt',
                 'NetPrice': '1000',
-                'GrossPrice': '1 270.00',
-                'ModifiedName': 'ModifiedPizza',
-                'ModifiedNetPrice': '3000',
-                'ModifiedGrossPrice': '3 810.00',
+                'GrossPrice': '1270.00',
+                #'ModifiedName': 'ModifiedPizza',
+                #'ModifiedNetPrice': '3000',
+                #'ModifiedGrossPrice': '3 810.00',
                 'WasteQuantity': '10',
             }
     }
@@ -121,29 +120,29 @@ class TestData:
             {
                 'Name': 'Babgulyás',
                 'Code': '99',
-                'Code2': '3131999',
+                #'Code2': '3131999',
                 'NetPrice': '100',
                 'ComponentName': 'TestComponent',
                 'Quantity': '2',
-                'ModifiedName': 'ModifiedProduct',
-                'ModifiedCode': '11',
-                'ModifiedPrice': '200',
-                'ModifiedQuantity': '2',
-                'ModifiedComponent': 'TestComponent2'
+                #'ModifiedName': 'ModifiedProduct',
+                #'ModifiedCode': '11',
+                #'ModifiedPrice': '200',
+                #'ModifiedQuantity': '2',
+                #'ModifiedComponent': 'TestComponent2'
             },
         'Palacsinta':
             {
                 'Name': 'Palacsinta',
                 'Code': '73',
-                'Code2': '71717171',
+                #'Code2': '71717171',
                 'NetPrice': '100',
                 'ComponentName': 'TestComponent',
                 'Quantity': '2',
-                'ModifiedName': 'ModifiedProduct',
-                'ModifiedCode': '11',
-                'ModifiedPrice': '200',
-                'ModifiedQuantity': '2',
-                'ModifiedComponent': 'TestComponent2'
+                #'ModifiedName': 'ModifiedProduct',
+                #'ModifiedCode': '11',
+                #'ModifiedPrice': '200',
+                #'ModifiedQuantity': '2',
+                #'ModifiedComponent': 'TestComponent2'
             }
 
     }

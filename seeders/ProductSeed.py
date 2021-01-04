@@ -30,7 +30,7 @@ class ProductSeed:
         self.html.clickElement('Rögzít')
         self.html.wait(10)
         self.html.switchFrame()
-        self.html.wait(2)
+        self.html.wait(5)
 
     def deleteProductGroup(self, groupName, module=False, tab=False):
         if module:

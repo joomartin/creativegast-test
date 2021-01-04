@@ -4,8 +4,8 @@ from receiving.ReceivingController import ReceivingController
 
 sc = StockController()
 pc = ProductController()
-rc= ReceivingController()
+rc = ReceivingController()
 
-#sc.run()
-#pc.run()
+sc.run()
+pc.run()
 rc.run()

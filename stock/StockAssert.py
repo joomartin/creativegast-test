@@ -6,6 +6,7 @@ from selenium import webdriver
 
 from core.Options import Options
 from mainMenu.MainMenuProxy import MainMenuProxy
+from core.CGSpecific import CGSpecific as cg
 
 
 class StockAssert(unittest.TestCase):
@@ -14,6 +15,7 @@ class StockAssert(unittest.TestCase):
         super().__init__()
         self.html = htmlProxy
         self.menu = MainMenuProxy(driver)
+        self.cg = cg()
 
     def assertWarehouseExist(self, name, tab):
         self.assertTrue(self.html.getElementInTable(name, 'storages', tab).is_displayed())
