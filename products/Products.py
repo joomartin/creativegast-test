@@ -95,7 +95,7 @@ class Products(BaseTestCase):
         self.assertTrue(self.html.getRowExist(['Termékcsoport:', td.ProductGroup['Öntetek']['Name']]))
         self.assertTrue(self.html.getRowExist(['Kód:', editedCode]))
         # ez itt egy bug, lehala  teszt
-        # self.assertTrue(self.html.getTablePairsExist('Számláló(k):', counter))
+        self.assertTrue(self.html.getTablePairsExist('Számláló(k):', td.Counter['TestCounter']['Name']))
 
         self.assertTrue(self.html.getRowExist(['Eladási ár', td.Product['Babgulyás']['NetPrice']]))
 
