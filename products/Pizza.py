@@ -52,8 +52,8 @@ class Pizza(BaseTestCase):
 
         self.html.fillInput('Nettó', modifiedNetPrice)
         self.html.clickElement('Rögzít', 'a', waitSeconds=2)
-        #self.html.closeAllert()
-        #self.html.clickElement('Rögzít', 'a')
+        self.html.closeAllert()
+        self.html.clickElement('Rögzít', 'a')
 
         self.html.clickElement('Rögzít')
         self.html.refresh()
