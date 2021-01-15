@@ -11,12 +11,12 @@ from seeders.StockSeed import StockSeed
 from seeders.ProductSeed import ProductSeed
 from seeders.ReceivingSeed import ReceivingSeed
 
+
 class BaseTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
         self.driver = webdriver.Chrome(executable_path='C:/webdrivers/chromedriver.exe')
-        #self.driver = webdriver.Firefox(executable_path='C:/webdrivers/geckodriver.exe')
         self.driver.maximize_window()
 
         config = read_section()

@@ -17,7 +17,6 @@ class ProductGroups(BaseTestCase):
     def tearDownClass(self):
         super().tearDownClass()
 
-
     def testCreate(self):
         testName = td.ProductGroup['Egyeb']['Name']
         self.productseed.createProductGroup(testName)
@@ -36,10 +35,11 @@ class ProductGroups(BaseTestCase):
         self.html.clickDropdown('Kategória', 'Étel')
         self.html.clickElement('Ételek', 'a')
         self.html.clickElement('Rögzít')
-        self.html.wait(5)
+        #self.html.wait(5)
+        self.driver.implicitly_wait(100000)
 
         self.html.switchFrame()
-        self.html.wait(8)
+        self.html.wait(8000)
         self.productAssert.asseretParentGroup(testName, 'Ételek')
 
         self.productseed.deleteProductGroup(testName, module=True)

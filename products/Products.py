@@ -1,7 +1,7 @@
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
 from shared.TestData import TestData as td
-from products.ProductGroups import ProductGroups as pg
+
 
 class Products(BaseTestCase):
 

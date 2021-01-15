@@ -1,6 +1,7 @@
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
 from shared.TestData import TestData as data
+import sys
 
 
 class RawMaterial(BaseTestCase):
@@ -20,15 +21,11 @@ class RawMaterial(BaseTestCase):
 
 
     def testCreate(self):
-        testName = 'Abszint'
         self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
 
     def testUpdate(self):
-        testName = 'Abszint'
-        ME = 'liter'
-        price = '1 010.00'
 
         self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
         self.html.clickTableDropdown(data.RawMaterial['Bundas_kenyer']['Name'], 'Szerkeszt', 'Raktárkészlet')
@@ -104,7 +101,6 @@ class RawMaterial(BaseTestCase):
         self.stockAssert.assertDeletedMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'])
 
     def testDuplicate(self):
-        testName = 'Abszint'
 
         self.menu.openStocks()
         self.html.clickElement('Új nyersanyag felvitele', 'a')
@@ -137,8 +133,6 @@ class RawMaterial(BaseTestCase):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
     def testWastingRawMaterial(self):
-        testName = 'Abszint'
-        ME = 'liter'
 
         self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
         # self.html.search(testName, 'Raktárkészlet')
@@ -173,8 +167,6 @@ class RawMaterial(BaseTestCase):
         self.stockAssert.assertDeletedMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'])
 
     def testOpeningButton(self):
-        ME = 'liter'
-        qty = '100'
         self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
 
         self.html.search(data.RawMaterial['Bundas_kenyer']['Name'], 'Raktárkészlet')
@@ -198,8 +190,6 @@ class RawMaterial(BaseTestCase):
                                      str(int(float(data.RawMaterial['Bundas_kenyer']['Quantity2']))))
 
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
-
-
 
 
 

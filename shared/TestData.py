@@ -53,8 +53,6 @@ class TestData:
             {
                 'Name': 'TestCounter',
                 'Position': '0'
-                #'ModifiedName': 'ModifiedCounter',
-                #'ModifiedPosition': '7'
             }
     }
 
@@ -81,9 +79,6 @@ class TestData:
                 'ToppingComponentName': 'SonkaTeszt',
                 'NetPrice': '1000',
                 'GrossPrice': '1270.00',
-                #'ModifiedName': 'ModifiedPizza',
-                #'ModifiedNetPrice': '3000',
-                #'ModifiedGrossPrice': '3 810.00',
                 'WasteQuantity': '10',
             }
     }
@@ -106,7 +101,6 @@ class TestData:
             {
                 'Name': 'Babgulyás',
                 'Code': '99',
-                #'Code2': '3131999',
                 'NetPrice': '100',
                 'ComponentName': 'TestComponent',
                 'Quantity': '2',
