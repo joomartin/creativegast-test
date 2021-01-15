@@ -1,8 +1,10 @@
-import unittest
+import sys
 
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
 from shared.TestData import TestData as data
+from datetime import datetime
+
 
 class Test(BaseTestCase):
 
@@ -18,7 +20,16 @@ class Test(BaseTestCase):
     def tearDownClass(self):
         super().tearDownClass()
 
-
+    '''
+    @classmethod
+    def tearDown(self):
+        print(sys.exc_info())
+        if sys.exc_info():
+            print('aaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+            now = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+            self.driver.save_screenshot("../ScreenShots/Screenshots-%s.png" % now)
+            print('tttttttttttttttttttttt')
+    '''
 
     def testCreateWarehouse(self):
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'])
@@ -26,6 +37,7 @@ class Test(BaseTestCase):
         self.html.search('', 'Raktárak')
 
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'])
+
 
     #@unittest.skip
     def testCantCreate(self):
@@ -43,7 +55,6 @@ class Test(BaseTestCase):
 
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'])
 
-    #@unittest.skip
     def testEdit(self):
 
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'])
@@ -64,7 +75,6 @@ class Test(BaseTestCase):
 
         self.stockseed.deleteWarehouse(data.WareHouses['Tartalékraktár']['Name'])
 
-
     def testDelete(self):
         self.html.refresh()
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'])
@@ -78,5 +88,4 @@ class Test(BaseTestCase):
         self.html.search('', 'Raktárak')
 
 
-if __name__ == "__main__":
-    unittest.main()
+

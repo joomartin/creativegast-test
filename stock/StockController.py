@@ -1,13 +1,13 @@
 import HTMLTestRunner
 import os
 import unittest
-from selenium import webdriver
 
+from selenium import webdriver
 from core.contracts.Controller import Controller
 from stock.RawMaterial import RawMaterial
 from stock.Warehouses import Test
 from stock.StockMovement import StockMovement
-from stock.BarCheckings import  BarCheckings
+from stock.BarCheckings import BarCheckings
 
 
 class StockController(Controller):

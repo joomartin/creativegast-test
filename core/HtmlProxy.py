@@ -244,11 +244,13 @@ class HtmlProxy:
     def scrollToElement(self, element):
         self.driver.execute_script('arguments[0].scrollIntoView;', element)
 
+    # scroll down to end of the page
     def scroll(self):
         html = self.driver.find_element_by_tag_name('html')
         html.send_keys(Keys.END)
         self.wait(1)
 
+    # it extendds decimals, may it belongs CGSpecific
     def extendedRound(self, number, decimals):
         return eval('"%.' + str(int(decimals)) + 'f" % ' + repr(number))
 

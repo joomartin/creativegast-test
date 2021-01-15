@@ -23,6 +23,7 @@ class Pizza(BaseTestCase):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         super().tearDownClass()
+        pass
 
 
     def testCreate(self):
@@ -50,7 +51,7 @@ class Pizza(BaseTestCase):
         self.html.clickElement('edit actionButton fright editPriceBtn', 'a', Options(htmlAttribute='class'))
 
         self.html.fillInput('Nettó', modifiedNetPrice)
-        self.html.clickElement('Rögzít', 'a')
+        self.html.clickElement('Rögzít', 'a', waitSeconds=2)
         self.html.closeAllert()
         self.html.clickElement('Rögzít', 'a')
 
@@ -63,8 +64,6 @@ class Pizza(BaseTestCase):
 
 
     def testWasting(self):
-        testName = 'Waste pizza'
-
         self.productseed.createPizza(data.Pizza['Sonkas_pizza']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], 'Pizza feltét')
         self.productAssert.assertPizzaExists(data.Pizza['Sonkas_pizza']['Name'], data.Pizza['Sonkas_pizza']['GrossPrice'])
 

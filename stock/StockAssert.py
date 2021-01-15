@@ -1,9 +1,6 @@
 import unittest
 
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.keys import Keys
-from selenium import webdriver
-
 from core.Options import Options
 from mainMenu.MainMenuProxy import MainMenuProxy
 from core.CGSpecific import CGSpecific as cg
