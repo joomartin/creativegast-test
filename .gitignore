@@ -5,3 +5,4 @@ __pychache__
 debug.log
 config.ini
 stock/geckodriver.log
+/screenShots/

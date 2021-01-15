@@ -1,3 +1,4 @@
+from datetime import datetime
 import unittest
 
 from selenium import webdriver
@@ -30,10 +31,29 @@ class BaseTestCase(unittest.TestCase):
         self.stockAssert = StockAssert(self.html,self.driver)
         self.productAssert = ProductAssert(self.html,self.driver)
         self.receivingAssert=ReceivingAssert(self.html,self.driver)
+        self.result = unittest.TestResult
 
     @classmethod
     def tearDownClass(self):
         self.driver.quit()
+
+    '''
+    @classmethod
+    def tearDown(self):
+        print('kint')
+        # if not unittest.TestResult.wasSuccessful(unittest.TestResult()):
+        print(self.defaultTestResult(self).errors)
+        print('error:')
+        print(len(self.result().errors))
+        print('fail:')
+        print(len(self.result().failures))
+        if not len(self.result(self).errors) == 0:
+            print('bent')
+            now = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+            name = 'screenshot-%s.png' % now
+            self.driver.save_screenshot(name)
+            print(name)
+    '''
 
     def login(self):
         self.html.fillInput('Felhasználónév', 'admin', selector='placeholder')

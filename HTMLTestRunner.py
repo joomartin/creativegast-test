@@ -67,6 +67,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 __author__ = "Wai Yip Tung"
 __version__ = "0.8.2"
 
+import os
+import shutil
+from datetime import  datetime
+import pyautogui
 
 """
 Change History
@@ -569,7 +573,7 @@ class _TestResult(TestResult):
         self.success_count += 1
         TestResult.addSuccess(self, test)
         output = self.complete_output()
-        self.result.append((0, test, output, ''))
+        self.result.append((0, test, output, '', ''))
         if self.verbosity > 1:
             sys.stderr.write('ok ')
             sys.stderr.write(str(test))
@@ -582,7 +586,7 @@ class _TestResult(TestResult):
         TestResult.addError(self, test, err)
         _, _exc_str = self.errors[-1]
         output = self.complete_output()
-        self.result.append((2, test, output, _exc_str))
+        self.result.append((2, test, output, _exc_str, self.generateTestScreenshot(test)))
         if self.verbosity > 1:
             sys.stderr.write('E  ')
             sys.stderr.write(str(test))
@@ -595,13 +599,29 @@ class _TestResult(TestResult):
         TestResult.addFailure(self, test, err)
         _, _exc_str = self.failures[-1]
         output = self.complete_output()
-        self.result.append((1, test, output, _exc_str))
+        self.result.append((1, test, output, _exc_str, self.generateTestScreenshot(test)))
         if self.verbosity > 1:
             sys.stderr.write('F  ')
             sys.stderr.write(str(test))
             sys.stderr.write('\n')
         else:
             sys.stderr.write('F')
+
+
+    def generateTestScreenshot(self, test):
+        dir = os.getcwd()
+        imgdir = dir +'\\screenShots\\'
+        imgpath = ''
+        stamp = datetime.datetime.now()
+        stamp= stamp.strftime('%m.%d.%Y')
+        if imgdir:
+            x = str(test).split()
+            tf = x[0]
+            tc = x[1].split('.')[1][:-1]
+            imgpath = os.path.join(imgdir, "%s-%s-%s.png" % (tc, tf,stamp))
+            myScreenshot = pyautogui.screenshot()
+            myScreenshot.save(imgpath)
+        return imgpath
 
 
 class HTMLTestRunner(Template_mixin):
@@ -637,14 +657,15 @@ class HTMLTestRunner(Template_mixin):
         # Here at least we want to group them together by class.
         rmap = {}
         classes = []
-        for n,t,o,e in result_list:
+        for n,t,o,e, i in result_list:
             cls = t.__class__
             if cls not in rmap:
                 rmap[cls] = []
                 classes.append(cls)
-            rmap[cls].append((n,t,o,e))
+            rmap[cls].append((n,t,o,e,i))
         r = [(cls, rmap[cls]) for cls in classes]
         return r
+
 
 
     def getReportAttributes(self, result):
@@ -713,7 +734,7 @@ class HTMLTestRunner(Template_mixin):
         for cid, (cls, cls_results) in enumerate(sortedResult):
             # subtotal for a class
             np = nf = ne = 0
-            for n,t,o,e in cls_results:
+            for n,t,o,e,i in cls_results:
                 if n == 0: np += 1
                 elif n == 1: nf += 1
                 else: ne += 1
@@ -737,7 +758,7 @@ class HTMLTestRunner(Template_mixin):
             )
             rows.append(row)
 
-            for tid, (n,t,o,e) in enumerate(cls_results):
+            for tid, (n,t,o,e,i) in enumerate(cls_results):
                 self._generate_report_test(rows, cid, tid, n, t, o, e)
 
         report = self.REPORT_TMPL % dict(
