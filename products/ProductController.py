@@ -8,6 +8,7 @@ from products.Products import Products
 from products.ProductGroups import ProductGroups
 from products.Menus import Menus
 from products.Pizza import Pizza
+import ReportMail as mail
 
 
 class ProductController(Controller):
@@ -34,4 +35,5 @@ class ProductController(Controller):
 
         # run the suite using HTMLTestRunner
         runner.run(test_suite)
+        mail.sendReport(dir + '\\reports\ProductsTestReport.html')
 

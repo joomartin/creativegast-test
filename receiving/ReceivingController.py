@@ -6,6 +6,7 @@ from selenium import webdriver
 from core.contracts.Controller import Controller
 from receiving.Partners import Partners
 from receiving.Receiving import Receiving
+import ReportMail as mail
 
 
 class ReceivingController(Controller):
@@ -28,3 +29,4 @@ class ReceivingController(Controller):
 
         # run the suite using HTMLTestRunner
         runner.run(test_suite)
+        mail.sendReport(dir + '\\reports\ReceivingTestReport.html')

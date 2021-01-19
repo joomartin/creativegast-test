@@ -34,6 +34,10 @@ class MainMenuProxy:
         self.navigate('conveniences')
         self.wait()
 
+    def openTableMapEditor(self):
+        self.navigate('tablemapeditor/index')
+        self.wait()
+
     def wait(self):
         self.html.wait()
 
