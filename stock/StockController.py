@@ -8,7 +8,7 @@ from stock.RawMaterial import RawMaterial
 from stock.Warehouses import Test
 from stock.StockMovement import StockMovement
 from stock.BarCheckings import BarCheckings
-
+import ReportMail as mail
 
 class StockController(Controller):
     def run(self):
@@ -32,4 +32,5 @@ class StockController(Controller):
 
         # run the suite using HTMLTestRunner
         runner.run(test_suite)
+        mail.sendReport(dir + '\\reports\StocksTestReport.html')
 
