@@ -27,7 +27,7 @@ class Test(BaseTestCase):
         if sys.exc_info():
             print('aaaaaaaaaaaaaaaaaaaaaaaaaaaa')
             now = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-            self.driver.save_screenshot("../ScreenShots/Screenshots-%s.png" % now)
+            self.driver.save_screenshot("../screenShots/Screenshots-%s.png" % now)
             print('tttttttttttttttttttttt')
     '''
 
