@@ -123,3 +123,23 @@ class TestData:
                 'Id': '01'
             }
     }
+
+    Table = {
+        'Normal':
+            {
+                'Name': 'Teszt asztal',
+                'Type': 'Normál'
+            },
+
+        'Courier':
+            {
+                'Name': 'Net Pincér',
+                'Type': 'Futár'
+            },
+
+        'Boss':
+            {
+                'Name': 'Boss',
+                'Type': 'Főnöki'
+            },
+    }

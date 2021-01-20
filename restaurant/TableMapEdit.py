@@ -18,17 +18,17 @@ class TableMapEdit(BaseTestCase):
         pass
 
     def testCreateTable(self):
-        self.restaurantseed.createTable('Teszt asztal')
-        self.restaurantAssert.assertTableExists('Teszt asztal')
-        self.restaurantseed.deleteTable('Teszt asztal')
+        self.restaurantseed.createTable(data.Table['Normal']['Name'])
+        self.restaurantAssert.assertTableExists(data.Table['Normal']['Name'])
+        self.restaurantseed.deleteTable(data.Table['Normal']['Name'])
 
     def testEdit(self):
         modifiedName = 'Kerek asztal'
 
-        self.restaurantseed.createTable('Teszt asztal')
-        self.restaurantAssert.assertTableExists('Teszt asztal')
+        self.restaurantseed.createTable(data.Table['Normal']['Name'])
+        self.restaurantAssert.assertTableExists(data.Table['Normal']['Name'])
 
-        self.html.clickElement('Teszt asztal', 'i')
+        self.html.clickElement(data.Table['Normal']['Name'], 'i')
         self.html.fillInput('Asztal neve', modifiedName)
         self.html.clickElement('Rögzít', 'span')
         self.restaurantAssert.assertTableExists(modifiedName)
@@ -37,12 +37,12 @@ class TableMapEdit(BaseTestCase):
 
     def testCreateCourier(self):
 
-        self.restaurantseed.createTable('NetPincér', tableType='Futár')
-        self.restaurantAssert.assertTableExists('NetPincér')
-        self.restaurantseed.deleteTable('NetPincér')
+        self.restaurantseed.createTable(data.Table['Courier']['Name'], tableType='Futár')
+        self.restaurantAssert.assertTableExists(data.Table['Courier']['Name'])
+        self.restaurantseed.deleteTable(data.Table['Courier']['Name'])
 
 
     def testCreateBossTable(self):
-        self.restaurantseed.createTable('Boss', tableShape='Téglalap' ,tableType='Főnöki')
-        self.restaurantAssert.assertTableExists('Boss')
-        self.restaurantseed.deleteTable('Boss')
+        self.restaurantseed.createTable(data.Table['Boss']['Name'], tableShape='Téglalap' ,tableType='Főnöki')
+        self.restaurantAssert.assertTableExists(data.Table['Boss']['Name'])
+        self.restaurantseed.deleteTable(data.Table['Boss']['Name'])
