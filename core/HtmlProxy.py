@@ -45,7 +45,7 @@ class HtmlProxy:
         self.clearInput(target,selector,options)
         elem.send_keys(value)
 
-    def clickDropdown(self, target, selectValue, selector='label',options=Options()):
+    def clickDropdown(self, target, selectValue, selector='label', options=Options()):
         """
         Select value from dropdown button
         :param target: It's next to dropdown button
@@ -53,9 +53,9 @@ class HtmlProxy:
         :param selectValue: This is what we want to select
         :type selectValue: String
         """
-        if self.getOption(options,'element') is not None:
-            self.getElement(target, selector, Options(following='button',element=self.getOption(options,'element'))).click()
-            element = self.getElement(target, selector, Options(following='ul', element=self.getOption(options,'element')))
+        if self.getOption(options, 'element') is not None:
+            self.getElement(target, selector, Options(following='button', element=self.getOption(options, 'element'))).click()
+            element = self.getElement(target, selector, Options(following='ul', element=self.getOption(options, 'element')))
             element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
         else:
             self.getElement(target, selector, Options(following='button')).click()
@@ -127,7 +127,7 @@ class HtmlProxy:
         return self.driver.find_element_by_xpath(
             '//table[@' + attribute + '="' + target + '"]//td[text() = "' + searchText + '"]').text
 
-    def getTxtFromTable(self, row, col, tableId = '',options=Options()):
+    def getTxtFromTable(self, row, col, tableId = '', options=Options()):
         """
         We can get a value from table that depends on params
         :param row: Table row number
@@ -137,7 +137,7 @@ class HtmlProxy:
         :return: Cell value
         :rtype: String
         """
-        element = self.getOption(options,'element')
+        element = self.getOption(options, 'element')
         if element is None:
             if tableId == '':
                 return self.driver.find_element_by_xpath('//table//tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
@@ -145,11 +145,37 @@ class HtmlProxy:
                 return self.driver.find_element_by_xpath('//table[@id="' + tableId + '"]//tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
         else:
             if tableId == '':
-                asd = element.find_element_by_xpath('./table/tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
-                print()
+                # asd = element.find_element_by_xpath('./table/tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
+                print('asdasd')
                 return element.find_element_by_xpath('./table/tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
             else:
                 return element.find_element_by_xpath('./table[@id="' + tableId + '"]/tbody/tr[' + str(row) + ']/td[' + str(col) + ']').text
+
+
+    def getTxtFromListTable(self, row, col, tableId = '', options=Options()):
+        """
+        We can get a value from table that depends on params
+        :param row: Table row number
+        :type row: Int or string
+        :param col: Table column number
+        :type col: Int or String
+        :return: Cell value
+        :rtype: String
+        """
+        element = self.getOption(options, 'element')
+        htmlAttribute = self.getOption(options, 'htmlAttribute')
+        if element is None:
+            if htmlAttribute is None:
+                return self.driver.find_element_by_xpath('//table//tbody//tr[' + str(row) + ']/td/div[' + str(col) + ']')
+            else:
+                return self.driver.find_element_by_xpath('//table[@' + htmlAttribute + '="' + tableId + '"]//tbody//tr[' + str(row) + ']/td/div[' + str(col) + ']')
+        else:
+            if htmlAttribute is None:
+                # #asd = element.find_element_by_xpath('./table/tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
+                print('asdasd')
+                return element.find_element_by_xpath('./table/tbody//tr[' + str(row) + ']/td/div[' + str(col) + ']')
+            else:
+                return element.find_element_by_xpath('./table[@' + htmlAttribute + '="' + tableId + '"]/tbody/tr[' + str(row) + ']/td/div[' + str(col) + ']')
 
     def clearInput(self, target, selector='label', options=Options()):
         input  = self.getInput(target, selector, options)
@@ -177,7 +203,7 @@ class HtmlProxy:
 
     def fillAutocomplete(self, target, tag, value, selectValue, selectTag, options,):
         self.getElement(target, tag, options).send_keys(value)
-        self.wait(3)
+        self.wait(5)
         self.clickElement(selectValue, selectTag)
 
     def clickTableElement(self, atrName, atrType, tdText, followingType, targetText, tab=None):
