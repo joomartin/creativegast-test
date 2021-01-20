@@ -7,10 +7,12 @@ from mainMenu.MainMenuProxy import MainMenuProxy
 from stock.StockAssert import StockAssert
 from products.ProductAssert import ProductAssert
 from receiving.ReceivingAssert import ReceivingAssert
+from restaurant.RestaurantAssert import RestaurantAssert
 from Config import read_section
 from seeders.StockSeed import StockSeed
 from seeders.ProductSeed import ProductSeed
 from seeders.ReceivingSeed import ReceivingSeed
+from seeders.RestaurantSeed import RestaurantSeed
 
 
 class BaseTestCase(unittest.TestCase):
@@ -28,9 +30,11 @@ class BaseTestCase(unittest.TestCase):
         self.stockseed = StockSeed(self.driver)
         self.productseed = ProductSeed(self.driver)
         self.receivingseed= ReceivingSeed(self.driver)
+        self.restaurantseed = RestaurantSeed(self.driver)
         self.stockAssert = StockAssert(self.html,self.driver)
         self.productAssert = ProductAssert(self.html,self.driver)
         self.receivingAssert=ReceivingAssert(self.html,self.driver)
+        self.restaurantAssert=RestaurantAssert(self.html,self.driver)
         self.result = unittest.TestResult
 
     @classmethod
