@@ -39,6 +39,8 @@ class Restaurant(BaseTestCase):
         self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
         super().tearDownClass()
 
+    def addProductToList(self):
+        self.html.fillAutocomplete('Terméknév', 'input', 'aaa', 'aaaa', 'li',
 
     def addProductToList(self, productName, quantity):
         self.html.fillAutocomplete('Terméknév', 'input', productName, productName, 'li',
@@ -77,13 +79,65 @@ class Restaurant(BaseTestCase):
         self.assertFalse(self.html.getElement('Fizetés', 'button').is_displayed())
 
 
+    def testUnion(self):
+        self.addProductToList()
+        self.addProductToList()
+        #self.html.clickElement('aaaa', 'div') # ez a verzi nem az elso elemet jelolte ki
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'aaaa', 'div', 'aaaa')
+        self.html.clickElement('Összevonás', waitSeconds=2)
+        self.html.clickElement('Összevonás / Áthelyezés', waitSeconds=2)
+
+        name = self.html.getTxtFromListTable('2', '3', tableId='tasks-list products ui-sortable',
+                                             options=Options(htmlAttribute='class'))
+        qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
+                                            options=Options(htmlAttribute='class'))
+        self.assertEqual(name.text, 'aaaa')
+        self.assertEqual(qty.text, '2.00')
+
+        # törlés
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'aaaa', 'div', 'Törlés')
+        self.html.clickElement('Igen', waitSeconds=2)
+        # itt azt csekkoljuk hogy a rendeles bekuldese gomb eltunt e
+        self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
 
 
+    def testUnfold(self):
+        self.addProductToList()
+        self.addProductToList()
+        # self.html.clickElement('aaaa', 'div') # ez a verzi nem az elso elemet jelolte ki
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'aaaa', 'div', 'aaaa')
+        self.html.clickElement('Összevonás', waitSeconds=2)
+        self.html.clickElement('Összevonás / Áthelyezés', waitSeconds=2)
 
+        name = self.html.getTxtFromListTable('2', '3', tableId='tasks-list products ui-sortable',
+                                             options=Options(htmlAttribute='class'))
+        qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
+                                            options=Options(htmlAttribute='class'))
+        self.assertEqual(name.text, 'aaaa')
+        self.assertEqual(qty.text, '2.00')
 
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'aaaa', 'div', 'aaaa')
+        self.html.clickElement('Bontás', waitSeconds=2)
+        self.html.clickElement('Bontás / Áthelyezés', waitSeconds=4)
 
+        name = self.html.getTxtFromListTable('2', '3', tableId='tasks-list products ui-sortable',
+                                             options=Options(htmlAttribute='class'))
+        name2 = self.html.getTxtFromListTable('3', '3', tableId='tasks-list products ui-sortable',
+                                             options=Options(htmlAttribute='class'))
+        qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
+                                            options=Options(htmlAttribute='class'))
+        qty2 = self.html.getTxtFromListTable('3', '5', tableId='tasks-list products ui-sortable',
+                                            options=Options(htmlAttribute='class'))
 
+        self.assertEqual(name.text, 'aaaa')
+        self.assertEqual(qty.text, '1.00')
+        self.assertEqual(name2.text, 'aaaa')
+        self.assertEqual(qty2.text, '1.00')
 
-
-
-
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'aaaa', 'div', 'Törlés')
+        self.html.clickElement('Igen', waitSeconds=2)
+        self.html.refresh()
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'aaaa', 'div', 'Törlés')
+        self.html.clickElement('Igen', waitSeconds=2)
+        # itt azt csekkoljuk hogy a rendeles bekuldese gomb eltunt e
+        self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
