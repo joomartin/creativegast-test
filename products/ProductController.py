@@ -35,5 +35,5 @@ class ProductController(Controller):
 
         # run the suite using HTMLTestRunner
         runner.run(test_suite)
-        mail.sendReport(dir + '\\reports\ProductsTestReport.html')
+        # mail.sendReport(dir + '\\reports\ProductsTestReport.html')
 
