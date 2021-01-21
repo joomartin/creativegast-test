@@ -39,8 +39,6 @@ class Restaurant(BaseTestCase):
         self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
         super().tearDownClass()
 
-    def addProductToList(self):
-        self.html.fillAutocomplete('Terméknév', 'input', 'aaa', 'aaaa', 'li',
 
     def addProductToList(self, productName, quantity):
         self.html.fillAutocomplete('Terméknév', 'input', productName, productName, 'li',
