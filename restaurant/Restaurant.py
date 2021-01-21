@@ -10,7 +10,6 @@ class Restaurant(BaseTestCase):
     def setUpClass(self):
         super().setUpClass()
         super().login(self)
-
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'],
                                          data.WareHouses['Szeszraktár']['Name'], module=True)
@@ -23,13 +22,19 @@ class Restaurant(BaseTestCase):
         self.productseed.createProduct(data.Product['Babgulyás']['Name'], data.ProductGroup['Egyeb']['Name'],
                                        data.Product['Babgulyás']['Code'], data.Counter['TestCounter']['Name'],
                                        data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+        self.productseed.createProduct(data.Product['Palacsinta']['Name'], data.ProductGroup['Egyeb']['Name'],
+                                       data.Product['Palacsinta']['Code'], data.Counter['TestCounter']['Name'],
+                                       data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
+
         self.menu.openRestaurant()
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
 
     @classmethod
     def tearDownClass(self):
         self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True)
+        self.productseed.deleteProduct(data.Product['Palacsinta']['Name'], module=True)
         self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], tab=True)
         self.productseed.deleteProductGroup(data.ProductGroup['Egyeb']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
@@ -39,9 +44,8 @@ class Restaurant(BaseTestCase):
         self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
         super().tearDownClass()
 
-
     def addProductToList(self, productName, quantity):
-        self.html.fillAutocomplete('Terméknév', 'input', productName, productName, 'li',
+        self.html.fillAutocomplete('Terméknév', 'input', productName[:-1], productName, 'li',
                                    Options(htmlAttribute='placeholder'))
 
         self.html.fillInput('Mennyiség', quantity, 'placeholder')
@@ -51,11 +55,11 @@ class Restaurant(BaseTestCase):
         qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
                                             options=Options(htmlAttribute='class'))
         self.assertEqual(name.text, productName)
-        self.assertEqual(qty.text, quantity+'.00')
+        self.assertEqual(qty.text, quantity)
 
     def testOrderStorno(self):
 
-        self.addProductToList(data.Product['Babgulyás']['Name'], '1')
+        self.addProductToList(data.Product['Babgulyás']['Name'], '1.00')
         self.html.refresh()
         self.html.clickElement('Rendelés beküldése', waitSeconds=3)
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
@@ -74,36 +78,42 @@ class Restaurant(BaseTestCase):
         # johet a sztorno
         self.html.clickTableElement('tasks-list products ui-sortable', 'class', data.Product['Babgulyás']['Name'], 'div', 'Sztornó')
         self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
-        self.assertFalse(self.html.getElement('Fizetés', 'button').is_displayed())
-
+        #self.assertFalse(self.html.getElement('Fizetés', 'button').is_displayed())
+        self.html.wait(5) # megkell varni h az ertesitesi ablak megjelenjen
+        self.assertTrue(self.html.getElement(data.Product['Babgulyás']['Name'] + ' nevű termék a felszolgáló által sztornózva lett! ', 'li').is_displayed())
+        self.html.clickElement('Rendben', 'a')
 
     def testUnion(self):
-        self.addProductToList()
-        self.addProductToList()
+        inputName = data.Product['Babgulyás']['Name']
+
+        self.addProductToList(inputName, '1.00')
+        self.addProductToList(inputName, '1.00')
         #self.html.clickElement('aaaa', 'div') # ez a verzi nem az elso elemet jelolte ki
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'aaaa', 'div', 'aaaa')
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', inputName)
         self.html.clickElement('Összevonás', waitSeconds=2)
-        self.html.clickElement('Összevonás / Áthelyezés', waitSeconds=2)
+        self.html.clickElement('Összevonás / Áthelyezés', waitSeconds=4)
 
         name = self.html.getTxtFromListTable('2', '3', tableId='tasks-list products ui-sortable',
                                              options=Options(htmlAttribute='class'))
         qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
                                             options=Options(htmlAttribute='class'))
-        self.assertEqual(name.text, 'aaaa')
+        self.assertEqual(name.text, inputName)
         self.assertEqual(qty.text, '2.00')
 
         # törlés
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'aaaa', 'div', 'Törlés')
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', 'Törlés')
         self.html.clickElement('Igen', waitSeconds=2)
         # itt azt csekkoljuk hogy a rendeles bekuldese gomb eltunt e
         self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
 
 
     def testUnfold(self):
-        self.addProductToList()
-        self.addProductToList()
+        inputName = data.Product['Babgulyás']['Name']
+
+        self.addProductToList(inputName, '1.00')
+        self.addProductToList(inputName, '1.00')
         # self.html.clickElement('aaaa', 'div') # ez a verzi nem az elso elemet jelolte ki
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'aaaa', 'div', 'aaaa')
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', inputName)
         self.html.clickElement('Összevonás', waitSeconds=2)
         self.html.clickElement('Összevonás / Áthelyezés', waitSeconds=2)
 
@@ -111,10 +121,10 @@ class Restaurant(BaseTestCase):
                                              options=Options(htmlAttribute='class'))
         qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
                                             options=Options(htmlAttribute='class'))
-        self.assertEqual(name.text, 'aaaa')
+        self.assertEqual(name.text, inputName)
         self.assertEqual(qty.text, '2.00')
 
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'aaaa', 'div', 'aaaa')
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', inputName)
         self.html.clickElement('Bontás', waitSeconds=2)
         self.html.clickElement('Bontás / Áthelyezés', waitSeconds=4)
 
@@ -127,15 +137,49 @@ class Restaurant(BaseTestCase):
         qty2 = self.html.getTxtFromListTable('3', '5', tableId='tasks-list products ui-sortable',
                                             options=Options(htmlAttribute='class'))
 
-        self.assertEqual(name.text, 'aaaa')
+        self.assertEqual(name.text, inputName)
         self.assertEqual(qty.text, '1.00')
-        self.assertEqual(name2.text, 'aaaa')
+        self.assertEqual(name2.text, inputName)
         self.assertEqual(qty2.text, '1.00')
 
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'aaaa', 'div', 'Törlés')
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', 'Törlés')
         self.html.clickElement('Igen', waitSeconds=2)
         self.html.refresh()
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'aaaa', 'div', 'Törlés')
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', 'Törlés')
         self.html.clickElement('Igen', waitSeconds=2)
         # itt azt csekkoljuk hogy a rendeles bekuldese gomb eltunt e
         self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
+
+    def testUnionAll(self):
+        inputName = data.Product['Babgulyás']['Name']
+        inputName2 = data.Product['Palacsinta']['Name']
+
+        self.addProductToList(inputName, '1.00')
+        self.addProductToList(inputName, '1.00')
+        self.addProductToList(inputName2, '1.00')
+        self.addProductToList(inputName2, '1.00')
+
+        self.html.clickElement('Minden összevonása', waitSeconds=4)
+
+        name = self.html.getTxtFromListTable('2', '3', tableId='tasks-list products ui-sortable',
+                                             options=Options(htmlAttribute='class'))
+        name2 = self.html.getTxtFromListTable('3', '3', tableId='tasks-list products ui-sortable',
+                                              options=Options(htmlAttribute='class'))
+        qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
+                                            options=Options(htmlAttribute='class'))
+        qty2 = self.html.getTxtFromListTable('3', '5', tableId='tasks-list products ui-sortable',
+                                             options=Options(htmlAttribute='class'))
+
+        self.assertEqual(name.text, inputName2)
+        self.assertEqual(qty.text, '2.00')
+        self.assertEqual(name2.text, inputName)
+        self.assertEqual(qty2.text, '2.00')
+
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', 'Törlés')
+        self.html.clickElement('Igen', waitSeconds=2)
+        self.html.refresh()
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName2, 'div', 'Törlés')
+        self.html.clickElement('Igen', waitSeconds=2)
+        # itt azt csekkoljuk hogy a rendeles bekuldese gomb eltunt e
+        self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
+
