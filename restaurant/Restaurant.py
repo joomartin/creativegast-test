@@ -10,6 +10,8 @@ class Restaurant(BaseTestCase):
     def setUpClass(self):
         super().setUpClass()
         super().login(self)
+
+        '''
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'],
                                          data.WareHouses['Szeszraktár']['Name'], module=True)
@@ -26,6 +28,7 @@ class Restaurant(BaseTestCase):
                                        data.Product['Palacsinta']['Code'], data.Counter['TestCounter']['Name'],
                                        data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
+        '''
 
         self.menu.openRestaurant()
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
@@ -33,6 +36,7 @@ class Restaurant(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
+        '''
         self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True)
         self.productseed.deleteProduct(data.Product['Palacsinta']['Name'], module=True)
         self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], tab=True)
@@ -43,6 +47,9 @@ class Restaurant(BaseTestCase):
         self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
         self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
         super().tearDownClass()
+        '''
+        pass
+
 
     def addProductToList(self, productName, quantity):
         self.html.fillAutocomplete('Terméknév', 'input', productName[:-1], productName, 'li',
@@ -182,4 +189,65 @@ class Restaurant(BaseTestCase):
         self.html.clickElement('Igen', waitSeconds=2)
         # itt azt csekkoljuk hogy a rendeles bekuldese gomb eltunt e
         self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
+
+
+    def testMove(self):
+        inputName = data.Product['Babgulyás']['Name']
+
+        self.addProductToList(inputName, '1.00')
+        name = self.html.getTxtFromListTable('2', '3', tableId='tasks-list products ui-sortable',
+                                             options=Options(htmlAttribute='class'))
+        qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
+                                            options=Options(htmlAttribute='class'))
+        self.assertEqual(name.text, inputName)
+        self.assertEqual(qty.text, '1.00')
+
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', inputName)
+        self.html.clickElement('Áthelyez részasztalra')
+        partTables = self.html.getElement('moveDialog', 'div', options=Options(htmlAttribute='id'))
+        self.html.clickElement('2', 'a', options=Options(element=partTables), waitSeconds=4)
+
+        tables = self.html.getElements('tasks-list products ui-sortable', 'table',
+                                       options=Options(htmlAttribute='class'))
+
+        #table = self.html.getElement('tasks-list products ui-sortable', 'table', options=Options(htmlAttribute='class'))
+        nrows = tables[0].find_elements_by_tag_name('tr')
+        print(len(nrows))
+        self.assertEqual(len(nrows), 2)
+
+        self.html.clickElement('2', 'a')
+        #secondTable = self.html.getElement('tabs-3146', 'div', options=Options(htmlAttribute='id'))
+
+
+        print(tables)
+        secondTable = tables[1]
+
+        name2 = self.html.getTxtFromListTable2('2', '3',
+                                             options=Options(element=secondTable))
+        qty2 = self.html.getTxtFromListTable2('2', '5',
+                                            options=Options(element=secondTable))
+        self.assertEqual(name2.text, inputName)
+        self.assertEqual(qty2.text, '1.00')
+
+        self.html.clickElement('Törlés', 'a', options=Options(element=secondTable))
+        #self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', 'Törlés')
+        self.html.clickElement('Igen', waitSeconds=2)
+
+        self.html.clickElement('1', 'a')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
