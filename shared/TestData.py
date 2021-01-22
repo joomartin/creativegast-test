@@ -12,6 +12,7 @@ class TestData:
                 'Quantity': '10.00',
                 'Quantity2': '100.00',
                 'Waste': '5.00',
+                'LessBySell': '8.00',
                 'FloatWaste': '5.00',
 
             },

@@ -1,3 +1,5 @@
+from selenium.common.exceptions import NoSuchElementException
+
 from core.HtmlProxy import HtmlProxy
 from Config import read_section
 
@@ -13,6 +15,11 @@ class MainMenuProxy:
     def openRestaurant(self):
         self.navigate('restaurant/index')
         self.wait()
+        try:
+            self.html.clickElement('A műveletet elvégeztem')
+        except:
+            pass
+
 
     def openProducts(self):
         self.navigate('products')

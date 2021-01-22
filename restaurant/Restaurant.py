@@ -12,20 +12,21 @@ class Restaurant(BaseTestCase):
         super().login(self)
 
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'],
-                                         data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterial(data.RawMaterial['Alma']['Name'], data.RawMaterial['Alma']['ME'],
-                                         data.WareHouses['Szeszraktár']['Name'])
+        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrossPrice'],
+                                         data.RawMaterial['Bundas_kenyer']['Quantity'], data.RawMaterial['Bundas_kenyer']['Warehouse'], me='db' ,module=True)
+
+        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Alma']['Name'], data.RawMaterial['Alma']['GrosPrice'], data.RawMaterial['Alma']['Quantity'], data.RawMaterial['Alma']['Warehouse'], me='db')
         self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'],
                                        module=True)
         self.productseed.createProductGroup(data.ProductGroup['Egyeb']['Name'], tab=True)
-        self.productseed.createProductGroup(data.ProductGroup['Öntetek']['Name'])
+        self.html.wait(5)
+        #self.productseed.createProductGroup(data.ProductGroup['Öntetek']['Name'])
         self.productseed.createProduct(data.Product['Babgulyás']['Name'], data.ProductGroup['Egyeb']['Name'],
                                        data.Product['Babgulyás']['Code'], data.Counter['TestCounter']['Name'],
                                        data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
         self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
 
     @classmethod
     def tearDownClass(self):
@@ -35,7 +36,7 @@ class Restaurant(BaseTestCase):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Alma']['Name'], module=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
-        self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
+        #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
         self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
         super().tearDownClass()
 
@@ -54,7 +55,8 @@ class Restaurant(BaseTestCase):
         self.assertEqual(qty.text, quantity+'.00')
 
     def testOrderStorno(self):
-
+        self.menu.openRestaurant()
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
         self.addProductToList(data.Product['Babgulyás']['Name'], '1')
         self.html.refresh()
         self.html.clickElement('Rendelés beküldése', waitSeconds=3)
@@ -71,12 +73,24 @@ class Restaurant(BaseTestCase):
         self.assertEqual(storno.text, 'Sztornó')
         print(storno)
 
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],data.RawMaterial['Bundas_kenyer']['Warehouse'], '6')
+
+        self.menu.openRestaurant()
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
         # johet a sztorno
         self.html.clickTableElement('tasks-list products ui-sortable', 'class', data.Product['Babgulyás']['Name'], 'div', 'Sztornó')
         self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
         self.assertFalse(self.html.getElement('Fizetés', 'button').is_displayed())
 
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
+                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
+
+
+
     def testOrderPayed(self):
+        self.menu.openRestaurant()
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
         self.addProductToList(data.Product['Babgulyás']['Name'], '1')
         self.html.refresh()
         self.html.clickElement('Rendelés beküldése', waitSeconds=3)
@@ -99,7 +113,9 @@ class Restaurant(BaseTestCase):
         self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
         self.html.refresh()
 
-        #self.html.clickElement('A müveletet elvégeztem')
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
+                                    data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
+
 
     '''
     def testUnion(self):
