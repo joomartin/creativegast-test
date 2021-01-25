@@ -45,7 +45,7 @@ class StockAssert(unittest.TestCase):
         self.html.switchFrame('iframe')
         if qty != '0':
             stock = self.html.getElement(whName, 'td', Options(following='td//following::td')).text
-            self.assertEqual(stock,qty)
+            self.assertEqual(stock, qty)
         else:
             with self.assertRaises(NoSuchElementException):
                 self.html.getElement(whName, 'td')
