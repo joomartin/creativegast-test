@@ -10,31 +10,44 @@ class Restaurant(BaseTestCase):
     def setUpClass(self):
         super().setUpClass()
         super().login(self)
+        self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
 
+    @classmethod
+    def tearDownClass(self):
+        super().tearDownClass()
+        self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
+        pass
 
+    def setUp(self):
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrossPrice'],
-                                         data.RawMaterial['Bundas_kenyer']['Quantity'], data.RawMaterial['Bundas_kenyer']['Warehouse'], me='db' ,module=True)
+        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
+                                                    data.RawMaterial['Bundas_kenyer']['GrossPrice'],
+                                                    data.RawMaterial['Bundas_kenyer']['Quantity'],
+                                                    data.RawMaterial['Bundas_kenyer']['Warehouse'], me='db',
+                                                    module=True)
 
-        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Alma']['Name'], data.RawMaterial['Alma']['GrosPrice'], data.RawMaterial['Alma']['Quantity'], data.RawMaterial['Alma']['Warehouse'], me='db')
+        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Alma']['Name'],
+                                                    data.RawMaterial['Alma']['GrosPrice'],
+                                                    data.RawMaterial['Alma']['Quantity'],
+                                                    data.RawMaterial['Alma']['Warehouse'], me='db')
         self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'],
                                        module=True)
         self.productseed.createProductGroup(data.ProductGroup['Egyeb']['Name'], tab=True)
         self.html.wait(5)
-        #self.productseed.createProductGroup(data.ProductGroup['Öntetek']['Name'])
+        # self.productseed.createProductGroup(data.ProductGroup['Öntetek']['Name'])
         self.productseed.createProduct(data.Product['Babgulyás']['Name'], data.ProductGroup['Egyeb']['Name'],
                                        data.Product['Babgulyás']['Code'], data.Counter['TestCounter']['Name'],
                                        data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.productseed.createProduct(data.Product['Palacsinta']['Name'], data.ProductGroup['Egyeb']['Name'],
                                        data.Product['Palacsinta']['Code'], data.Counter['TestCounter']['Name'],
                                        data.RawMaterial['Bundas_kenyer']['Name'], module=True)
-        self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
+
 
         self.menu.openRestaurant()
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
 
-    @classmethod
-    def tearDownClass(self):
+    def tearDown(self):
         self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True)
         self.productseed.deleteProduct(data.Product['Palacsinta']['Name'], module=True)
         self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], tab=True)
@@ -42,14 +55,8 @@ class Restaurant(BaseTestCase):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Alma']['Name'], module=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
-        #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
-        self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
-        super().tearDownClass()
-        pass
+        # self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
 
-    def setUp(self):
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
     def addProductToList(self, productName, quantity):
         self.html.fillAutocomplete('Terméknév', 'input', productName[:-1], productName, 'li',
@@ -85,7 +92,7 @@ class Restaurant(BaseTestCase):
         self.assertEqual(storno.text, 'Sztornó')
         print(storno)
 
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['Warehouse'], '6')
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
 
         self.menu.openRestaurant()
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
@@ -96,7 +103,7 @@ class Restaurant(BaseTestCase):
         self.assertFalse(self.html.getElement('Fizetés', 'button').is_displayed())
 
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
-                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
+                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], data.RawMaterial['Bundas_kenyer']['Quantity'])
 
     def testOrderPayed(self):
         self.addProductToList(data.Product['Babgulyás']['Name'], '1.00')
