@@ -12,9 +12,7 @@ class Restaurant(BaseTestCase):
         super().login(self)
         self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
 
-        self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrossPrice'],
-                                         data.RawMaterial['Bundas_kenyer']['Quantity'], data.RawMaterial['Bundas_kenyer']['Warehouse'], me='db' ,module=True)
+
 
     def setUp(self):
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
@@ -39,13 +37,16 @@ class Restaurant(BaseTestCase):
         self.productseed.createProduct(data.Product['Palacsinta']['Name'], data.ProductGroup['Egyeb']['Name'],
                                        data.Product['Palacsinta']['Code'], data.Counter['TestCounter']['Name'],
                                        data.RawMaterial['Bundas_kenyer']['Name'], module=True)
-        self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
         self.menu.openRestaurant()
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
 
     @classmethod
     def tearDownClass(self):
+        self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
+        super().tearDownClass()
+
+    def tearDown(self):
 
         self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True)
         self.productseed.deleteProduct(data.Product['Palacsinta']['Name'], module=True)
@@ -55,8 +56,6 @@ class Restaurant(BaseTestCase):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Alma']['Name'], module=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
-        self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
-        super().tearDownClass()
 
 
     def addProductToList(self, productName, quantity):
@@ -110,7 +109,7 @@ class Restaurant(BaseTestCase):
         self.html.clickElement('Rendben', 'a')
 
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
-                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], data.RawMaterial['Bundas_kenyer']['Quantity'])
+                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '10')
 
     def testOrderPayed(self):
         self.addProductToList(data.Product['Babgulyás']['Name'], '1.00')
