@@ -6,6 +6,7 @@ from selenium import webdriver
 from core.contracts.Controller import Controller
 from stock.Warehouses import Test
 from restaurant.TableMapEdit import TableMapEdit
+from restaurant.Restaurant import Restaurant
 import ReportMail as mail
 
 class RestaurantController(Controller):
@@ -14,9 +15,10 @@ class RestaurantController(Controller):
         driver = webdriver
         # get all tests from SearchText and HomePageTest class
         tableMap = unittest.TestLoader().loadTestsFromTestCase(TableMapEdit)
+        restaurant = unittest.TestLoader().loadTestsFromTestCase(Restaurant)
 
         # create a test suite combining search_text and home_page_test
-        test_suite = unittest.TestSuite([tableMap])
+        test_suite = unittest.TestSuite([tableMap, restaurant])
 
 
         # open the report file
