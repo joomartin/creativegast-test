@@ -11,7 +11,7 @@ class Restaurant(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        '''
+
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrossPrice'],
                                          data.RawMaterial['Bundas_kenyer']['Quantity'], data.RawMaterial['Bundas_kenyer']['Warehouse'], me='db' ,module=True)
@@ -29,7 +29,6 @@ class Restaurant(BaseTestCase):
                                        data.Product['Palacsinta']['Code'], data.Counter['TestCounter']['Name'],
                                        data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
-        '''
 
         self.menu.openRestaurant()
 
@@ -37,7 +36,6 @@ class Restaurant(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
-        '''
         self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True)
         self.productseed.deleteProduct(data.Product['Palacsinta']['Name'], module=True)
         self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], tab=True)
@@ -48,7 +46,6 @@ class Restaurant(BaseTestCase):
         #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
         self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
         super().tearDownClass()
-        '''
         pass
 
 
@@ -68,7 +65,7 @@ class Restaurant(BaseTestCase):
     def testOrderStorno(self):
         self.menu.openRestaurant()
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-        self.addProductToList(data.Product['Babgulyás']['Name'], '1')
+        self.addProductToList(data.Product['Babgulyás']['Name'], '1.00')
         self.html.refresh()
         self.html.clickElement('Rendelés beküldése', waitSeconds=3)
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
@@ -102,7 +99,7 @@ class Restaurant(BaseTestCase):
     def testOrderPayed(self):
         self.menu.openRestaurant()
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-        self.addProductToList(data.Product['Babgulyás']['Name'], '1')
+        self.addProductToList(data.Product['Babgulyás']['Name'], '1.00')
         self.html.refresh()
         self.html.clickElement('Rendelés beküldése', waitSeconds=3)
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
@@ -128,7 +125,6 @@ class Restaurant(BaseTestCase):
                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
 
 
-    '''
     def testUnion(self):
         inputName = data.Product['Babgulyás']['Name']
 
@@ -158,7 +154,7 @@ class Restaurant(BaseTestCase):
 
         self.addProductToList(inputName, '1.00')
         self.addProductToList(inputName, '1.00')
-        # self.html.clickElement('aaaa', 'div') # ez a verzi nem az elso elemet jelolte ki
+        #self.html.clickElement('aaaa', 'div') # ez a verzi nem az elso elemet jelolte ki
         self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', inputName)
         self.html.clickElement('Összevonás', waitSeconds=2)
         self.html.clickElement('Összevonás / Áthelyezés', waitSeconds=2)
@@ -273,8 +269,6 @@ class Restaurant(BaseTestCase):
         self.html.clickElement('Igen', waitSeconds=2)
 
         self.html.clickElement('1', 'a')
-
-
 
 
 
