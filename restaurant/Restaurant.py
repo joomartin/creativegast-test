@@ -11,7 +11,6 @@ class Restaurant(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        '''
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrossPrice'],
                                          data.RawMaterial['Bundas_kenyer']['Quantity'], data.RawMaterial['Bundas_kenyer']['Warehouse'], me='db' ,module=True)
@@ -29,13 +28,12 @@ class Restaurant(BaseTestCase):
                                        data.Product['Palacsinta']['Code'], data.Counter['TestCounter']['Name'],
                                        data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
-        '''
         self.menu.openRestaurant()
 
 
     @classmethod
     def tearDownClass(self):
-        '''
+
         self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True)
         self.productseed.deleteProduct(data.Product['Palacsinta']['Name'], module=True)
         self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], tab=True)
@@ -46,8 +44,6 @@ class Restaurant(BaseTestCase):
         #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
         self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
         super().tearDownClass()
-        '''
-        pass
 
     def setUp(self):
         self.menu.openRestaurant()
@@ -96,6 +92,12 @@ class Restaurant(BaseTestCase):
         self.html.clickTableElement('tasks-list products ui-sortable', 'class', data.Product['Babgulyás']['Name'], 'div', 'Sztornó')
         self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
         self.assertFalse(self.html.getElement('Fizetés', 'button').is_displayed())
+
+        self.html.wait(5)  # megkell varni h az ertesitesi ablak megjelenjen
+        self.assertTrue(self.html.getElement(
+            data.Product['Babgulyás']['Name'] + ' nevű termék a felszolgáló által sztornózva lett! ',
+            'li').is_displayed())
+        self.html.clickElement('Rendben', 'a')
 
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
                                      data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
