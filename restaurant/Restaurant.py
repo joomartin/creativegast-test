@@ -33,7 +33,6 @@ class Restaurant(BaseTestCase):
         self.menu.openRestaurant()
 
 
-
     @classmethod
     def tearDownClass(self):
         self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True)
@@ -48,6 +47,9 @@ class Restaurant(BaseTestCase):
         super().tearDownClass()
         pass
 
+    def setUp(self):
+        self.menu.openRestaurant()
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
     def addProductToList(self, productName, quantity):
         self.html.fillAutocomplete('Terméknév', 'input', productName[:-1], productName, 'li',
@@ -59,12 +61,13 @@ class Restaurant(BaseTestCase):
                                              options=Options(htmlAttribute='class'))
         qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
                                             options=Options(htmlAttribute='class'))
+
+        print(qty.text)
         self.assertEqual(name.text, productName)
         self.assertEqual(qty.text, quantity)
 
     def testOrderStorno(self):
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
         self.addProductToList(data.Product['Babgulyás']['Name'], '1.00')
         self.html.refresh()
         self.html.clickElement('Rendelés beküldése', waitSeconds=3)
@@ -76,12 +79,13 @@ class Restaurant(BaseTestCase):
                                             options=Options(htmlAttribute='class'))
         storno = self.html.getTxtFromListTable('2', '8', tableId='tasks-list products ui-sortable',
                                             options=Options(htmlAttribute='class'))
+
         self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
         self.assertEqual(qty.text, '1.00')
         self.assertEqual(storno.text, 'Sztornó')
         print(storno)
 
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],data.RawMaterial['Bundas_kenyer']['Warehouse'], '6')
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['Warehouse'], '6')
 
         self.menu.openRestaurant()
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
@@ -94,11 +98,7 @@ class Restaurant(BaseTestCase):
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
                                      data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
 
-
-
     def testOrderPayed(self):
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
         self.addProductToList(data.Product['Babgulyás']['Name'], '1.00')
         self.html.refresh()
         self.html.clickElement('Rendelés beküldése', waitSeconds=3)
@@ -124,7 +124,6 @@ class Restaurant(BaseTestCase):
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
 
-
     def testUnion(self):
         inputName = data.Product['Babgulyás']['Name']
 
@@ -147,7 +146,6 @@ class Restaurant(BaseTestCase):
         self.html.clickElement('Igen', waitSeconds=2)
         # itt azt csekkoljuk hogy a rendeles bekuldese gomb eltunt e
         self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
-
 
     def testUnfold(self):
         inputName = data.Product['Babgulyás']['Name']
@@ -225,7 +223,6 @@ class Restaurant(BaseTestCase):
         # itt azt csekkoljuk hogy a rendeles bekuldese gomb eltunt e
         self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
 
-
     def testMove(self):
         inputName = data.Product['Babgulyás']['Name']
 
@@ -254,7 +251,6 @@ class Restaurant(BaseTestCase):
         #secondTable = self.html.getElement('tabs-3146', 'div', options=Options(htmlAttribute='id'))
 
 
-        print(tables)
         secondTable = tables[1]
 
         name2 = self.html.getTxtFromListTable2('2', '3',
