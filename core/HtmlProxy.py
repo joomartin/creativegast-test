@@ -95,13 +95,10 @@ class HtmlProxy:
 
             return element.find_element_by_xpath(xpath)
 
-
         xpath = self.getXpathByExactMatch(tag, target, options)
         xpath = self.appendFollowing(xpath, options)
 
-
         return element.find_element_by_xpath(xpath)
-
 
     def appendFollowing(self, xpath, options=Options()):
         following = self.getOption(options, 'following')
@@ -170,12 +167,33 @@ class HtmlProxy:
             else:
                 return self.driver.find_element_by_xpath('//table[@' + htmlAttribute + '="' + tableId + '"]//tbody//tr[' + str(row) + ']/td/div[' + str(col) + ']')
         else:
-            if htmlAttribute is None:
+            if htmlAttribute == '':
                 # #asd = element.find_element_by_xpath('./table/tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
                 print('asdasd')
                 return element.find_element_by_xpath('./table/tbody//tr[' + str(row) + ']/td/div[' + str(col) + ']')
             else:
                 return element.find_element_by_xpath('./table[@' + htmlAttribute + '="' + tableId + '"]/tbody/tr[' + str(row) + ']/td/div[' + str(col) + ']')
+
+    def getTxtFromListTable2(self, row, col, tableId = '', options=Options()):
+        """
+        We can get a value from table that depends on params
+        :param row: Table row number
+        :type row: Int or string
+        :param col: Table column number
+        :type col: Int or String
+        :return: Cell value
+        :rtype: String
+        """
+        element = self.getOption(options, 'element')
+        if element is None:
+            return self.driver.find_element_by_xpath('//tbody//tr[' + str(row) + ']/td/div[' + str(col) + ']')
+
+        else:
+            # #asd = element.find_element_by_xpath('./table/tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
+            # print('asdasd')
+            return element.find_element_by_xpath('//tbody//tr[' + str(row) + ']/td/div[' + str(col) + ']')
+
+
 
     def clearInput(self, target, selector='label', options=Options()):
         input  = self.getInput(target, selector, options)
@@ -279,4 +297,30 @@ class HtmlProxy:
     # it extendds decimals, may it belongs CGSpecific
     def extendedRound(self, number, decimals):
         return eval('"%.' + str(int(decimals)) + 'f" % ' + repr(number))
+
+    def getElements(self, target, tag, options=Options()):
+        if self.getOption(options, 'element') is not None:
+            element = self.getOption(options, 'element')
+        else:
+            element = self.driver
+        if self.getOption(options, 'uniqueSelector'):
+                return element.find_elements_by_xpath(tag)
+
+        htmlAttribute = self.getOption(options, 'htmlAttribute')
+        exactMatch = self.getOption(options, 'exactMatch')
+
+        if htmlAttribute and exactMatch:
+            raise ValueError('exactMatch must be false while using htmlAttribute')
+
+        if htmlAttribute:
+            xpath = './/' + tag + '[@' + htmlAttribute + '="' + target + '"]'
+            xpath = self.appendFollowing(xpath, options)
+
+            return element.find_elements_by_xpath(xpath)
+
+        xpath = self.getXpathByExactMatch(tag, target, options)
+        xpath = self.appendFollowing(xpath, options)
+
+        return element.find_elements_by_xpath(xpath)
+
 
