@@ -1,6 +1,5 @@
 
 class TestData:
-
     RawMaterial = {
         'Bundas_kenyer':
             {
@@ -27,8 +26,84 @@ class TestData:
                 'Quantity2': '100',
                 'Waste': '5',
                 'FloatWaste': '5.00',
-            }
+            },
+        'Csirkemell':
+            {
+                'Name': 'Csirkemell',
+                'GrosPrice': '500',
+                'ModifiedGrossPrice': '1 010.00',
+                'ME': 'kg',
+                'Warehouse': 'Szeszraktár',
+                'Quantity': '10',
+                'Quantity2': '100',
+                'Waste': '5',
+                'FloatWaste': '5.00',
+            },
+
+        'Finomliszt':
+            {
+                'Name': 'Finomliszt',
+                'GrosPrice': '500',
+                'ModifiedGrossPrice': '1 010.00',
+                'ME': 'kg',
+                'Warehouse': 'Szeszraktár',
+                'Quantity': '10',
+                'Quantity2': '100',
+                'Waste': '5',
+                'FloatWaste': '5.00',
+            },
+        'Almalé':
+            {
+                'Name': 'Almalé',
+                'GrosPrice': '500',
+                'ModifiedGrossPrice': '1 010.00',
+                'ME': 'liter',
+                'Warehouse': 'Szeszraktár',
+                'Quantity': '10',
+                'Quantity2': '100',
+                'Waste': '5',
+                'FloatWaste': '5.00',
+            },
+
+        'Hasábburgonya':
+            {
+                'Name': 'Hasábburgonya',
+                'GrosPrice': '500',
+                'ModifiedGrossPrice': '1 010.00',
+                'ME': 'kg',
+                'Warehouse': 'Szeszraktár',
+                'Quantity': '10',
+                'Quantity2': '100',
+                'Waste': '5',
+                'FloatWaste': '5.00',
+            },
+        'Sonka':
+            {
+                'Name': 'Sonka',
+                'GrosPrice': '500',
+                'ModifiedGrossPrice': '1 010.00',
+                'ME': 'kg',
+                'Warehouse': 'Szeszraktár',
+                'Quantity': '10',
+                'Quantity2': '100',
+                'Waste': '5',
+                'FloatWaste': '5.00',
+            },
+        'Paradicsomszósz':
+            {
+                'Name': 'Paradicsomszósz',
+                'GrosPrice': '500',
+                'ModifiedGrossPrice': '1 010.00',
+                'ME': 'kg',
+                'Warehouse': 'Szeszraktár',
+                'Quantity': '10',
+                'Quantity2': '100',
+                'Waste': '5',
+                'FloatWaste': '5.00',
+            },
+
     }
+
 
     WareHouses = {
         'Szeszraktár':
@@ -113,8 +188,26 @@ class TestData:
                 'NetPrice': '100',
                 'ComponentName': 'TestComponent',
                 'Quantity': '2',
-            }
+            },
 
+        'Hasábburgonya':
+            {
+                'Name': 'Hasábburgonya',
+                'Code': '01',
+                'ProductGroup': 'Köretek',
+                'NetPrice': '400',
+                'ComponentName': 'Hasábburgonya',
+                'Quantity': '0.18',
+            },
+        'Sonka':
+            {
+                'Name': 'Sonka',
+                'Code': '03',
+                'ProductGroup': 'Köretek',
+                'NetPrice': '400',
+                'ComponentName': 'Hasábburgonya',
+                'Quantity': '0.18',
+            },
     }
 
     Partner = {

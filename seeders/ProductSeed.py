@@ -147,7 +147,7 @@ class ProductSeed:
         self.html.clickTableElement('customproduct-2', 'id', pizzaName, 'a', 'Törlés', 'Pizza (testreszabható)')
         self.html.clickElement('Igen')
 
-    def createProduct(self, name, group, code, counter, component, module=False):
+    def createProduct(self, name, group, code, counter, component, compQty=2, netPrice=100, module=False):
         if module:
             self.menu.openProducts()
 
@@ -173,17 +173,17 @@ class ProductSeed:
 
         places = self.html.getElement('Eladási ár (Kötelező)', 'td')
         self.html.clickElement('Ár megadása',options=Options(element=places))
-        self.html.fillInput('Nettó', 100)
+        self.html.fillInput('Nettó', netPrice)
         self.html.wait(1)
         self.html.clickElement('taxPriceSave', 'a', options=Options(htmlAttribute='id'))
         self.html.wait(2)
 
         self.html.fillAutocomplete('componentName', 'input', component, component, 'li', Options(htmlAttribute='id'))
-        self.html.fillInput('componentQty', 2, 'input', options=Options(htmlAttribute='id'))
+        self.html.fillInput('componentQty', compQty, 'input', options=Options(htmlAttribute='id'))
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
 
-    def createProductConveniencies(self, name, group, code, counter, component, module=False):
+    def createProductConveniencies(self, name, group, code, counter, component, compQty=2, module=False):
         if module:
             self.menu.openProducts()
 
@@ -211,7 +211,7 @@ class ProductSeed:
         self.html.fillInput('Recept adag', '1')
 
         self.html.fillAutocomplete('componentName', 'input', component, component, 'li', Options(htmlAttribute='id'))
-        self.html.fillInput('componentQty', 2, 'input', options=Options(htmlAttribute='id'))
+        self.html.fillInput('componentQty', compQty, 'input', options=Options(htmlAttribute='id'))
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
 
@@ -251,3 +251,7 @@ class ProductSeed:
         self.html.clickTableElement('counters', 'id', name, 'a', 'Törlés', 'Számlálók')
         self.html.clickElement('Igen', waitSeconds=1)
         self.html.search('', 'Számlálók')
+
+
+
+
