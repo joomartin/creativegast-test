@@ -28,7 +28,7 @@ class ProductSeed:
         self.html.fillInput('Termékcsoport neve', groupName)
         self.html.clickDropdown('Kategória', 'Étel')
         self.html.clickElement('Rögzít')
-        self.html.wait(10)
+        self.html.wait(12)
         self.html.switchFrame()
         self.html.wait(5)
 

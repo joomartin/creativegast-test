@@ -1,7 +1,6 @@
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
 from shared.TestData import TestData as data
-import sys
 
 
 class RawMaterial(BaseTestCase):
@@ -11,19 +10,19 @@ class RawMaterial(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
-        self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
-
-
     @classmethod
     def tearDownClass(self):
-        self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         super().tearDownClass()
 
+    def setUp(self):
+        self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
+
+    def tearDown(self):
+        self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
 
     def testCreate(self):
         self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
-
 
     def testUpdate(self):
 

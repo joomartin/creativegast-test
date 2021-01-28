@@ -1,5 +1,4 @@
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.keys import Keys
 from shared.TestData import TestData as data
 
 from core.Options import Options
@@ -12,30 +11,41 @@ class Menus(BaseTestCase):
     def setUpClass(self):
         super().setUpClass()
         super().login(self)
+        
+    @classmethod
+    def tearDownClass(self):
+        super().tearDownClass()
+
+    def setUp(self):
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrossPrice'], data.RawMaterial['Bundas_kenyer']['Quantity'], data.WareHouses['Szeszraktár']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], module=True)
-        self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'], module=True)
+        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
+                                                    data.RawMaterial['Bundas_kenyer']['GrossPrice'],
+                                                    data.RawMaterial['Bundas_kenyer']['Quantity'],
+                                                    data.WareHouses['Szeszraktár']['Name'],
+                                                    data.RawMaterial['Bundas_kenyer']['ME'], module=True)
+        self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'],
+                                       module=True)
         self.productseed.createProductGroup(data.ProductGroup['Egyeb']['Name'], tab=True)
-        self.productseed.createProduct(data.Product['Babgulyás']['Name'], data.ProductGroup['Egyeb']['Name'], data.Product['Babgulyás']['Code'], data.Counter['TestCounter']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], module=True)
-        self.productseed.createProduct(data.Product['Palacsinta']['Name'], data.ProductGroup['Egyeb']['Name'], data.Product['Palacsinta']['Code'], data.Counter['TestCounter']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+        self.productseed.createProduct(data.Product['Babgulyás']['Name'], data.ProductGroup['Egyeb']['Name'],
+                                       data.Product['Babgulyás']['Code'], data.Counter['TestCounter']['Name'],
+                                       data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+        self.productseed.createProduct(data.Product['Palacsinta']['Name'], data.ProductGroup['Egyeb']['Name'],
+                                       data.Product['Palacsinta']['Code'], data.Counter['TestCounter']['Name'],
+                                       data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.html.refresh()
         self.html.clickElement('Menü', 'a')
 
-    @classmethod
-    def tearDownClass(self):
 
+    def tearDown(self):
         self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True)
         self.productseed.deleteProduct(data.Product['Palacsinta']['Name'])
         self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], module=True)
         self.productseed.deleteProductGroup(data.ProductGroup['Egyeb']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
-        super().tearDownClass()
-
 
 
     def testCreate(self):
-        grossPrice = ''
         self.productseed.createMenu(data.Menu['NapiMenu']['Name'], data.Product['Babgulyás']['Name'], data.Product['Palacsinta']['Name'], data.Menu['NapiMenu']['Price'])
         self.productAssert.assertMenuExists(data.Menu['NapiMenu']['Name'], data.Menu['NapiMenu']['GrossPrice'])
         self.productseed.deleteMenu(data.Menu['NapiMenu']['Name'])
@@ -43,7 +53,6 @@ class Menus(BaseTestCase):
     def testUpdateMenu(self):
         modifiedName = 'Heti menu'
         modifiedPrice= '300'
-        extended_round = lambda x, n: eval('"%.' + str(int(n)) + 'f" % ' + repr(x))
         modifiedGrossPrice = self.html.extendedRound(int(modifiedPrice) * 1.27, 2)
 
         self.productseed.createMenu(data.Menu['NapiMenu']['Name'], data.Product['Babgulyás']['Name'], data.Product['Palacsinta']['Name'], data.Menu['NapiMenu']['Price'])
