@@ -104,7 +104,7 @@ class TestData:
                 'Code': '99',
                 'NetPrice': '100',
                 'ComponentName': 'TestComponent',
-                'Quantity': '2',
+                'Quantity': '10',
             },
         'Palacsinta':
             {
@@ -112,7 +112,7 @@ class TestData:
                 'Code': '73',
                 'NetPrice': '100',
                 'ComponentName': 'TestComponent',
-                'Quantity': '2',
+                'Quantity': '10',
             }
 
     }
