@@ -10,9 +10,13 @@ class Restaurant(BaseTestCase):
     def setUpClass(self):
         super().setUpClass()
         super().login(self)
+        '''
         self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
+        self.restaurantseed.createTable(data.Table['Courier']['Name'], module=True)
+        '''
 
     def setUp(self):
+        '''
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
                                                     data.RawMaterial['Bundas_kenyer']['GrossPrice'],
@@ -35,12 +39,15 @@ class Restaurant(BaseTestCase):
         self.productseed.createProduct(data.Product['Palacsinta']['Name'], data.ProductGroup['Egyeb']['Name'],
                                        data.Product['Palacsinta']['Code'], data.Counter['TestCounter']['Name'],
                                        data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+        '''
         self.menu.openRestaurant()
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
+    '''
     @classmethod
     def tearDownClass(self):
         self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
+        self.restaurantseed.deleteTable(data.Table['Courier']['Name'], module=True)
         super().tearDownClass()
 
     def tearDown(self):
@@ -53,6 +60,7 @@ class Restaurant(BaseTestCase):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Alma']['Name'], module=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
+    '''
 
     def addProductToList(self, productName, quantity):
         self.html.fillAutocomplete('Terméknév', 'input', productName[:-1], productName, 'li',
@@ -86,7 +94,7 @@ class Restaurant(BaseTestCase):
         self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
         self.assertEqual(qty.text, '1.00')
         self.assertEqual(storno.text, 'Sztornó')
-        print(storno)
+        # print(storno)
 
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
 
@@ -275,8 +283,48 @@ class Restaurant(BaseTestCase):
 
         self.html.clickElement('1', 'a')
 
+    def testMoveToTable(self):
+        inputName = data.Product['Babgulyás']['Name']
+        inputName2 = data.Product['Palacsinta']['Name']
 
+        self.addProductToList(inputName, '1.00')
+        self.addProductToList(inputName2, '1.00')
+        self.html.refresh()
 
+        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
+        # muvelet
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', inputName)
+        self.html.clickElement('Áthelyez másik asztalra')
+        self.html.clickElement(data.Table['Courier']['Name'], 'a')
+
+        self.html.refresh()
+        self.html.clickElement('Vissza', 'a', waitSeconds=2)
+        self.html.clickElement(data.Table['Courier']['Name'], tag='i')
+
+        # csekkoljuk a dolgokat
+        name = self.html.getTxtFromListTable('2', '3', tableId='tasks-list products ui-sortable',
+                                             options=Options(htmlAttribute='class'))
+        qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
+                                            options=Options(htmlAttribute='class'))
+        self.assertEqual(name.text, inputName)
+        self.assertEqual(qty.text, '1.00')
+
+        # sztorno
+        self.html.clickElement('Sztornó', 'a')
+        self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
+        self.html.wait(5)  # megkell varni h az ertesitesi ablak megjelenjen
+        self.assertTrue(self.html.getElement(inputName + ' nevű termék a felszolgáló által sztornózva lett! ', 'li').is_displayed())
+        self.html.clickElement('Rendben', 'a')
+
+        self.html.clickElement('Vissza', 'a')
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+        self.html.clickElement('Sztornó', 'a')
+        self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
+        self.html.wait(5)  # megkell varni h az ertesitesi ablak megjelenjen
+        self.assertTrue(self.html.getElement(inputName2 + ' nevű termék a felszolgáló által sztornózva lett! ', 'li').is_displayed())
+        self.html.clickElement('Rendben', 'a')
 
 
 
