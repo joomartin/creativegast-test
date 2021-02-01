@@ -75,7 +75,10 @@ class Orders(BaseTestCase):
     def tearDown(self):
 
         self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
+        self.productseed.deleteProduct('Roston csirkemell')
+        self.productseed.deleteProduct('Rántott csirkemell')
         self.productseed.deleteProduct('Almalé')
+        self.productseed.deleteProduct('Cola')
         self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], tab=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Csirkemell']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Finomliszt']['Name'], module=True)
@@ -83,6 +86,7 @@ class Orders(BaseTestCase):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Hasábburgonya']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Sonka']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Paradicsomszósz']['Name'], module=True)
+        self.stockseed.deleteRawMaterial('Cola')
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
 
@@ -144,6 +148,31 @@ class Orders(BaseTestCase):
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
 
+    def createProductAsRawMaterial(self):
+        self.menu.openProducts()
+
+        self.html.clickElement('Új termék felvitele', 'a')
+        self.html.switchFrame('iframe')
+
+        self.html.clickDropdown('Nyomtatási részleg', 'Pult')
+        self.html.switchFrame('iframe')
+
+        self.html.clickElement('Üdítők', 'a')
+        self.html.clickElement('Rögzít')
+        self.html.switchFrame('iframe')
+        self.html.fillInput('Termék neve', 'Cola')
+        places = self.html.getElement('Eladási ár (Kötelező)', 'td')
+        self.html.clickElement('Ár megadása', options=Options(element=places))
+        self.html.fillInput('Nettó', '300')
+        self.html.wait(1)
+        self.html.clickElement('taxPriceSave', 'a', options=Options(htmlAttribute='id'))
+        self.html.wait(2)
+
+        self.html.clickElement('Felvétel nyersanyagként', 'label', Options(following='i'))
+
+        self.html.clickElement('Rögzít')
+
+
     def addProductToList(self, productName, quantity):
         self.html.fillAutocomplete('Terméknév', 'input', productName[:-1], productName, 'li',
                                    Options(htmlAttribute='placeholder'))
@@ -164,19 +193,26 @@ class Orders(BaseTestCase):
         self.createProductChose()
         self.menu.openProducts()
         self.createProductFix()
+        self.createProductAsRawMaterial()
 
         self.menu.openRestaurant()
 
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
         self.addProductToList('Rántott csirkemell', '1.00')
         self.html.clickElement('Ital', 'a')
+        self.html.wait(2)
+        self.html.clickElement('Üdítők', 'a')
+        self.html.wait(2)
+        self.html.clickElement('Cola', 'span', Options(exactMatch=True))
+
+        self.addProductToList('Roston csirkemell', '1.00')
+        '''
         self.html.clickElement('Kiszereléses', 'a')
         self.html.wait(2)
         self.html.clickElement('Almalé', 'a')
         self.html.wait(2)
-        self.html.switchFrame('iframe')
-        gomb = self.html.getElement('3 dl', 'a')
-        self.html.clickElement('3 dl', 'a')
+        #self.html.switchFrame('iframe')
+        div = self.html.getElement('packingsContainer', 'div', Options(htmlAttribute='class'))
 
-        self.productseed.deleteProduct('Roston csirkemell', module=True)
-        self.productseed.deleteProduct('Rántott csirkemell')
+        self.html.clickElement('3 dl', 'a', Options(element=div))
+        '''
