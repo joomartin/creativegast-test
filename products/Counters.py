@@ -1,6 +1,7 @@
 from shared.BaseTestCase import BaseTestCase
 from shared.TestData import TestData as data
 
+
 class Counters(BaseTestCase):
 
     @classmethod

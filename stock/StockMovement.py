@@ -12,24 +12,26 @@ class StockMovement(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
+    @classmethod
+    def tearDownClass(self):
+        super().tearDownClass()
+
+    def setUp(self):
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.createWarehouse(data.WareHouses['Tartalékraktár']['Name'])
-        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrossPrice'], data.RawMaterial['Bundas_kenyer']['Quantity'], data.WareHouses['Szeszraktár']['Name'], module=True)
+        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
+                                                    data.RawMaterial['Bundas_kenyer']['GrossPrice'],
+                                                    data.RawMaterial['Bundas_kenyer']['Quantity'],
+                                                    data.WareHouses['Szeszraktár']['Name'], module=True)
 
         self.html.clickElement('Raktármozgás', 'a')
 
-    @classmethod
-    def tearDownClass(self):
-
+    def tearDown(self):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Tartalékraktár']['Name'])
-        super().tearDownClass()
-
 
     def createNewMovement(self):
-
-
         self.html.wait()
         self.html.clickElement('Új raktármozgás', 'a', waitSeconds=2)
         self.html.clickElement('Új')

@@ -12,8 +12,6 @@ class Restaurant(BaseTestCase):
         super().login(self)
         self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
 
-
-
     def setUp(self):
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
@@ -40,7 +38,6 @@ class Restaurant(BaseTestCase):
         self.menu.openRestaurant()
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
-
     @classmethod
     def tearDownClass(self):
         self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
@@ -56,7 +53,6 @@ class Restaurant(BaseTestCase):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Alma']['Name'], module=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
-
 
     def addProductToList(self, productName, quantity):
         self.html.fillAutocomplete('Terméknév', 'input', productName[:-1], productName, 'li',

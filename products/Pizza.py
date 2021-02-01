@@ -1,8 +1,8 @@
-
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
 from datetime import datetime
 from shared.TestData import TestData as data
+
 
 class Pizza(BaseTestCase):
 
@@ -11,20 +11,24 @@ class Pizza(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
+    @classmethod
+    def tearDownClass(self):
+        super().tearDownClass()
+
+    def setUp(self):
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['GrossPrice'], data.RawMaterial['Bundas_kenyer']['Quantity'], data.WareHouses['Szeszraktár']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], module=True)
-        #self.stockseed.createRawMaterial('Pizza feltét', '500', '100', 'Pizzatest', 'db')
+        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
+                                                    data.RawMaterial['Bundas_kenyer']['GrossPrice'],
+                                                    data.RawMaterial['Bundas_kenyer']['Quantity'],
+                                                    data.WareHouses['Szeszraktár']['Name'],
+                                                    data.RawMaterial['Bundas_kenyer']['ME'], module=True)
 
         self.menu.openProducts()
         self.html.clickElement('Pizza (testreszabható)', 'a')
 
-    @classmethod
-    def tearDownClass(self):
+    def tearDown(self):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
-        super().tearDownClass()
-        pass
-
 
     def testCreate(self):
         testName = 'Create pizza'
@@ -32,11 +36,9 @@ class Pizza(BaseTestCase):
         self.productAssert.assertPizzaExists(data.Pizza['Sonkas_pizza']['Name'], data.Pizza['Sonkas_pizza']['GrossPrice'])
         self.productseed.deletePizza(data.Pizza['Sonkas_pizza']['Name'])
 
-
     def testUpdate(self):
         modofiedName = 'Gumicukros pizza'
         modifiedNetPrice = 3000
-        extended_round = lambda x, n: eval('"%.' + str(int(n)) + 'f" % ' + repr(x))
         modifiedGrossPrice = self.html.extendedRound(modifiedNetPrice * 1.27, 2)
 
         self.productseed.createPizza(data.Pizza['Sonkas_pizza']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], 'Pizza feltét')
@@ -61,7 +63,6 @@ class Pizza(BaseTestCase):
         self.productAssert.assertPizzaExists(modofiedName, modifiedGrossPrice)
 
         self.productseed.deletePizza(modofiedName)
-
 
     def testWasting(self):
         self.productseed.createPizza(data.Pizza['Sonkas_pizza']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], 'Pizza feltét')

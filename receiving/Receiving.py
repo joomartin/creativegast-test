@@ -1,9 +1,7 @@
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.keys import Keys
 from shared.TestData import TestData as td
-from seeders.ReceivingSeed import ReceivingSeed
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
+
 
 class Receiving(BaseTestCase):
 
@@ -11,21 +9,25 @@ class Receiving(BaseTestCase):
     def setUpClass(self):
         super().setUpClass()
         super().login(self)
-        self.stockseed.createWarehouse(td.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Bundas_kenyer']['Name'], td.RawMaterial['Bundas_kenyer']['GrossPrice'], td.RawMaterial['Bundas_kenyer']['Quantity'], td.WareHouses['Szeszraktár']['Name'], module=True)
-        self.receivingseed.createPartner(td.Partner['Szallito']['Name'],td.Partner['Szallito']['Id'], module=True)
-
-
-
 
     @classmethod
     def tearDownClass(self):
+        super().tearDownClass()
+
+    def setUp(self):
+        self.stockseed.createWarehouse(td.WareHouses['Szeszraktár']['Name'], module=True)
+        self.stockseed.createRawMaterialWithOpening(td.RawMaterial['Bundas_kenyer']['Name'],
+                                                    td.RawMaterial['Bundas_kenyer']['GrossPrice'],
+                                                    td.RawMaterial['Bundas_kenyer']['Quantity'],
+                                                    td.WareHouses['Szeszraktár']['Name'], module=True)
+        self.receivingseed.createPartner(td.Partner['Szallito']['Name'], td.Partner['Szallito']['Id'], module=True)
+
+    def tearDown(self):
         self.stockseed.deleteRawMaterial(td.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.stockseed.deleteWarehouse(td.WareHouses['Szeszraktár']['Name'], module=True)
         self.receivingseed.deleteParter(td.Partner['Szallito']['Name'], module=True)
-        super().tearDownClass()
 
-    def createReceiving(self, billName,):
+    def createReceiving(self, billName):
         self.menu.openReceiving()
         self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
         # self.html.clickElement('Új')

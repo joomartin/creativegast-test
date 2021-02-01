@@ -10,26 +10,29 @@ class Products(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
+    @classmethod
+    def tearDownClass(self):
+        super().tearDownClass()
+
+    def setUp(self):
         self.stockseed.createWarehouse(td.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterial(td.RawMaterial['Bundas_kenyer']['Name'], td.RawMaterial['Bundas_kenyer']['ME'], td.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterial(td.RawMaterial['Alma']['Name'], td.RawMaterial['Alma']['ME'], td.WareHouses['Szeszraktár']['Name'])
-        self.productseed.createCounter(td.Counter['TestCounter']['Name'], td.Counter['TestCounter']['Position'], module=True)
+        self.stockseed.createRawMaterial(td.RawMaterial['Bundas_kenyer']['Name'], td.RawMaterial['Bundas_kenyer']['ME'],
+                                         td.WareHouses['Szeszraktár']['Name'], module=True)
+        self.stockseed.createRawMaterial(td.RawMaterial['Alma']['Name'], td.RawMaterial['Alma']['ME'],
+                                         td.WareHouses['Szeszraktár']['Name'])
+        self.productseed.createCounter(td.Counter['TestCounter']['Name'], td.Counter['TestCounter']['Position'],
+                                       module=True)
         self.productseed.createProductGroup(td.ProductGroup['Egyeb']['Name'], tab=True)
         self.productseed.createProductGroup(td.ProductGroup['Öntetek']['Name'])
         self.menu.openProducts()
 
-
-    @classmethod
-    def tearDownClass(self):
+    def tearDown(self):
         self.stockseed.deleteRawMaterial(td.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.stockseed.deleteRawMaterial(td.RawMaterial['Alma']['Name'], module=True)
         self.stockseed.deleteWarehouse(td.WareHouses['Szeszraktár']['Name'], tab=True)
         self.productseed.deleteCounter(td.Counter['TestCounter']['Name'], module=True)
         self.productseed.deleteProductGroup(td.ProductGroup['Egyeb']['Name'], module=True)
         self.productseed.deleteProductGroup(td.ProductGroup['Öntetek']['Name'], module=True)
-        super().tearDownClass()
-
-
 
     def testCreate(self):
         self.productseed.createProduct(td.Product['Babgulyás']['Name'], td.ProductGroup['Egyeb']['Name'], td.Product['Babgulyás']['Code'], td.Counter['TestCounter']['Name'], td.RawMaterial['Bundas_kenyer']['Name'])
@@ -46,8 +49,6 @@ class Products(BaseTestCase):
         editedName = 'Bableves'
         editedCode = '3131999'
         editedQuantity = '3'
-
-
 
         self.productseed.createProduct(td.Product['Babgulyás']['Name'], td.ProductGroup['Egyeb']['Name'], td.Product['Babgulyás']['Code'], td.Counter['TestCounter']['Name'], td.RawMaterial['Bundas_kenyer']['Name'])
 

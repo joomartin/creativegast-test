@@ -1,4 +1,3 @@
-from selenium.webdriver.common.keys import Keys
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
 from shared.TestData import TestData as data
@@ -12,6 +11,11 @@ class BarCheckings(BaseTestCase):
         super().setUpClass()
         super().login(self)
 
+    @classmethod
+    def tearDownClass(self):
+        super().tearDownClass()
+
+    def setUp(self):
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
                                                     data.RawMaterial['Bundas_kenyer']['GrossPrice'],
@@ -22,13 +26,9 @@ class BarCheckings(BaseTestCase):
 
         self.html.clickElement('Standellenőrzések', 'a')
 
-
-    @classmethod
-    def tearDownClass(self):
+    def tearDown(self):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
-        super().tearDownClass()
-
 
     def deleteChecking(self):
         self.html.clickTableElement('barchecking', 'id', data.WareHouses['Szeszraktár']['Name'], 'a', 'Törlés', 'Standellenőrzések')
