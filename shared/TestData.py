@@ -27,6 +27,18 @@ class TestData:
                 'Quantity2': '100',
                 'Waste': '5',
                 'FloatWaste': '5.00',
+            },
+        'Cola':
+            {
+                'Name': 'Cola',
+                'GrosPrice': '500',
+                'ModifiedGrossPrice': '1 010.00',
+                'ME': 'liter',
+                'Warehouse': 'Szeszraktár',
+                'Quantity': '10',
+                'Quantity2': '100',
+                'Waste': '5',
+                'FloatWaste': '5.00',
             }
     }
 

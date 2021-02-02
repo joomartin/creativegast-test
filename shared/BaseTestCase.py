@@ -21,9 +21,9 @@ class BaseTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(self):
 
-        # chrome_options = Options()
+        chrome_options = Options()
         # chrome_options.add_argument("--auto-open-devtools-for-tabs")
-        self.driver = webdriver.Chrome(executable_path='C:/webdrivers/chromedriver.exe', chrome_options=chrome_options)
+        self.driver = webdriver.Chrome(executable_path='C:/webdrivers/chromedriver.exe', options=chrome_options)
 
         self.driver.delete_all_cookies()
         self.driver.maximize_window()
