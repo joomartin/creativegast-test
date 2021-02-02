@@ -184,7 +184,7 @@ class Orders(BaseTestCase):
         qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
                                             options=Options(htmlAttribute='class'))
 
-        print(qty.text)
+
         self.assertEqual(name.text, productName)
         self.assertEqual(qty.text, quantity)
 
@@ -199,13 +199,41 @@ class Orders(BaseTestCase):
 
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
         self.addProductToList('Rántott csirkemell', '1.00')
+
+
         self.html.clickElement('Ital', 'a')
         self.html.wait(2)
         self.html.clickElement('Üdítők', 'a')
         self.html.wait(2)
-        self.html.clickElement('Cola', 'span', Options(exactMatch=True))
+        self.html.clickElement('Cola', 'span')
 
         self.addProductToList('Roston csirkemell', '1.00')
+        self.html.wait(2)
+        #self.html.clickElement('Hasábburgonya','label')
+        #self.html.clickElement('sideDishSaveButton', 'button', Options(htmlAttribute='id'))
+
+
+
+
+
+        self.menu.openRestaurant()
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+        self.html.wait(2)
+        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+        self.html.clickElement('Fizetés')
+
+        #self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
+        price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
+        print(price)
+
+        self.html.clickElement('Kitölt')
+
+        self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
+
+
+        #TODO Ez itt valamiért szopat
         '''
         self.html.clickElement('Kiszereléses', 'a')
         self.html.wait(2)
@@ -213,6 +241,5 @@ class Orders(BaseTestCase):
         self.html.wait(2)
         #self.html.switchFrame('iframe')
         div = self.html.getElement('packingsContainer', 'div', Options(htmlAttribute='class'))
-
         self.html.clickElement('3 dl', 'a', Options(element=div))
         '''
