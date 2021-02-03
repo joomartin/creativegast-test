@@ -86,9 +86,23 @@ class Orders(BaseTestCase):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Hasábburgonya']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Sonka']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Paradicsomszósz']['Name'], module=True)
-        self.stockseed.deleteRawMaterial('Cola')
+        #self.deleteCola()
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
+
+    def deleteCola(self):
+        self.html.wait(2)
+        self.html.search('Cola', 'Raktárkészlet')
+        self.html.wait(2)
+        element = self.html.getElement('Cola', 'td', Options(following='td[contains(.,"Menü")]', exactMatch=True))
+        element.find_element_by_xpath('./a').click()
+        self.html.wait(1)
+        element2 = element.find_element_by_xpath('./div')
+        element2.find_element_by_xpath('./ul/li[contains(.,"Törlés")]').click()
+        self.html.clickElement('Igen')
+        self.html.wait(2)
+        self.html.search('', 'Raktárkészlet')
+        self.html.wait(2)
 
     def createProductChose(self):
         self.html.clickElement('Új termék felvitele', 'a')
@@ -189,6 +203,9 @@ class Orders(BaseTestCase):
         self.assertEqual(qty.text, quantity)
 
     def testMultipleOrders(self):
+        self.menu.openFinance()
+        startValue = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2]
+        print(startValue)
         self.menu.openProducts()
         self.createProductChose()
         self.menu.openProducts()
@@ -231,6 +248,19 @@ class Orders(BaseTestCase):
         self.html.clickElement('Kitölt')
 
         self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
+        stvalue = startValue.split(' ')
+        prc= price.split(' ')
+        prcInt = int(prc[0] + prc[1])
+        expected = int(stvalue[0]+stvalue[1]) + prcInt
+        print('ex '+ str(expected))
+        self.menu.openFinance()
+        self.html.refresh()
+        self.html.wait()
+        actual = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2].split(' ')
+        actInt=int(actual[0] + actual[1])
+        print('act ' + str(actInt))
+
+        self.assertEqual(expected, actInt)
 
 
         #TODO Ez itt valamiért szopat
@@ -243,3 +273,62 @@ class Orders(BaseTestCase):
         div = self.html.getElement('packingsContainer', 'div', Options(htmlAttribute='class'))
         self.html.clickElement('3 dl', 'a', Options(element=div))
         '''
+
+    def testMultipleOrdersCredit(self):
+        self.menu.openFinance()
+        try:
+            startValue = self.html.getElement('Bankkártya', 'td', Options(following='td')).text[:-2]
+        except:
+            startValue = '0 0'
+
+        print(startValue)
+        self.menu.openProducts()
+        self.createProductChose()
+        self.menu.openProducts()
+        self.createProductFix()
+        self.createProductAsRawMaterial()
+
+        self.menu.openRestaurant()
+
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+        self.addProductToList('Rántott csirkemell', '1.00')
+
+
+        self.html.clickElement('Ital', 'a')
+        self.html.wait(2)
+        self.html.clickElement('Üdítők', 'a')
+        self.html.wait(2)
+        self.html.clickElement('Cola', 'span')
+
+        self.addProductToList('Roston csirkemell', '1.00')
+        self.html.wait(2)
+        #self.html.clickElement('Hasábburgonya','label')
+        #self.html.clickElement('sideDishSaveButton', 'button', Options(htmlAttribute='id'))
+
+        self.menu.openRestaurant()
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+        self.html.wait(2)
+        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+        self.html.clickElement('Fizetés')
+
+        #self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
+        price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
+        print(price)
+
+        self.html.clickElement('Bankkártya', 'td', Options(following='button'))
+
+        self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
+        stvalue = startValue.split(' ')
+        prc = price.split(' ')
+        prcInt = int(prc[0] + prc[1])
+        expected = int(stvalue[0]+stvalue[1]) + prcInt
+        self.menu.openFinance()
+        self.html.refresh()
+        self.html.wait()
+        actual = self.html.getElement('Bankkártya', 'td', Options(following='td')).text[:-2].split(' ')
+        actInt = int(actual[0] + actual[1])
+
+
+        self.assertEqual(expected, actInt)

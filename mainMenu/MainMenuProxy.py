@@ -45,6 +45,10 @@ class MainMenuProxy:
         self.navigate('tablemapeditor/index')
         self.wait()
 
+    def openFinance(self):
+        self.navigate('finance')
+        self.wait()
+
     def wait(self):
         self.html.wait()
 
