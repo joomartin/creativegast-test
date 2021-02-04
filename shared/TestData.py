@@ -80,7 +80,7 @@ class TestData:
         'Sonka':
             {
                 'Name': 'Sonka',
-                'GrosPrice': '500',
+                'GrosPrice': '200',
                 'ModifiedGrossPrice': '1 010.00',
                 'ME': 'kg',
                 'Warehouse': 'Szeszraktár',
@@ -92,7 +92,7 @@ class TestData:
         'Paradicsomszósz':
             {
                 'Name': 'Paradicsomszósz',
-                'GrosPrice': '500',
+                'GrosPrice': '0',
                 'ModifiedGrossPrice': '1 010.00',
                 'ME': 'kg',
                 'Warehouse': 'Szeszraktár',
@@ -179,7 +179,7 @@ class TestData:
                 'Code': '99',
                 'NetPrice': '100',
                 'ComponentName': 'TestComponent',
-                'Quantity': '2',
+                'Quantity': '10',
             },
         'Palacsinta':
             {
@@ -203,10 +203,19 @@ class TestData:
             {
                 'Name': 'Sonka',
                 'Code': '03',
-                'ProductGroup': 'Köretek',
-                'NetPrice': '400',
-                'ComponentName': 'Hasábburgonya',
-                'Quantity': '0.18',
+                'ProductGroup': 'Pizza feltét',
+                'NetPrice': '200',
+                'ComponentName': 'Sonka',
+                'Quantity': '0.1',
+            },
+        'Paradicsomszósz':
+            {
+                'Name': 'Paradicsomszósz',
+                'Code': '04',
+                'ProductGroup': 'Szószok',
+                'NetPrice': '200',
+                'ComponentName': 'Paradicsomszósz',
+                'Quantity': '0.05',
             },
     }
 

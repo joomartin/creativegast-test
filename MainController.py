@@ -10,5 +10,5 @@ resc = RestaurantController()
 
 #sc.run()
 #pc.run()
-rc.run()
-#resc.run()
+#rc.run()
+resc.run()

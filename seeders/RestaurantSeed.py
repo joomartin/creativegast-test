@@ -5,7 +5,7 @@ from receiving.ReceivingAssert import ReceivingAssert
 from shared.TestData import TestData as td
 
 
-class RestaurantSeed():
+class RestaurantSeed:
 
     def __init__(self, driver):
         self.driver = driver
@@ -17,7 +17,7 @@ class RestaurantSeed():
         if module:
             self.menu.openTableMapEditor()
 
-        self.html.clickElement( tableShape + ' asztal hozzáadása', 'a', Options(htmlAttribute='title'))
+        self.html.clickElement(tableShape + ' asztal hozzáadása', 'a', Options(htmlAttribute='title'))
         self.html.refresh()
 
         self.html.clickElement('Étterem', 'i')

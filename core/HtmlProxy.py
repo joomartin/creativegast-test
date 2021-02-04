@@ -20,9 +20,9 @@ class HtmlProxy:
         if selector != 'label':
             if self.getOption(options, 'htmlAttribute'):
                 htmlAttribute = self.getOption(options, 'htmlAttribute')
-                return self.getElement(target, selector, Options(htmlAttribute=htmlAttribute, element=self.getOption(options,'element')))
+                return self.getElement(target, selector, Options(htmlAttribute=htmlAttribute, element=self.getOption(options, 'element')))
             else:
-                return self.getElement(target, 'input', Options(htmlAttribute=selector, element=self.getOption(options,'element')))
+                return self.getElement(target, 'input', Options(htmlAttribute=selector, element=self.getOption(options, 'element')))
 
         options.following = 'input'
         return self.getElement(target, selector, options)
@@ -41,8 +41,8 @@ class HtmlProxy:
         :rtype:
         '''
 
-        elem = self.getInput(target,selector,options)
-        self.clearInput(target,selector,options)
+        elem = self.getInput(target, selector, options)
+        self.clearInput(target, selector, options)
         elem.send_keys(value)
 
     def clickDropdown(self, target, selectValue, selector='label', options=Options()):
