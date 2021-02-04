@@ -125,12 +125,12 @@ class Restaurant(BaseTestCase):
                                             options=Options(htmlAttribute='class'))
         storno = self.html.getTxtFromListTable('2', '8', tableId='tasks-list products ui-sortable',
                                                options=Options(htmlAttribute='class'))
+
         self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
         self.assertEqual(qty.text, '1.00')
         self.assertEqual(storno.text, 'Sztornó')
 
         self.html.clickElement('Fizetés')
-
         self.html.clickElement('Kitölt')
 
         self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
@@ -142,22 +142,32 @@ class Restaurant(BaseTestCase):
     def testUnion(self):
         inputName = data.Product['Babgulyás']['Name']
 
-        self.addProductToList(inputName, '1.00')
-        self.addProductToList(inputName, '1.00')
+        for i in range(10):
+            self.addProductToList(inputName, '1.00')
+
         #self.html.clickElement('aaaa', 'div') # ez a verzi nem az elso elemet jelolte ki
         self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', inputName)
         self.html.clickElement('Összevonás', waitSeconds=2)
+        for i in range(4):
+            self.html.clickElement('unionMinus', 'a', options=Options(htmlAttribute='id'))
+        self.html.wait(3)
         self.html.clickElement('Összevonás / Áthelyezés', waitSeconds=4)
 
         # csekkolás
-        name = self.html.getTxtFromListTable('2', '3', tableId='tasks-list products ui-sortable',
+        for i in range(2, 7):
+            tempName = self.html.getTxtFromListTable(str(i), '3', tableId='tasks-list products ui-sortable',
                                              options=Options(htmlAttribute='class'))
-        qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
+            tempQty = self.html.getTxtFromListTable(str(i), '5', tableId='tasks-list products ui-sortable',
                                             options=Options(htmlAttribute='class'))
-        self.assertEqual(name.text, inputName)
-        self.assertEqual(qty.text, '2.00')
+
+            self.assertEqual(tempName.text, inputName)
+            if i == 2:
+                self.assertEqual(tempQty.text, '6.00')
+            else:
+                self.assertEqual(tempQty.text, '1.00')
 
         # törlés
+        self.html.clickElement('Minden összevonása', waitSeconds=4)
         self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', 'Törlés')
         self.html.clickElement('Igen', waitSeconds=2)
         # itt azt csekkoljuk hogy a rendeles bekuldese gomb eltunt e
@@ -310,17 +320,13 @@ class Restaurant(BaseTestCase):
         # sztorno
         self.html.clickElement('Sztornó', 'a')
         self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
-        self.html.wait(5)  # megkell varni h az ertesitesi ablak megjelenjen
-        self.assertTrue(self.html.getElement(inputName + ' nevű termék a felszolgáló által sztornózva lett! ', 'li').is_displayed())
-        self.html.clickElement('Rendben', 'a')
+        self.restaurantAssert.assertStornoSucces(inputName)
 
         self.html.clickElement('Vissza', 'a')
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
         self.html.clickElement('Sztornó', 'a')
         self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
-        self.html.wait(5)  # megkell varni h az ertesitesi ablak megjelenjen
-        self.assertTrue(self.html.getElement(inputName2 + ' nevű termék a felszolgáló által sztornózva lett! ', 'li').is_displayed())
-        self.html.clickElement('Rendben', 'a')
+        self.restaurantAssert.assertStornoSucces(inputName2)
 
 
     def testQualityStorno(self):
@@ -344,6 +350,7 @@ class Restaurant(BaseTestCase):
         storno = self.html.getTxtFromListTable('2', '8', tableId='tasks-list products ui-sortable',
                                             options=Options(htmlAttribute='class'))
 
+        # csekkolas
         self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
         self.assertEqual(qty.text, '1.00')
         self.assertEqual(storno.text, 'Sztornó')

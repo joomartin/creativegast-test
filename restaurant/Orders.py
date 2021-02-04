@@ -16,6 +16,7 @@ class Orders(BaseTestCase):
 
     def setUp(self):
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
+
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Csirkemell']['Name'],
                                                     data.RawMaterial['Csirkemell']['GrosPrice'],
                                                     data.RawMaterial['Csirkemell']['Quantity'],
@@ -25,7 +26,7 @@ class Orders(BaseTestCase):
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Finomliszt']['Name'],
                                                     data.RawMaterial['Finomliszt']['GrosPrice'],
                                                     data.RawMaterial['Finomliszt']['Quantity'],
-                                                    data.RawMaterial['Finomliszt']['Warehouse'], data.RawMaterial['Finomliszt']['ME'])
+                                                    data.RawMaterial['Finomliszt']['Warehouse'], data.RawMaterial['Finomliszt']['ME'], module=True)
 
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Almalé']['Name'],
                                                     data.RawMaterial['Almalé']['GrosPrice'],
@@ -55,7 +56,6 @@ class Orders(BaseTestCase):
                                        module=True)
         #self.productseed.createProductGroup(data.ProductGroup['Egyeb']['Name'], tab=True)
         self.html.wait(5)
-
         self.productseed.createProduct(data.Product['Hasábburgonya']['Name'], 'Köretek',
                                        data.Product['Hasábburgonya']['Code'], data.Counter['TestCounter']['Name'],
                                        data.RawMaterial['Hasábburgonya']['Name'], data.Product['Hasábburgonya']['Quantity'],data.Product['Hasábburgonya']['NetPrice'], module=True)
@@ -63,8 +63,20 @@ class Orders(BaseTestCase):
         self.productseed.createProduct('Almalé', 'Kiszereléses',
                                        '99', data.Counter['TestCounter']['Name'], data.RawMaterial['Almalé']['Name'], '1', '2200', module=True)
 
+        self.productseed.createProduct(data.Product['Sonka']['Name'], data.Product['Sonka']['ProductGroup'],
+                                       data.Product['Sonka']['Code'], data.Counter['TestCounter']['Name'],
+                                       data.RawMaterial['Sonka']['Name'], data.Product['Sonka']['Quantity'], data.Product['Sonka']['NetPrice'], module=True)
+
+        self.productseed.createProduct(data.Product['Paradicsomszósz']['Name'],
+                                       data.Product['Paradicsomszósz']['ProductGroup'],
+                                       data.Product['Paradicsomszósz']['Code'], data.Counter['TestCounter']['Name'],
+                                       data.RawMaterial['Paradicsomszósz']['Name'], data.Product['Paradicsomszósz']['Quantity'], '0', module=True)
+
+        '''
         self.menu.openRestaurant()
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+        '''
+        self.menu.openProducts()
 
 
     @classmethod
@@ -75,11 +87,14 @@ class Orders(BaseTestCase):
     def tearDown(self):
 
         self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
-        self.productseed.deleteProduct('Roston csirkemell')
-        self.productseed.deleteProduct('Rántott csirkemell')
+        #self.productseed.deleteProduct('Roston csirkemell')
+        #self.productseed.deleteProduct('Rántott csirkemell')
         self.productseed.deleteProduct('Almalé')
         self.productseed.deleteProduct('Cola')
+        self.productseed.deleteProduct(data.Product['Sonka']['Name'])
+        self.productseed.deleteProduct(data.Product['Paradicsomszósz']['Name'])
         self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], tab=True)
+
         self.stockseed.deleteRawMaterial(data.RawMaterial['Csirkemell']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Finomliszt']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Almalé']['Name'], module=True)
@@ -116,7 +131,6 @@ class Orders(BaseTestCase):
         self.html.fillInput('componentQty', '0.20', 'input', options=Options(htmlAttribute='id'))
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
-
 
     def createProductFix(self):
         self.html.clickElement('Új termék felvitele', 'a')
@@ -171,7 +185,6 @@ class Orders(BaseTestCase):
         self.html.clickElement('Felvétel nyersanyagként', 'label', Options(following='i'))
 
         self.html.clickElement('Rögzít')
-
 
     def addProductToList(self, productName, quantity):
         self.html.fillAutocomplete('Terméknév', 'input', productName[:-1], productName, 'li',
@@ -243,3 +256,82 @@ class Orders(BaseTestCase):
         div = self.html.getElement('packingsContainer', 'div', Options(htmlAttribute='class'))
         self.html.clickElement('3 dl', 'a', Options(element=div))
         '''
+
+    def createPizza(self, pizzaName, baseComponent, topping, module=False, tab=False):
+        if module:
+            self.menu.openProducts()
+            self.html.clickElement('Pizza (testreszabható)', 'a')
+        elif tab:
+            self.html.clickElement('Pizza (testreszabható)', 'a')
+
+        self.html.clickElement('Új pizza (testreszabható)', 'a')
+
+        self.html.switchFrame('iframe')
+        self.html.clickDropdown('Nyomtatási részleg', 'Pizza')
+        self.html.fillInput('Termék neve', pizzaName)
+        self.html.fillInput('Kód', '1333')
+
+        self.html.clickDropdown('Szósz', 'Paradicsomszósz')
+
+        self.html.fillAutocomplete('baseComponentName', 'input', baseComponent, baseComponent, 'li',
+                                   Options(htmlAttribute='id'))
+        table = self.html.getElement('baseComponents', 'table', Options(htmlAttribute='id'))
+        self.html.getElement('Hozzáad', 'button', Options(element=table)).click()
+
+        self.html.fillAutocomplete('toppingComponentName', 'input', topping, topping, 'li', Options(htmlAttribute='id'))
+        table = self.html.getElement('toppingComponents', 'table', Options(htmlAttribute='id'))
+        self.html.getElement('Hozzáad', 'button', options=Options(element=table)).click()
+
+        self.html.clickElement('Mennyiségek', 'a')
+        self.html.wait(2)
+
+        self.html.clickElement('edit actionButton fright editPriceBtn', 'a', Options(htmlAttribute='class'))
+        self.html.fillInput('grossPrice-2-1', '1400', 'input', options=Options(htmlAttribute='name'))
+        self.html.fillInput('grossPrice-5-1', '2000', 'input', options=Options(htmlAttribute='name'))
+        self.html.clickElement('Rögzít', 'a', waitSeconds=2)
+        self.html.closeAllert()
+        self.html.clickElement('Rögzít', 'a')
+        self.html.clickElement('Rögzít')
+
+        self.html.clickTableElement('customproduct-2', 'id', 'Sonkás pizza', 'a', 'Szerkeszt',
+                                    'Pizza (testreszabható)')
+        self.html.switchFrame('iframe')
+        self.html.clickElement('Mennyiségek', 'a')
+        self.html.wait(2)
+        inputFields = self.html.getElements('inputmask-numeric qtys', 'input', options=Options(htmlAttribute='class'))
+
+        inputFields[0].send_keys('0,18')
+        inputFields[1].send_keys('0,18')
+        # self.html.fillInput('inputmask-numeric qtys', '0,18', 'input', options=Options(htmlAttribute='class', element=inputFields[0]))
+        # self.html.fillInput('inputmask-numeric qtys', '0,18', 'input', options=Options(htmlAttribute='class', element=inputFields[1]))
+        self.html.clickElement('Rögzít')
+
+    def testCustomizable(self):
+        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'], tab=True)
+
+        # assert
+        self.productAssert.assertPizzaExists('Sonkás pizza', '1400.00')
+        self.html.clickTableElement('customproduct-2', 'id', 'Sonkás pizza', 'a', 'Részletek',
+                                    'Pizza (testreszabható)')
+        self.html.switchFrame('iframe')
+        #self.assertTrue(self.html.getElement('Paradicsomszósz', 'button').is_displayed())
+
+        #self.assertTrue(self.html.getElement('Finomliszt', 'td').is_displayed())
+
+        baseName = self.html.getTxtFromTable('3', '1', tableId='baseQuantities')
+        littleQty = self.html.getTxtFromTable('3', '2', tableId='baseQuantities')
+        bigQty = self.html.getTxtFromTable('3', '3', tableId='baseQuantities')
+        self.assertEqual(baseName, 'Finomliszt')
+        self.assertEqual(littleQty[:4], '0.18')
+        self.assertEqual(bigQty[:4], '0.18')
+        self.html.refresh()
+
+        self.productseed.deletePizza('Sonkás pizza')
+
+
+
+
+
+
+
+
