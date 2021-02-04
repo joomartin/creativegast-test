@@ -1,5 +1,8 @@
+from email.mime.application import MIMEApplication
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib
+from os.path import basename
 
 fromAddr = 'dev.gr33nt3ch@gmail.com'
 toAddr = 'ricsi.sikulitest@gmail.com'
@@ -7,10 +10,21 @@ toAddr = 'ricsi.sikulitest@gmail.com'
 
 def sendReport(filePath,):
     html = open(filePath)
-    msg = MIMEText(html.read(), 'html')
+    msg =  msg = MIMEMultipart()
     msg['From'] = fromAddr
     msg['To'] = toAddr
     msg['Subject'] = "CG Teszt Report"
+
+    msg.attach(MIMEText(html.read(), 'html'))
+
+    with open(filePath, "rb") as fil:
+        part = MIMEApplication(
+            fil.read(),
+            Name=basename(filePath)
+        )
+
+        part['Content-Disposition'] = 'attachment; filename="%s"' % basename(filePath)
+        msg.attach(part)
 
     debug = False
     if debug:
@@ -22,3 +36,24 @@ def sendReport(filePath,):
         text = msg.as_string('html')
         server.sendmail(fromAddr, toAddr, text)
         server.quit()
+
+
+        '''
+         msg = MIMEMultipart()
+    msg['From'] = send_from
+    msg['To'] = COMMASPACE.join(send_to)
+    msg['Date'] = formatdate(localtime=True)
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(text))
+
+    for f in files or []:
+        with open(f, "rb") as fil:
+            part = MIMEApplication(
+                fil.read(),
+                Name=basename(f)
+            )
+        # After the file is closed
+        part['Content-Disposition'] = 'attachment; filename="%s"' % basename(f)
+        msg.attach(part)
+        '''

@@ -78,7 +78,7 @@ class Orders(BaseTestCase):
         self.productseed.deleteProduct('Roston csirkemell')
         self.productseed.deleteProduct('Rántott csirkemell')
         self.productseed.deleteProduct('Almalé')
-        self.productseed.deleteProduct('Cola')
+        self.productseed.deleteProduct('Kóla')
         self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], tab=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Csirkemell']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Finomliszt']['Name'], module=True)
@@ -86,23 +86,9 @@ class Orders(BaseTestCase):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Hasábburgonya']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Sonka']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Paradicsomszósz']['Name'], module=True)
-        #self.deleteCola()
+        self.stockseed.deleteRawMaterial('Kóla', module=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
-
-    def deleteCola(self):
-        self.html.wait(2)
-        self.html.search('Cola', 'Raktárkészlet')
-        self.html.wait(2)
-        element = self.html.getElement('Cola', 'td', Options(following='td[contains(.,"Menü")]', exactMatch=True))
-        element.find_element_by_xpath('./a').click()
-        self.html.wait(1)
-        element2 = element.find_element_by_xpath('./div')
-        element2.find_element_by_xpath('./ul/li[contains(.,"Törlés")]').click()
-        self.html.clickElement('Igen')
-        self.html.wait(2)
-        self.html.search('', 'Raktárkészlet')
-        self.html.wait(2)
 
     def createProductChose(self):
         self.html.clickElement('Új termék felvitele', 'a')
@@ -174,7 +160,7 @@ class Orders(BaseTestCase):
         self.html.clickElement('Üdítők', 'a')
         self.html.clickElement('Rögzít')
         self.html.switchFrame('iframe')
-        self.html.fillInput('Termék neve', 'Cola')
+        self.html.fillInput('Termék neve', 'Kóla')
         places = self.html.getElement('Eladási ár (Kötelező)', 'td')
         self.html.clickElement('Ár megadása', options=Options(element=places))
         self.html.fillInput('Nettó', '300')
@@ -204,7 +190,10 @@ class Orders(BaseTestCase):
 
     def testMultipleOrders(self):
         self.menu.openFinance()
-        startValue = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2]
+        try:
+            startValue = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2]
+        except:
+            startValue = '0 0'
         print(startValue)
         self.menu.openProducts()
         self.createProductChose()
@@ -222,13 +211,21 @@ class Orders(BaseTestCase):
         self.html.wait(2)
         self.html.clickElement('Üdítők', 'a')
         self.html.wait(2)
-        self.html.clickElement('Cola', 'span')
+        self.html.clickElement('Kóla', 'span')
+        self.html.wait(2)
+        self.html.clickElement('Kiszereléses', 'a')
+        self.html.wait(2)
+        self.html.clickElement('Almalé', 'a')
+        self.html.wait(2)
+        self.html.clickElement('3 dl', 'a')
 
         self.addProductToList('Roston csirkemell', '1.00')
         self.html.wait(2)
         #self.html.clickElement('Hasábburgonya','label')
         #self.html.clickElement('sideDishSaveButton', 'button', Options(htmlAttribute='id'))
-
+        # self.html.switchFrame('iframe')
+        div = self.html.getElement('packingsContainer', 'div', Options(htmlAttribute='class'))
+        self.html.clickElement('3 dl', 'a', Options(element=div))
 
 
 
@@ -264,15 +261,8 @@ class Orders(BaseTestCase):
 
 
         #TODO Ez itt valamiért szopat
-        '''
-        self.html.clickElement('Kiszereléses', 'a')
-        self.html.wait(2)
-        self.html.clickElement('Almalé', 'a')
-        self.html.wait(2)
-        #self.html.switchFrame('iframe')
-        div = self.html.getElement('packingsContainer', 'div', Options(htmlAttribute='class'))
-        self.html.clickElement('3 dl', 'a', Options(element=div))
-        '''
+
+
 
     def testMultipleOrdersCredit(self):
         self.menu.openFinance()
@@ -298,7 +288,7 @@ class Orders(BaseTestCase):
         self.html.wait(2)
         self.html.clickElement('Üdítők', 'a')
         self.html.wait(2)
-        self.html.clickElement('Cola', 'span')
+        self.html.clickElement('Kóla', 'span')
 
         self.addProductToList('Roston csirkemell', '1.00')
         self.html.wait(2)
