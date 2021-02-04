@@ -227,11 +227,13 @@ class Orders(BaseTestCase):
         self.html.wait(2)
         self.html.clickElement('Kóla', 'span')
         self.html.wait(2)
+        '''
         self.html.clickElement('Kiszereléses', 'a')
         self.html.wait(2)
         self.html.clickElement('Almalé', 'a')
         self.html.wait(2)
         self.html.clickElement('3 dl', 'a')
+        '''
 
         self.addProductToList('Roston csirkemell', '1.00')
         self.html.wait(2)
@@ -413,7 +415,7 @@ class Orders(BaseTestCase):
 
         self.productseed.deletePizza('Sonkás pizza')
 
-
+        '''
 
 
 
