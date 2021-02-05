@@ -10,10 +10,13 @@ class Restaurant(BaseTestCase):
     def setUpClass(self):
         super().setUpClass()
         super().login(self)
+        '''
         self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
         self.restaurantseed.createTable(data.Table['Courier']['Name'], module=True)
+        '''
 
     def setUp(self):
+        '''
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
                                                     data.RawMaterial['Bundas_kenyer']['GrossPrice'],
@@ -36,20 +39,17 @@ class Restaurant(BaseTestCase):
         self.productseed.createProduct(data.Product['Palacsinta']['Name'], data.ProductGroup['Egyeb']['Name'],
                                        data.Product['Palacsinta']['Code'], data.Counter['TestCounter']['Name'],
                                        data.RawMaterial['Bundas_kenyer']['Name'], module=True)
-
+        '''
         self.menu.openRestaurant()
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
     @classmethod
     def tearDownClass(self):
-
         self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
         self.restaurantseed.deleteTable(data.Table['Courier']['Name'], module=True)
         super().tearDownClass()
-        pass
 
     def tearDown(self):
-
         self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True)
         self.productseed.deleteProduct(data.Product['Palacsinta']['Name'], module=True)
         self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], tab=True)
@@ -58,7 +58,7 @@ class Restaurant(BaseTestCase):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Alma']['Name'], module=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
-
+        
     def addProductToList(self, productName, quantity):
         self.html.fillAutocomplete('Terméknév', 'input', productName[:-1], productName, 'li',
                                    Options(htmlAttribute='placeholder'))
@@ -97,7 +97,6 @@ class Restaurant(BaseTestCase):
         self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
         self.assertEqual(qty.text, '1.00')
         self.assertEqual(storno.text, 'Sztornó')
-        # print(storno)
 
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
 
@@ -328,7 +327,6 @@ class Restaurant(BaseTestCase):
         self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
         self.restaurantAssert.assertStornoSucces(inputName2)
 
-
     def testQualityStorno(self):
         # mennyiseg ellenorzese
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
@@ -421,6 +419,78 @@ class Restaurant(BaseTestCase):
         # mennyiseg ellenorzese
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
                                      data.RawMaterial['Bundas_kenyer']['Warehouse'], '10')
+
+    def testMoveToReservedTable(self):
+        inputName = data.Product['Babgulyás']['Name']
+        inputName2 = data.Product['Palacsinta']['Name']
+
+        # elso asztalra rendeles bekuldese
+        self.addProductToList(inputName, '1.00')
+        self.html.refresh()
+        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+        self.html.clickElement(data.Table['Courier']['Name'], tag='i')
+
+        # masodik asztalra rendeles bekuldese
+        self.addProductToList(inputName, '1.00')
+        self.addProductToList(inputName2, '1.00')
+        self.html.refresh()
+        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+        self.html.clickElement(data.Table['Courier']['Name'], tag='i')
+
+        # muvelet
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName2, 'div', inputName2)
+        self.html.clickElement('Áthelyez másik asztalra')
+        self.html.clickElement(data.Table['Normal']['Name'], 'a', waitSeconds=2)
+
+        self.html.clickElement('Vissza', 'a', waitSeconds=2)
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+        #
+        # ide talan kene assert h melyik asztalon is vagyunk
+
+        # csekkoljuk a dolgokat az elso asztalon, ahova athelyeztuk a termeket
+
+        # csekkolas
+
+        name2 = self.html.getTxtFromListTable2('2', '3')
+        qty2 = self.html.getTxtFromListTable2('2', '5')
+        self.assertEqual(name2.text, inputName)
+        self.assertEqual(qty2.text, '1.00')
+        self.html.clickElement('Sztornó', 'a')
+        self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
+        self.restaurantAssert.assertStornoSucces(inputName)
+
+        self.html.clickElement('2', 'a', waitSeconds=2)
+        name = self.html.getTxtFromListTable2('2', '3')
+        qty = self.html.getTxtFromListTable2('2', '5')
+
+        self.assertEqual(name.text, inputName2)
+        self.assertEqual(qty.text, '1.00')
+        self.html.clickElement('Sztornó', 'a')
+        self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
+        self.restaurantAssert.assertStornoSucces(inputName2)
+
+        # vissza a 2. asztalra
+        self.html.clickElement('Vissza', 'a', waitSeconds=2)
+        self.html.clickElement(data.Table['Courier']['Name'], 'a')
+
+        # csekkoljuk a 3. asztalon is a dolgokat
+        name3 = self.html.getTxtFromListTable2('2', '3')
+        qty3 = self.html.getTxtFromListTable2('2', '5')
+        self.assertEqual(name3.text, inputName)
+        self.assertEqual(qty3.text, '1.00')
+
+        # sztorno
+        self.html.clickElement('Sztornó', 'a')
+        self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
+        self.restaurantAssert.assertStornoSucces(inputName)
+
+
+
+
+
+
+
+
 
 
 
