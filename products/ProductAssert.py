@@ -15,7 +15,7 @@ class ProductAssert(unittest.TestCase):
         self.html = htmlProxy
         self.menu = MainMenuProxy(driver)
 
-    def assertGroupExists(self,name):
+    def assertGroupExists(self, name):
         self.assertTrue(self.html.getElement(name, 'td').is_displayed())
 
     def asseretParentGroup(self, groupName, parentName):

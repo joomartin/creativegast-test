@@ -246,3 +246,21 @@ class TestData:
                 'Type': 'Főnöki'
             },
     }
+
+    Client = {
+        'Pista':
+            {
+                'Name': 'Pista',
+                'Code': '987654321',
+                'Phone': '123456789',
+                'Discount': '10',
+                'TaxNumber': '2468',
+                'Country': 'Hungary',
+                'PostalCode': '1171',
+                'City': 'Budapest',
+                'Street': 'Csak utca',
+                'HouseNumber': '1'
+            }
+    }
+
+
