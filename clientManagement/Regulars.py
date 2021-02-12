@@ -1,4 +1,3 @@
-from shared.BaseTestCase import BaseTestCase
 
 from shared.BaseTestCase import BaseTestCase
 from shared.TestData import TestData as data
@@ -6,6 +5,7 @@ from core.Options import Options
 
 
 class Regulars(BaseTestCase):
+
     @classmethod
     def setUpClass(self):
         super().setUpClass()

@@ -31,5 +31,20 @@ class ClientSeed:
         self.html.wait(2)
 
 
+    def deleteCard(self, name, module=False, tab=False):
+        if module:
+            self.menu.openClientManagement()
+            self.html.clickElement('Kedvezménykártyák', 'a')
+        elif tab:
+            self.html.clickElement('Kedvezménykártyák', 'a')
 
+        self.html.wait(2)
+        self.html.search(name, 'Kedvezménykártyák')
+        self.html.wait(2)
+        self.html.clickTableElement('discount_cards', 'id', name, 'a', 'Törlés')
+        self.html.wait(2)
+        self.html.clickElement('Igen')
+        self.html.wait(2)
+        self.html.search('', 'Kedvezménykártyák')
+        self.html.wait(2)
 

@@ -263,4 +263,24 @@ class TestData:
             }
     }
 
+    DiscountCard = {
+        'White Friday':
+            {
+                'Name': 'White Friday',
+                'Code': 'White10',
+                'Category': 'Ital',
+                'Discount': '10',
+            },
+        'Blue Friday':
+            {
+                'Name': 'Blue Friday',
+                'Code': 'Blue10',
+                'Category': 'Étel',
+                'Discount': '10',
+            }
+    }
+
+
+
+
 

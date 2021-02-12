@@ -4,6 +4,7 @@ import unittest
 
 from core.contracts.Controller import Controller
 from clientManagement.Regulars import Regulars
+from clientManagement.DiscountCards import DiscountCards
 
 
 class ClientManagementController(Controller):
@@ -13,9 +14,9 @@ class ClientManagementController(Controller):
         # get all tests from SearchText and HomePageTest class
 
         regulars = unittest.TestLoader().loadTestsFromTestCase(Regulars)
-
+        discountCards = unittest.TestLoader().loadTestsFromTestCase(DiscountCards)
         # create a test suite combining search_text and home_page_test
-        test_suite = unittest.TestSuite([regulars])
+        test_suite = unittest.TestSuite([regulars, discountCards])
 
 
         # open the report file

@@ -1,9 +1,5 @@
 import unittest
 
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.keys import Keys
-from selenium import webdriver
-
 from core.Options import Options
 from mainMenu.MainMenuProxy import MainMenuProxy
 
@@ -29,15 +25,51 @@ class ClientManagementAssert(unittest.TestCase):
         self.html.switchFrame()
         self.html.clickElement('fancybox-item fancybox-close', 'a', options=Options(htmlAttribute='class'))
 
+    def assertDiscountCardExist(self, name, code, discount, category='', products = 'Válassz...'):
+        days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap']
 
+        self.html.search(name, 'Kedvezménykártyák')
+        self.html.clickTableElement('discount_cards', 'id', name, 'a', 'Részletek')
+        self.html.switchFrame('iframe')
 
+        self.assertTrue(self.html.getTablePairsExist('Megnevezés', name))
+        self.assertTrue(self.html.getTablePairsExist('Kód', code))
 
+        for day in days:
+            self.assertTrue(self.html.getTablePairsExist(day, discount))
 
+        self.html.switchFrame()
+        self.html.clickElement('fancybox-item fancybox-close', 'a', options=Options(htmlAttribute='class'))
 
+        self.html.clickTableElement('discount_cards', 'id', name, 'a', 'Szerkeszt')
+        self.html.switchFrame('iframe')
+        '''
+        lista = self.html.getElement('selectContainer', 'div', options=Options(htmlAttribute='class'))
+        getCategory = []
+        getCategory.append(self.html.getElement('item selected', 'li', options=Options(htmlAttribute='class', element=lista)))
+        print(type(lista))
+        print(type(getCategory[0]))
+        for i in range(len(getCategory)):
+            print('print')
+            print(type(getCategory[i]))
+            asd = self.html.getElements(category[i], 'label')
+            self.assertTrue(self.html.getElement(category[i], 'label', options=Options(element=getCategory[i])).is_displayed())
+        '''
 
+        if category == 'all':
+            selectList = self.html.getElement('selectContainer', 'div', options=Options(htmlAttribute='class'))
+            allElements = self.html.getElements('', 'li', options=Options(element=selectList))
+            selectedElements = self.html.getElements('item selected', 'li',
+                                                     options=Options(htmlAttribute='class', element=selectList))
+            # osszes elem kilett e valasztva
+            self.assertEqual(len(allElements), len(selectedElements))
+        else:
+            self.assertTrue(self.html.getElement(category, 'button').is_displayed())
 
+        self.assertTrue(self.html.getElement(products, 'button').is_displayed())
 
-
+        self.html.switchFrame()
+        self.html.clickElement('fancybox-item fancybox-close', 'a', options=Options(htmlAttribute='class'))
 
 
 
