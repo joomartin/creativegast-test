@@ -132,9 +132,10 @@ class ProductSeed:
         self.html.clickElement('edit actionButton fright editPriceBtn', 'a', Options(htmlAttribute='class'))
 
         self.html.fillInput('Nettó', '1000')
+        self.html.wait(2)
         self.html.clickElement('Rögzít', 'a', waitSeconds=2)
-        self.html.closeAllert()
-        self.html.clickElement('Rögzít', 'a')
+        #self.html.closeAllert()
+        #self.html.clickElement('Rögzít', 'a')
         self.html.clickElement('Rögzít')
 
     def deletePizza(self, pizzaName, module=False, tab=False):

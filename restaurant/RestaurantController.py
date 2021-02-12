@@ -7,6 +7,7 @@ from core.contracts.Controller import Controller
 from stock.Warehouses import Test
 from restaurant.TableMapEdit import TableMapEdit
 from restaurant.Restaurant import Restaurant
+from restaurant.Orders import Orders
 import ReportMail as mail
 
 class RestaurantController(Controller):
@@ -16,9 +17,11 @@ class RestaurantController(Controller):
         # get all tests from SearchText and HomePageTest class
         tableMap = unittest.TestLoader().loadTestsFromTestCase(TableMapEdit)
         restaurant = unittest.TestLoader().loadTestsFromTestCase(Restaurant)
+        order = unittest.TestLoader().loadTestsFromTestCase(Orders)
 
         # create a test suite combining search_text and home_page_test
-        test_suite = unittest.TestSuite([tableMap, restaurant])
+        #test_suite = unittest.TestSuite([tableMap, restaurant])
+        test_suite = unittest.TestSuite([order])
 
 
         # open the report file
@@ -29,4 +32,4 @@ class RestaurantController(Controller):
 
         # run the suite using HTMLTestRunner
         runner.run(test_suite)
-        #mail.sendReport(dir + '\\reports\RestaurantTestReportTestReport.html')
+        mail.sendReport(dir + '\\reports\RestaurantTestReport.html')
