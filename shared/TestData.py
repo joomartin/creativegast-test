@@ -282,7 +282,21 @@ class TestData:
             }
     }
 
-
+    Group = {
+        'Felszolgáló2':
+            {
+                'Name': 'Felszolgáló2',
+                'Rights':
+                    {
+                        'Enter': 'Belépés',
+                        'Enter2': 'Belépés 2',
+                        'Restaurant': 'Étterem',
+                        'OpenDay': 'Napnyitás',
+                        'CloseDay': 'Napzárás',
+                        'PrintCloseDay': 'Napzárás nyomtatása',
+                    }
+            }
+    }
 
 
 
