@@ -269,6 +269,8 @@ class TestData:
                 'Name': 'White Friday',
                 'Code': 'White10',
                 'Category': 'Ital',
+                'ProductGroup': 'Üdítők',
+                'Product': 'Cola', # valszeg ez amjd nem fog kelleni itt ahogy a product group se
                 'Discount': '10',
             },
         'Blue Friday':

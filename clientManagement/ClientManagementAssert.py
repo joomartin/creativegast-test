@@ -25,7 +25,7 @@ class ClientManagementAssert(unittest.TestCase):
         self.html.switchFrame()
         self.html.clickElement('fancybox-item fancybox-close', 'a', options=Options(htmlAttribute='class'))
 
-    def assertDiscountCardExist(self, name, code, discount, category='', products = 'Válassz...'):
+    def assertDiscountCardExist(self, name, code, discount, category='', group = '', products = 'Válassz...'):
         days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap']
 
         self.html.search(name, 'Kedvezménykártyák')
@@ -68,8 +68,16 @@ class ClientManagementAssert(unittest.TestCase):
 
         self.assertTrue(self.html.getElement(products, 'button').is_displayed())
 
+        if group != '':
+            self.html.clickElement('Termékcsoportok', 'label', options=Options(following='input'))
+            self.html.switchFrame('iframe')
+            selectedGroup = self.html.getElement('dynatree-node dynatree-exp-c dynatree-ico-c dynatree-selected', 'span', options=Options(htmlAttribute='class'))
+            group = self.html.getElement('Üdítők', 'a', options=Options(element=selectedGroup)).is_displayed()
+            self.assertTrue(group)
+
         self.html.switchFrame()
         self.html.clickElement('fancybox-item fancybox-close', 'a', options=Options(htmlAttribute='class'))
+
 
 
 
