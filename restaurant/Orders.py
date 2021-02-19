@@ -1,3 +1,5 @@
+
+
 from shared.BaseTestCase import BaseTestCase
 from shared.TestData import TestData as data
 from core.Options import Options
@@ -215,12 +217,15 @@ class Orders(BaseTestCase):
         self.createProductAsRawMaterial()
         self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
                          module=True)
-        self.html.wait(2)
-        element = self.html.getElement('-1', 'div', Options(htmlAttribute='tabindex'))
-        self.html.clickElement('size', 'label', Options(element=element,htmlAttribute='data-name'))
-        #sauce = self.html.getElement('baseSauce', 'div', Options(htmlAttribute='id'))
-        self.html.clickElement('Paradicsomos alap', 'span', Options(element=element))
-        self.html.clickElement('Rögzít', Options(element=element))
+
+        #element = self.html.getElement('-1', 'div', Options(htmlAttribute='tabindex'))
+        div = self.driver.switch_to.active_element
+        print(div)
+        self.driver.execute_script("document.getElementsByName('size')[0].style.display='inline-block';")
+        self.html.clickElement('size-2', 'label', Options(element=div, htmlAttribute='id'))
+        # sauce = self.html.getElement('baseSauce', 'div', Options(htmlAttribute='id'))
+        self.html.clickElement('Paradicsomos alap', 'em', Options(element=div))
+        self.html.clickElement('Rögzít')
 
         self.menu.openRestaurant()
 
@@ -377,9 +382,8 @@ class Orders(BaseTestCase):
         self.html.clickElement('edit actionButton fright editPriceBtn', 'a', Options(htmlAttribute='class'))
         self.html.fillInput('grossPrice-2-1', '1400', 'input', options=Options(htmlAttribute='name'))
         self.html.fillInput('grossPrice-5-1', '2000', 'input', options=Options(htmlAttribute='name'))
+        self.html.wait(2)
         self.html.clickElement('Rögzít', 'a', waitSeconds=2)
-        self.html.closeAllert()
-        self.html.clickElement('Rögzít', 'a')
         self.html.clickElement('Rögzít')
 
         self.html.clickTableElement('customproduct-2', 'id', 'Sonkás pizza', 'a', 'Szerkeszt',
