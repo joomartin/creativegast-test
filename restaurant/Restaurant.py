@@ -10,6 +10,7 @@ class Restaurant(BaseTestCase):
     def setUpClass(self):
         super().setUpClass()
         super().login(self)
+
         self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
         self.restaurantseed.createTable(data.Table['Courier']['Name'], module=True)
 
@@ -42,14 +43,11 @@ class Restaurant(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
-
         self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
         self.restaurantseed.deleteTable(data.Table['Courier']['Name'], module=True)
         super().tearDownClass()
-        pass
 
     def tearDown(self):
-
         self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True)
         self.productseed.deleteProduct(data.Product['Palacsinta']['Name'], module=True)
         self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], tab=True)
@@ -65,10 +63,8 @@ class Restaurant(BaseTestCase):
 
         self.html.fillInput('Mennyiség', quantity, 'placeholder')
         self.html.clickElement('addProduct', 'a', options=Options(htmlAttribute='id'))
-        name = self.html.getTxtFromListTable('2', '3', tableId='tasks-list products ui-sortable',
-                                             options=Options(htmlAttribute='class'))
-        qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
-                                            options=Options(htmlAttribute='class'))
+        name = self.html.getTxtFromListTable2('2', '3')
+        qty = self.html.getTxtFromListTable2('2', '5')
 
         self.assertEqual(name.text, productName)
         self.assertEqual(qty.text, quantity)
@@ -87,17 +83,13 @@ class Restaurant(BaseTestCase):
         self.html.clickElement('Rendelés beküldése', waitSeconds=3)
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
-        name = self.html.getTxtFromListTable('2', '3', tableId='tasks-list products ui-sortable',
-                                             options=Options(htmlAttribute='class'))
-        qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
-                                            options=Options(htmlAttribute='class'))
-        storno = self.html.getTxtFromListTable('2', '8', tableId='tasks-list products ui-sortable',
-                                            options=Options(htmlAttribute='class'))
+        name = self.html.getTxtFromListTable2('2', '3')
+        qty = self.html.getTxtFromListTable2('2', '5')
+        storno = self.html.getTxtFromListTable2('2', '8')
 
         self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
         self.assertEqual(qty.text, '1.00')
         self.assertEqual(storno.text, 'Sztornó')
-        # print(storno)
 
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
 
@@ -119,12 +111,9 @@ class Restaurant(BaseTestCase):
         self.html.clickElement('Rendelés beküldése', waitSeconds=3)
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
-        name = self.html.getTxtFromListTable('2', '3', tableId='tasks-list products ui-sortable',
-                                             options=Options(htmlAttribute='class'))
-        qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
-                                            options=Options(htmlAttribute='class'))
-        storno = self.html.getTxtFromListTable('2', '8', tableId='tasks-list products ui-sortable',
-                                               options=Options(htmlAttribute='class'))
+        name = self.html.getTxtFromListTable2('2', '3')
+        qty = self.html.getTxtFromListTable2('2', '5')
+        storno = self.html.getTxtFromListTable2('2', '8')
 
         self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
         self.assertEqual(qty.text, '1.00')
@@ -155,10 +144,8 @@ class Restaurant(BaseTestCase):
 
         # csekkolás
         for i in range(2, 7):
-            tempName = self.html.getTxtFromListTable(str(i), '3', tableId='tasks-list products ui-sortable',
-                                             options=Options(htmlAttribute='class'))
-            tempQty = self.html.getTxtFromListTable(str(i), '5', tableId='tasks-list products ui-sortable',
-                                            options=Options(htmlAttribute='class'))
+            tempName = self.html.getTxtFromListTable2(str(i), '3')
+            tempQty = self.html.getTxtFromListTable2(str(i), '5')
 
             self.assertEqual(tempName.text, inputName)
             if i == 2:
@@ -176,29 +163,21 @@ class Restaurant(BaseTestCase):
     def testUnfold(self):
         self.html.wait(10)
         inputName = data.Product['Babgulyás']['Name']
-        portion = 6
 
         self.addProductToList(inputName, '10.00')
-        #self.addProductToList(inputName, '1.00')
 
         self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', inputName)
         self.html.clickElement('Bontás', waitSeconds=2)
-        #self.html.fillInput('unfoldProductQtyDisplay', portion, 'input', options=Options(htmlAttribute='id'))
-        self.html.clickElement('unfoldMinus', 'a', options=Options(htmlAttribute='id'))
-        self.html.clickElement('unfoldMinus', 'a', options=Options(htmlAttribute='id'))
-        self.html.clickElement('unfoldMinus', 'a', options=Options(htmlAttribute='id'))
-        self.html.clickElement('unfoldMinus', 'a', options=Options(htmlAttribute='id'))
+        for i in range(4):
+            self.html.clickElement('unfoldMinus', 'a', options=Options(htmlAttribute='id'))
+
         self.html.wait(3)
         self.html.clickElement('Bontás / Áthelyezés', waitSeconds=4)
 
-        name = self.html.getTxtFromListTable('2', '3', tableId='tasks-list products ui-sortable',
-                                             options=Options(htmlAttribute='class'))
-        name2 = self.html.getTxtFromListTable('3', '3', tableId='tasks-list products ui-sortable',
-                                             options=Options(htmlAttribute='class'))
-        qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
-                                            options=Options(htmlAttribute='class'))
-        qty2 = self.html.getTxtFromListTable('3', '5', tableId='tasks-list products ui-sortable',
-                                            options=Options(htmlAttribute='class'))
+        name = self.html.getTxtFromListTable2('2', '3')
+        name2 = self.html.getTxtFromListTable2('3', '3')
+        qty = self.html.getTxtFromListTable2('2', '5')
+        qty2 = self.html.getTxtFromListTable2('3', '5')
 
         self.assertEqual(name.text, inputName)
         self.assertEqual(qty.text, '6.00')
@@ -224,14 +203,10 @@ class Restaurant(BaseTestCase):
 
         self.html.clickElement('Minden összevonása', waitSeconds=4)
 
-        name = self.html.getTxtFromListTable('2', '3', tableId='tasks-list products ui-sortable',
-                                             options=Options(htmlAttribute='class'))
-        name2 = self.html.getTxtFromListTable('3', '3', tableId='tasks-list products ui-sortable',
-                                              options=Options(htmlAttribute='class'))
-        qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
-                                            options=Options(htmlAttribute='class'))
-        qty2 = self.html.getTxtFromListTable('3', '5', tableId='tasks-list products ui-sortable',
-                                             options=Options(htmlAttribute='class'))
+        name = self.html.getTxtFromListTable2('2', '3')
+        name2 = self.html.getTxtFromListTable2('3', '3')
+        qty = self.html.getTxtFromListTable2('2', '5')
+        qty2 = self.html.getTxtFromListTable2('3', '5')
 
         self.assertEqual(name.text, inputName2)
         self.assertEqual(qty.text, '2.00')
@@ -261,20 +236,11 @@ class Restaurant(BaseTestCase):
         partTablesDialog = self.html.getElement('moveDialog', 'div', options=Options(htmlAttribute='id'))
         self.html.clickElement('2', 'a', options=Options(element=partTablesDialog), waitSeconds=4)
 
-        tables = self.html.getElements('tasks-list products ui-sortable', 'table',
-                                       options=Options(htmlAttribute='class'))
-
-        #nrows = tables[0].find_elements_by_tag_name('tr')
-        #self.assertEqual(len(nrows), 2)
-
         self.html.clickElement('2', 'a')
-        secondTable = tables[1]
 
         # csekkolas
-        name = self.html.getTxtFromListTable2('2', '3',
-                                             options=Options(element=secondTable))
-        qty = self.html.getTxtFromListTable2('2', '5',
-                                            options=Options(element=secondTable))
+        name = self.html.getTxtFromListTable2('2', '3')
+        qty = self.html.getTxtFromListTable2('2', '5')
         self.assertEqual(name.text, inputName)
         self.assertEqual(qty.text, '1.00')
 
@@ -287,7 +253,6 @@ class Restaurant(BaseTestCase):
         self.html.clickElement('Rendben', 'a')
 
         self.html.clickElement('1', 'a')
-
 
     def testMoveToTable(self):
         inputName = data.Product['Babgulyás']['Name']
@@ -328,7 +293,6 @@ class Restaurant(BaseTestCase):
         self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
         self.restaurantAssert.assertStornoSucces(inputName2)
 
-
     def testQualityStorno(self):
         # mennyiseg ellenorzese
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
@@ -343,12 +307,9 @@ class Restaurant(BaseTestCase):
         self.html.clickElement('Rendelés beküldése', waitSeconds=3)
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
-        name = self.html.getTxtFromListTable('2', '3', tableId='tasks-list products ui-sortable',
-                                             options=Options(htmlAttribute='class'))
-        qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
-                                            options=Options(htmlAttribute='class'))
-        storno = self.html.getTxtFromListTable('2', '8', tableId='tasks-list products ui-sortable',
-                                            options=Options(htmlAttribute='class'))
+        name = self.html.getTxtFromListTable2('2', '3')
+        qty = self.html.getTxtFromListTable2('2', '5')
+        storno = self.html.getTxtFromListTable2('2', '8')
 
         # csekkolas
         self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
@@ -394,12 +355,9 @@ class Restaurant(BaseTestCase):
         self.html.clickElement('Rendelés beküldése', waitSeconds=3)
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
-        name = self.html.getTxtFromListTable('2', '3', tableId='tasks-list products ui-sortable',
-                                             options=Options(htmlAttribute='class'))
-        qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
-                                            options=Options(htmlAttribute='class'))
-        storno = self.html.getTxtFromListTable('2', '8', tableId='tasks-list products ui-sortable',
-                                            options=Options(htmlAttribute='class'))
+        name = self.html.getTxtFromListTable2('2', '3')
+        qty = self.html.getTxtFromListTable2('2', '5')
+        storno = self.html.getTxtFromListTable2('2', '8')
 
         self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
         self.assertEqual(qty.text, '1.00')
@@ -421,6 +379,78 @@ class Restaurant(BaseTestCase):
         # mennyiseg ellenorzese
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
                                      data.RawMaterial['Bundas_kenyer']['Warehouse'], '10')
+
+    def testMoveToReservedTable(self):
+        inputName = data.Product['Babgulyás']['Name']
+        inputName2 = data.Product['Palacsinta']['Name']
+
+        # elso asztalra rendeles bekuldese
+        self.addProductToList(inputName, '1.00')
+        self.html.refresh()
+        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+        self.html.clickElement(data.Table['Courier']['Name'], tag='i')
+
+        # masodik asztalra rendeles bekuldese
+        self.addProductToList(inputName, '1.00')
+        self.addProductToList(inputName2, '1.00')
+        self.html.refresh()
+        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+        self.html.clickElement(data.Table['Courier']['Name'], tag='i')
+
+        # muvelet
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName2, 'div', inputName2)
+        self.html.clickElement('Áthelyez másik asztalra')
+        self.html.clickElement(data.Table['Normal']['Name'], 'a', waitSeconds=2)
+
+        self.html.clickElement('Vissza', 'a', waitSeconds=2)
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+        #
+        # ide talan kene assert h melyik asztalon is vagyunk
+
+        # csekkoljuk a dolgokat az elso asztalon, ahova athelyeztuk a termeket
+
+        # csekkolas
+
+        name2 = self.html.getTxtFromListTable2('2', '3')
+        qty2 = self.html.getTxtFromListTable2('2', '5')
+        self.assertEqual(name2.text, inputName)
+        self.assertEqual(qty2.text, '1.00')
+        self.html.clickElement('Sztornó', 'a')
+        self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
+        self.restaurantAssert.assertStornoSucces(inputName)
+
+        self.html.clickElement('2', 'a', waitSeconds=2)
+        name = self.html.getTxtFromListTable2('2', '3')
+        qty = self.html.getTxtFromListTable2('2', '5')
+
+        self.assertEqual(name.text, inputName2)
+        self.assertEqual(qty.text, '1.00')
+        self.html.clickElement('Sztornó', 'a')
+        self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
+        self.restaurantAssert.assertStornoSucces(inputName2)
+
+        # vissza a 2. asztalra
+        self.html.clickElement('Vissza', 'a', waitSeconds=2)
+        self.html.clickElement(data.Table['Courier']['Name'], 'a')
+
+        # csekkoljuk a 3. asztalon is a dolgokat
+        name3 = self.html.getTxtFromListTable2('2', '3')
+        qty3 = self.html.getTxtFromListTable2('2', '5')
+        self.assertEqual(name3.text, inputName)
+        self.assertEqual(qty3.text, '1.00')
+
+        # sztorno
+        self.html.clickElement('Sztornó', 'a')
+        self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
+        self.restaurantAssert.assertStornoSucces(inputName)
+
+
+
+
+
+
+
+
 
 
 

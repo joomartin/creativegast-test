@@ -4,10 +4,14 @@ import unittest
 from selenium import webdriver
 from core.HtmlProxy import HtmlProxy
 from mainMenu.MainMenuProxy import MainMenuProxy
+from seeders.ClientSeed import ClientSeed
+from seeders.UsersSeed import UsersSeed
 from stock.StockAssert import StockAssert
 from products.ProductAssert import ProductAssert
 from receiving.ReceivingAssert import ReceivingAssert
 from restaurant.RestaurantAssert import RestaurantAssert
+from clientManagement.ClientManagementAssert import ClientManagementAssert
+from users.UsersAssert import UserAssert
 from Config import read_section
 from seeders.StockSeed import StockSeed
 from seeders.ProductSeed import ProductSeed
@@ -35,12 +39,16 @@ class BaseTestCase(unittest.TestCase):
         self.menu = MainMenuProxy(self.driver)
         self.stockseed = StockSeed(self.driver)
         self.productseed = ProductSeed(self.driver)
-        self.receivingseed= ReceivingSeed(self.driver)
+        self.receivingseed = ReceivingSeed(self.driver)
         self.restaurantseed = RestaurantSeed(self.driver)
-        self.stockAssert = StockAssert(self.html,self.driver)
-        self.productAssert = ProductAssert(self.html,self.driver)
-        self.receivingAssert=ReceivingAssert(self.html,self.driver)
-        self.restaurantAssert=RestaurantAssert(self.html,self.driver)
+        self.clientseed = ClientSeed(self.driver)
+        self.usersSeed = UsersSeed(self.driver)
+        self.stockAssert = StockAssert(self.html, self.driver)
+        self.productAssert = ProductAssert(self.html, self.driver)
+        self.receivingAssert = ReceivingAssert(self.html, self.driver)
+        self.restaurantAssert = RestaurantAssert(self.html, self.driver)
+        self.clientAssert = ClientManagementAssert(self.html, self.driver)
+        self.usersAssert = UserAssert(self.html, self.driver)
         self.result = unittest.TestResult
 
     @classmethod

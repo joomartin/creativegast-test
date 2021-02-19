@@ -59,7 +59,7 @@ class HtmlProxy:
             element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
         else:
             self.getElement(target, selector, Options(following='button')).click()
-            element = self.getElement(target, selector, Options(following='ul',element=self.getOption(options,'element')))
+            element = self.getElement(target, selector, Options(following='ul', element=self.getOption(options, 'element')))
             element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
 
     def switchFrame(self, tagName=None):
@@ -76,15 +76,15 @@ class HtmlProxy:
         self.wait(2)
 
     def getElement(self, target, tag, options=Options()):
-        if self.getOption(options,'element') is not None:
+        if self.getOption(options, 'element') is not None:
             element = self.getOption(options, 'element')
         else:
-            element=self.driver
-        if self.getOption(options,'uniqueSelector'):
-                return element.find_element_by_xpath(tag)
+            element = self.driver
+        if self.getOption(options, 'uniqueSelector'):
+            return element.find_element_by_xpath(tag)
 
-        htmlAttribute = self.getOption(options,'htmlAttribute')
-        exactMatch = self.getOption(options,'exactMatch')
+        htmlAttribute = self.getOption(options, 'htmlAttribute')
+        exactMatch = self.getOption(options, 'exactMatch')
 
         if htmlAttribute and exactMatch:
             raise ValueError('exactMatch must be false while using htmlAttribute')

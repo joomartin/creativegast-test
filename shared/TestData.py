@@ -246,3 +246,57 @@ class TestData:
                 'Type': 'Főnöki'
             },
     }
+
+    Client = {
+        'Pista':
+            {
+                'Name': 'Pista',
+                'Code': '987654321',
+                'Phone': '123456789',
+                'Discount': '10',
+                'TaxNumber': '2468',
+                'Country': 'Hungary',
+                'PostalCode': '1171',
+                'City': 'Budapest',
+                'Street': 'Csak utca',
+                'HouseNumber': '1'
+            }
+    }
+
+    DiscountCard = {
+        'White Friday':
+            {
+                'Name': 'White Friday',
+                'Code': 'White10',
+                'Category': 'Ital',
+                'ProductGroup': 'Üdítők',
+                'Product': 'Cola', # valszeg ez amjd nem fog kelleni itt ahogy a product group se
+                'Discount': '10',
+            },
+        'Blue Friday':
+            {
+                'Name': 'Blue Friday',
+                'Code': 'Blue10',
+                'Category': 'Étel',
+                'Discount': '10',
+            }
+    }
+
+    Group = {
+        'Felszolgáló2':
+            {
+                'Name': 'Felszolgáló2',
+                'Rights':
+                    {
+                        'Enter': 'Belépés',
+                        'Enter2': 'Belépés 2',
+                        'Restaurant': 'Étterem',
+                        'OpenDay': 'Napnyitás',
+                        'CloseDay': 'Napzárás',
+                        'PrintCloseDay': 'Napzárás nyomtatása',
+                    }
+            }
+    }
+
+
+
