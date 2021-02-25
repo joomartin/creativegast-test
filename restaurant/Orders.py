@@ -95,6 +95,7 @@ class Orders(BaseTestCase):
         self.productseed.deleteProduct('Kóla')
         self.productseed.deleteProduct(data.Product['Sonka']['Name'])
         self.productseed.deleteProduct(data.Product['Paradicsomszósz']['Name'])
+        self.productseed.deletePizza('Sonkás pizza', module=True)
         self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], tab=True)
 
         self.stockseed.deleteRawMaterial(data.RawMaterial['Csirkemell']['Name'], module=True)
@@ -215,21 +216,23 @@ class Orders(BaseTestCase):
         self.menu.openProducts()
         self.createProductFix()
         self.createProductAsRawMaterial()
+
         self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
                          module=True)
-
-        #element = self.html.getElement('-1', 'div', Options(htmlAttribute='tabindex'))
-        div = self.driver.switch_to.active_element
-        print(div)
-        self.driver.execute_script("document.getElementsByName('size')[0].style.display='inline-block';")
-        self.html.clickElement('size-2', 'label', Options(element=div, htmlAttribute='id'))
-        # sauce = self.html.getElement('baseSauce', 'div', Options(htmlAttribute='id'))
-        self.html.clickElement('Paradicsomos alap', 'em', Options(element=div))
-        self.html.clickElement('Rögzít')
 
         self.menu.openRestaurant()
 
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+        self.html.clickElement('Pizza (testreszabható)', 'a')
+        self.html.wait(1)
+        self.html.clickElement('Sonkás pizza', 'span')
+        self.html.wait(1)
+       # self.html.clickElement(None,
+        #                       '//div[@id="pizzaCustomizeDialog"]//span',
+        #                      Options(uniqueSelector=True))
+        #self.html.clickElement('pizzaCustomizeDialog', 'div', Options(htmlAttribute='id', following='span/span/span'))
+        #self.html.clickElement('Rögzít')
+        self.html.refresh()
         self.addProductToList('Rántott csirkemell', '1.00')
 
 
@@ -249,7 +252,6 @@ class Orders(BaseTestCase):
 
         self.addProductToList('Roston csirkemell', '1.00')
         self.html.wait(2)
-        self.addProductToList('Sonkás pizza', '1.00')
         self.html.wait(2)
         #self.html.clickElement('Hasábburgonya','label')
         #self.html.clickElement('sideDishSaveButton', 'button', Options(htmlAttribute='id'))
@@ -302,12 +304,18 @@ class Orders(BaseTestCase):
         self.menu.openProducts()
         self.createProductFix()
         self.createProductAsRawMaterial()
+        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
+                         module=True)
 
         self.menu.openRestaurant()
 
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
         self.addProductToList('Rántott csirkemell', '1.00')
 
+        self.html.clickElement('Pizza (testreszabható)', 'a')
+        self.html.wait(1)
+        self.html.clickElement('Sonkás pizza', 'span')
+        self.html.wait(1)
 
         self.html.clickElement('Ital', 'a')
         self.html.wait(2)
