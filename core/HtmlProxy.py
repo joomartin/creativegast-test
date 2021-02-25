@@ -174,6 +174,7 @@ class HtmlProxy:
             else:
                 return element.find_element_by_xpath('./table[@' + htmlAttribute + '="' + tableId + '"]/tbody/tr[' + str(row) + ']/td/div[' + str(col) + ']')
 
+    # div version
     def getTxtFromListTable2(self, row, col, tableId = '', options=Options()):
         """
         We can get a value from table that depends on params
@@ -273,6 +274,9 @@ class HtmlProxy:
 
     def getTablePairsExist(self, firstElement, SecondElelment):
         return self.driver.find_element_by_xpath('//tr[contains(., "' + firstElement + '") and contains(., "' + SecondElelment + '")]').is_displayed()
+
+    def getElementPairsExist(self, firstElement, SecondElelment, tag='tr'):
+        return self.driver.find_element_by_xpath('//' + tag + '[contains(., "' + firstElement + '") and contains(., "' + SecondElelment + '")]').is_displayed()
 
     def getRowExist(self, elements):
         xPath = ''

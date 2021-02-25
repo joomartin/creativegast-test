@@ -22,7 +22,16 @@ class UsersSeed:
         self.html.clickElement('Igen', waitSeconds=1)
         self.html.search('', 'Számlálók')
 
+    def createUser(self, surname, firstName, userName, password, position, group):
+        self.html.fillInput('Vezetéknév', surname)
+        self.html.fillInput('Keresztnév', firstName)
+        self.html.fillInput('Felhasználónév', userName)
+        self.html.fillInput('Jelszó', password)
+        self.html.fillInput('Jelszó ismét', password)
+        self.html.clickDropdown('Beosztás', position)
+        self.html.clickDropdown('Csoportok', group)
 
+        self.html.clickElement('Rögzít')
 
 
 

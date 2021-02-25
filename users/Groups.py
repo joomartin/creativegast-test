@@ -5,7 +5,7 @@ from shared.TestData import TestData as data
 from core.Options import Options
 
 
-class DiscountCards(BaseTestCase):
+class Groups(BaseTestCase):
 
     @classmethod
     def setUpClass(self):

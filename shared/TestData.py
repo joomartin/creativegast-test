@@ -298,5 +298,17 @@ class TestData:
             }
     }
 
+    User = {
+        'Géza':
+            {
+                'Surname': 'Kovács',
+                'FirstName': 'Géza',
+                'Position': 'Felszolgáló',
+                'UserName': 'géza',
+                'Password': '999',
+                'Group': 'Felszolgáló'
+            }
+    }
+
 
 
