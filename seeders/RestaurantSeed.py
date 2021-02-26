@@ -13,7 +13,7 @@ class RestaurantSeed:
         self.menu = MainMenuProxy(self.driver)
         self.receivingAssert = ReceivingAssert(self.html, self.driver)
 
-    def createTable(self, tableName, tableShape='Kör', tableType='Normál', module=False):
+    def createTable(self, tableName, tableShape='Kör', tableType='Normál', discount='0', module=False):
         if module:
             self.menu.openTableMapEditor()
 
@@ -27,6 +27,8 @@ class RestaurantSeed:
 
         if not tableType == 'Normál':
             self.html.clickDropdown('Asztal típusa', tableType)
+            if tableType == 'Főnöki' or tableType == 'Személyzeti':
+                self.html.fillInput('Kedv.', discount)
 
         self.html.clickElement('Rögzít', 'span')  # Span-t kell használni mert valamiért 'Rögzít' buttonból van egy amit előbb megtalál és az nem interactable
 
