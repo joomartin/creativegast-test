@@ -20,7 +20,7 @@ class UsersSeed:
     def deleteGroup(self, name):
         self.html.clickTableElement('groups', 'id', name, 'a', 'Törlés', 'Csoportok')
         self.html.clickElement('Igen', waitSeconds=1)
-        self.html.search('', 'Számlálók')
+        self.html.search('', 'Csoportok')
 
     def createUser(self, surname, firstName, userName, password, position, group):
         self.html.fillInput('Vezetéknév', surname)
@@ -28,11 +28,17 @@ class UsersSeed:
         self.html.fillInput('Felhasználónév', userName)
         self.html.fillInput('Jelszó', password)
         self.html.fillInput('Jelszó ismét', password)
+        self.html.fillInput('Belépő kód', password)
         self.html.clickDropdown('Beosztás', position)
         self.html.clickDropdown('Csoportok', group)
 
         self.html.clickElement('Rögzít')
 
+    def deleteUser(self, surname):
+        self.html.search(surname, 'Személyzet')
+        self.html.clickTableElement('users', 'id', surname, 'a', 'Törlés', 'Személyzet')
+        self.html.clickElement('Igen', waitSeconds=1)
+        self.html.search('', 'Személyzet')
 
 
 
