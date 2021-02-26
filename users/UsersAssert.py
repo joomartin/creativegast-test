@@ -34,7 +34,13 @@ class UserAssert(unittest.TestCase):
         for i in observedRights:
             self.assertTrue(i.text in rights)
 
-
+    def assertGroupExist(self, name, rights):
+        # jogosultsagok csekkolasa
+        rightsList = self.html.getElement('groupsRightList', 'ul', options=Options(htmlAttribute='id'))
+        observedRights = self.html.getElements('', 'li', options=Options(element=rightsList))
+        for i in observedRights:
+            temp = i.text.split('\n')[0]
+            self.assertTrue(temp in rights)
 
 
 
