@@ -13,7 +13,6 @@ class Regulars(BaseTestCase):
 
     def setUp(self):
         self.menu.openClientManagement()
-        self.html.clickElement('Törzsvendégek', 'a')
 
     @classmethod
     def tearDownClass(self):
@@ -22,7 +21,7 @@ class Regulars(BaseTestCase):
     def tearDown(self):
         pass
 
-    def testCreateRegular(self):
+    def testCreateClient(self):
         name = data.Client['Pista']['Name']
         code = data.Client['Pista']['Code']
         phone = data.Client['Pista']['Phone']
@@ -33,13 +32,21 @@ class Regulars(BaseTestCase):
         city = data.Client['Pista']['City']
         street = data.Client['Pista']['Street']
         housenumber = data.Client['Pista']['HouseNumber']
-        address = self.clientseed.createRegular(name, code, phone, discount, taxnumber, country, postalCode, city,
-                                               street, housenumber)
+        address = self.clientseed.createClient(name, code, phone, discount, taxnumber, country, postalCode, city, street, housenumber)
 
-        self.clientAssert.assertRegularExist(name, address, phone,
+        self.clientAssert.assertClientExist(name, address, phone,
                                             discount, code)
 
-        self.clientseed.deleteRegular(name)
+        self.clientseed.deleteClient(name)
+
+
+
+
+
+
+
+
+
 
 
 

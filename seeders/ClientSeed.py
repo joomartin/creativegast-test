@@ -13,7 +13,61 @@ class ClientSeed:
         self.menu = MainMenuProxy(self.driver)
         self.clientAssert = ClientManagementAssert(self.html, self.driver)
 
-    def deleteClient(self, name, module=False, tab=False):
+    def createClient(self, name, code, phone, discount, taxnumber, country, postalCode, city, street, houseNumber):
+        self.html.clickElement('Új házhozszállítási cím', 'a', waitSeconds=2)
+
+        self.html.switchFrame('iframe')
+        self.html.fillInput('Név / azonosító', name)
+        self.html.fillInput('Ügyfélazonosító', code)
+        self.html.fillInput('Telefon', phone)
+        self.html.fillInput('Kedv. (%)', discount)
+        self.html.fillInput('Adószám', taxnumber)
+
+        self.html.fillInput('ca_country_helper', country, 'input',
+                            options=Options(htmlAttribute='id'))
+        self.html.fillInput('ca_zip_helper', postalCode, 'input',
+                            options=Options(htmlAttribute='id'))
+        self.html.fillInput('ca_city_helper', city, 'input',
+                            options=Options(htmlAttribute='id'))
+        self.html.fillInput('ca_street_helper', street, 'input',
+                            options=Options(htmlAttribute='id'))
+        self.html.fillInput('ca_housenumber_helper', houseNumber, 'input',
+                            options=Options(htmlAttribute='id'))
+        self.html.clickElement('Hozzáad')
+        self.html.clickElement('Rögzít', waitSeconds=2)
+        self.html.switchFrame()
+        address = country + ', ' + postalCode + ' ' + city + ' ' + street + ' ' + houseNumber
+
+        return address
+
+    def createRegular(self, name, code, phone, discount, taxnumber, country, postalCode, city, street, houseNumber):
+        self.html.clickElement('Új törzsvendég', 'a', waitSeconds=2)
+
+        self.html.switchFrame('iframe')
+        self.html.fillInput('Név / azonosító', name)
+        self.html.fillInput('Ügyfélazonosító', code)
+        self.html.fillInput('Telefon', phone)
+        self.html.fillInput('Kedv. (%)', discount)
+        self.html.fillInput('Adószám', taxnumber)
+
+        self.html.fillInput('ca_country_helper', country, 'input',
+                            options=Options(htmlAttribute='id'))
+        self.html.fillInput('ca_zip_helper', postalCode, 'input',
+                            options=Options(htmlAttribute='id'))
+        self.html.fillInput('ca_city_helper', city, 'input',
+                            options=Options(htmlAttribute='id'))
+        self.html.fillInput('ca_street_helper', street, 'input',
+                            options=Options(htmlAttribute='id'))
+        self.html.fillInput('ca_housenumber_helper', houseNumber, 'input',
+                            options=Options(htmlAttribute='id'))
+        self.html.clickElement('Hozzáad')
+        self.html.clickElement('Rögzít', waitSeconds=2)
+        self.html.switchFrame()
+        address = country + ', ' + postalCode + ' ' + city + ' ' + street + ' ' + houseNumber
+
+        return address
+
+    def deleteRegular(self, name, module=False, tab=False):
         if module:
             self.menu.openClientManagement()
             self.html.clickElement('Törzsvendégek', 'a')
