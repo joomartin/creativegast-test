@@ -428,7 +428,6 @@ class Orders(BaseTestCase):
         actInt = int(actual[0] + actual[1])
 
         self.assertEqual(expected, actInt)
-        self.assertEqual(expected, actInt)
 
     def createPizza(self, pizzaName, baseComponent, topping, module=False, tab=False):
         if module:
@@ -622,6 +621,61 @@ class Orders(BaseTestCase):
         self.assertEqual(expected, actInt)
 
         self.restaurantseed.deleteTable('Elvitel', module=True)
+
+
+
+    def testPartPrice(self):
+        self.menu.openFinance()
+        try:
+            startValue = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2]
+        except:
+            startValue = '0 0'
+
+        print(startValue)
+        self.menu.openProducts()
+        self.createProductChose()
+        self.menu.openProducts()
+        self.createProductFix()
+        self.createProductAsRawMaterial()
+        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
+                         module=True)
+
+        self.menu.openRestaurant()
+
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
+        for i in range(10):
+            self.addProductToList('Rántott csirkemell', '1.00')
+            self.html.wait(2)
+
+        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+        self.html.clickElement('Fizetendő részösszeg')
+        self.html.fillInput('Részösszeg','10000')
+        self.html.getElements(None, '//button[contains(.,"OK")]', Options(uniqueSelector='True'))[1].click()
+        self.html.wait(2)
+        self.html.clickElement('Kijelöltek fizetése')
+
+        price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
+        print(price)
+
+
+        self.html.clickElement('Készpénz', 'td', Options(following='button'))
+
+        self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
+        stvalue = startValue.split(' ')
+        prc = price.split(' ')
+        prcInt = int(prc[0] + prc[1])
+        self.assertGreaterEqual(prcInt,10000)
+        expected = int(stvalue[0] + stvalue[1]) + prcInt
+        self.menu.openFinance()
+        self.html.refresh()
+        self.html.wait()
+        actual = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2].split(' ')
+        actInt = int(actual[0] + actual[1])
+
+        self.assertEqual(expected, actInt)
 
     '''
     def testCustomizable(self):
