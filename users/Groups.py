@@ -18,8 +18,7 @@ class Groups(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
-        # super().tearDownClass()
-        pass
+        super().tearDownClass()
 
     def tearDown(self):
         pass
@@ -45,6 +44,7 @@ class Groups(BaseTestCase):
 
         # oke, egyelore jo lesz igy
         # NASA code
+        # a megjeleno iframe-ben gorgetunk lefele es bepipaljuk a szukseges elemeket
         selected = 0
         while selected != len(rights):
             for i in rights:

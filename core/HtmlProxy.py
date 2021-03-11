@@ -220,7 +220,7 @@ class HtmlProxy:
         self.driver.refresh()
         self.wait(2)
 
-    def fillAutocomplete(self, target, tag, value, selectValue, selectTag, options,):
+    def fillAutocomplete(self, target, tag, value, selectValue, selectTag, options):
         self.getElement(target, tag, options).send_keys(value)
         self.wait(5)
         self.clickElement(selectValue, selectTag)
