@@ -1,5 +1,3 @@
-
-
 from shared.BaseTestCase import BaseTestCase
 from shared.TestData import TestData as data
 from core.Options import Options
@@ -14,8 +12,6 @@ class Orders(BaseTestCase):
         super().setUpClass()
         super().login(self)
         self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
-
-
 
     def setUp(self):
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
@@ -80,7 +76,6 @@ class Orders(BaseTestCase):
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
         '''
         self.menu.openProducts()
-
 
     @classmethod
     def tearDownClass(self):
@@ -290,11 +285,6 @@ class Orders(BaseTestCase):
 
         self.assertEqual(expected, actInt)
 
-
-
-
-
-
     def testMultipleOrdersCredit(self):
         self.menu.openFinance()
         try:
@@ -361,8 +351,6 @@ class Orders(BaseTestCase):
         self.assertEqual(expected, actInt)
         self.assertEqual(expected, actInt)
         #self.html.switchFrame('iframe')
-
-
 
     def testInstantPayment(self):
         self.menu.openFinance()
@@ -479,7 +467,6 @@ class Orders(BaseTestCase):
         # self.html.fillInput('inputmask-numeric qtys', '0,18', 'input', options=Options(htmlAttribute='class', element=inputFields[1]))
         self.html.clickElement('Rögzít')
 
-
     def testDiscountedTable(self):
         self.restaurantseed.createTable('Kedvezmeny','Kör','Személyzeti','10', module=True)
 
@@ -549,8 +536,6 @@ class Orders(BaseTestCase):
         self.assertEqual(expected, actInt)
 
         self.restaurantseed.deleteTable('Kedvezmeny',module=True)
-
-
 
     def testTake(self):
         self.restaurantseed.createTable('Elvitel','Kör','Elvitel','10', module=True)
