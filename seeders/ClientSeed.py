@@ -13,7 +13,10 @@ class ClientSeed:
         self.menu = MainMenuProxy(self.driver)
         self.clientAssert = ClientManagementAssert(self.html, self.driver)
 
-    def createClient(self, name, code, phone, discount, taxnumber, country, postalCode, city, street, houseNumber):
+    def createClient(self, name, code, phone, discount, taxnumber, country, postalCode, city, street, houseNumber, tab=False):
+        if tab:
+            self.html.clickElement('Házhozszállítási cím', 'a')
+
         self.html.clickElement('Új házhozszállítási cím', 'a', waitSeconds=2)
 
         self.html.switchFrame('iframe')
@@ -40,7 +43,13 @@ class ClientSeed:
 
         return address
 
-    def createRegular(self, name, code, phone, discount, taxnumber, country, postalCode, city, street, houseNumber):
+    def createRegular(self, name, code, phone, discount, taxnumber, country, postalCode, city, street, houseNumber, module=False, tab=False):
+        if module:
+            self.menu.openClientManagement()
+            self.html.clickElement('Törzsvendégek', 'a')
+        if tab:
+            self.html.clickElement('Törzsvendégek', 'a')
+
         self.html.clickElement('Új törzsvendég', 'a', waitSeconds=2)
 
         self.html.switchFrame('iframe')
@@ -83,7 +92,6 @@ class ClientSeed:
         self.html.wait(2)
         self.html.search('', 'Törzsvendégek')
         self.html.wait(2)
-
 
     def deleteCard(self, name, module=False, tab=False):
         if module:

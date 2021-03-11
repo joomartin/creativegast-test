@@ -21,8 +21,6 @@ class RestaurantSeed:
         self.html.refresh()
 
         self.html.clickElement('Étterem', 'i')
-
-
         self.html.fillInput('Asztal neve', tableName)
 
         if not tableType == 'Normál':
@@ -40,4 +38,15 @@ class RestaurantSeed:
 
         self.html.clickElement('Törlés', 'span') # ugyan az az állás mint a fenti kommentnél
         self.html.clickElement('Igen')
+
+    def createDynamicCourierTable(self, name):
+        self.html.clickElement('+', waitSeconds=1)
+        self.html.fillAutocomplete('cl_name', 'input', name, name, 'li', options=Options(htmlAttribute='id'))
+        self.html.clickElement('Rögzít', 'span')
+
+
+
+
+
+
 
