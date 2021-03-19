@@ -2,6 +2,7 @@ import unittest
 
 from shared.BaseTestCase import BaseTestCase
 from shared.TestData import TestData as data
+from selenium.webdriver.common.keys import Keys
 from core.Options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 from restaurant.Restaurant import Restaurant
@@ -235,6 +236,7 @@ class Orders(BaseTestCase):
 
         self.assertEqual(name.text, productName)
         self.assertEqual(qty.text, quantity)
+
     '''
     def testMultipleOrders(self):
         self.menu.openFinance()
@@ -816,7 +818,7 @@ class Orders(BaseTestCase):
 
 
 
-    '''
+    
     def testCustomizable(self):
         self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
                          tab=True)
@@ -839,7 +841,7 @@ class Orders(BaseTestCase):
         self.html.refresh()
 
         self.productseed.deletePizza('Sonkás pizza')
-        '''
+    '''
 
     @unittest.skip
     def testDynamic1(self):
@@ -1472,4 +1474,96 @@ class Orders(BaseTestCase):
                                             self.discount, self.code)
 
         self.clientseed.deleteRegular(self.name)
+
+    '''_______________________________________________________WORKS__________________________________________________'''
+    def testCreateUser(self):
+        surname = data.User['Géza']['Surname']
+        firstName = data.User['Géza']['FirstName']
+        userName = data.User['Géza']['UserName']
+        position = data.User['Géza']['Position']
+        password = data.User['Géza']['Password']
+        group = data.User['Géza']['Group']
+        rights = data.Group['Felszolgáló2']['Rights'].values()
+
+        self.menu.openProducts()
+        self.createProductChose()
+        self.menu.openProducts()
+        self.createProductFix()
+        self.createProductAsRawMaterial()  # cola
+
+        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
+                         module=True)
+
+        self.menu.openUsers()
+
+        self.usersSeed.createUser(surname, firstName, userName, password, position, group)
+        self.usersAssert.assertUserExist(surname, firstName, position, rights, group=group)
+
+        self.html.clickElement('Kilépés a rendszerből', 'a')
+        self.html.fillInput('Felhasználónév', userName, selector='placeholder')
+        self.html.fillInput('Jelszó', password, selector='placeholder')
+        self.html.clickElement('Belépés')
+        self.html.fillInput('Belépési kód', password, selector='placeholder')
+        self.html.clickElement('Belépés')
+        self.menu.openUsers()
+
+        self.html.clickElement('Kilépés a rendszerből', 'a')
+        super().setUpClass()
+        super().login()
+        self.menu.openUsers()
+
+        self.usersSeed.deleteUser(surname)
+
+    '''_______________________________________________________WORKS__________________________________________________'''
+    def testUpdateUserGroup(self):
+        name = data.Group['Felszolgáló2']['Name']
+        rights = data.Group['Felszolgáló2']['Rights'].values()
+
+        self.menu.openProducts()
+        self.createProductChose()
+        self.menu.openProducts()
+        self.createProductFix()
+        self.createProductAsRawMaterial()  # cola
+
+        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
+                         module=True)
+
+        self.menu.openUsers()
+        self.html.clickElement('Csoportok', 'a')
+
+        self.usersSeed.createGroup(name)
+
+        self.html.clickTableElement('groups', 'id', name, 'a', 'Szerkeszt', 'Csoportok')
+        self.html.clickElement('Jogok', 'a')
+        self.html.switchFrame('iframe')
+        self.html.clickElement('inside scrollableContent', 'div', options=Options(htmlAttribute='class'))
+        html = self.driver.find_element_by_tag_name('html')
+
+        # oke, egyelore jo lesz igy
+        # NASA code
+        # a megjeleno iframe-ben gorgetunk lefele es bepipaljuk a szukseges elemeket
+        selected = 0
+        while selected != len(rights):
+            for i in rights:
+                try:
+                    self.html.getElement(None, '//span[contains(., "' + i + '") and @class="dynatree-node dynatree-exp-c dynatree-ico-c"]', options=Options(uniqueSelector=True)).click()
+                    selected += 1
+                except Exception as ex:
+                    pass
+            html.send_keys(Keys.DOWN)
+            self.html.wait(0.5)
+
+        self.html.clickElement('Rögzít', waitSeconds=2)
+        self.usersAssert.assertGroupExist(name, rights)
+
+        self.usersSeed.deleteGroup(name)
+
+
+
+
+
+
+
+
+
 

@@ -30,7 +30,7 @@ class Groups(BaseTestCase):
         self.assertTrue(self.html.getElementInTable(name, 'groups', 'Csoportok').is_displayed())
         self.usersSeed.deleteGroup(name)
 
-    def testUpdate(self):
+    def testUpdateUserGroup(self):
         name = data.Group['Felszolgáló2']['Name']
         rights = data.Group['Felszolgáló2']['Rights'].values()
         self.usersSeed.createGroup(name)
