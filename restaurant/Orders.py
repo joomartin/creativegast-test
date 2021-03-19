@@ -921,8 +921,9 @@ class Orders(BaseTestCase):
         self.assertEqual(expected, actInt)
 
     # sztorno
-    @unittest.skip
+    #@unittest.skip
     def testOrderStorno(self):
+        self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'], module=True)
         self.menu.openProducts()
         self.createProductChose()
         self.menu.openProducts()
