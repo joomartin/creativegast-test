@@ -973,7 +973,7 @@ class Orders(BaseTestCase):
         self.assertEqual(qty.text, '1.00')
         self.assertEqual(storno.text, 'Sztornó')
 
-        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '8')
+        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '9')
 
         self.menu.openRestaurant()
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
