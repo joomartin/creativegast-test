@@ -18,6 +18,7 @@ class Orders(BaseTestCase):
     city = data.Client['Pista']['City']
     street = data.Client['Pista']['Street']
     housenumber = data.Client['Pista']['HouseNumber']
+    address = None
 
     days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap']
 
@@ -100,7 +101,7 @@ class Orders(BaseTestCase):
         # self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
 
-        address = self.clientseed.createRegular(self.name, self.code, self.phone, self.discount, self.taxnumber,
+        self.address = self.clientseed.createRegular(self.name, self.code, self.phone, self.discount, self.taxnumber,
                                                 self.country, self.postalCode, self.city,
                                                 self.street, self.housenumber, module=True)
 
@@ -1302,6 +1303,7 @@ class Orders(BaseTestCase):
         self.clientAssert.assertDiscountCardExist(name, code, discount, group=productGroup, category='Ital')
         self.clientseed.deleteCard(data.DiscountCard['White Friday']['Name'])
 
+    '''_______________________________________________________WORKS__________________________________________________'''
     def testCreateCardProduct(self):
         name = data.DiscountCard['White Friday']['Name']
         code = data.DiscountCard['White Friday']['Code']
@@ -1309,6 +1311,14 @@ class Orders(BaseTestCase):
         category = data.DiscountCard['White Friday']['Category']
         productGroup = data.DiscountCard['White Friday']['ProductGroup']
         product = data.DiscountCard['White Friday']['Product']
+
+        self.menu.openProducts()
+        self.createProductChose()
+        self.menu.openProducts()
+        self.createProductFix()
+        self.createProductAsRawMaterial()  # cola
+        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
+                         module=True)
 
         self.menu.openClientManagement()
         self.html.clickElement('Kedvezménykártyák', 'a')
@@ -1338,5 +1348,10 @@ class Orders(BaseTestCase):
         self.clientAssert.assertDiscountCardExist(name, code, discount, group=productGroup, category='Ital', products=product)
         self.clientseed.deleteCard(data.DiscountCard['White Friday']['Name'])
 
+    @unittest.skip
+    def testCreateRegular(self):
+        self.clientAssert.assertRegularExist(self.name, self.address, self.phone,
+                                            self.discount, self.code)
 
+        self.clientseed.deleteRegular(self.name)
 

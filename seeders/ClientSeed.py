@@ -110,3 +110,19 @@ class ClientSeed:
         self.html.search('', 'Kedvezménykártyák')
         self.html.wait(2)
 
+    def deleteClient(self, name, module=False, tab=False):
+        if module:
+            self.menu.openClientManagement()
+            self.html.clickElement('Házhozszállítási cím', 'a')
+        elif tab:
+            self.html.clickElement('Házhozszállítási cím', 'a')
+
+        self.html.wait(2)
+        self.html.search(name, 'Házhozszállítási cím')
+        self.html.wait(2)
+        self.html.clickTableElement('frequenters', 'id', name, 'a', 'Törlés')
+        self.html.wait(2)
+        self.html.clickElement('Igen')
+        self.html.wait(2)
+        self.html.search('', 'Törzsvendégek')
+        self.html.wait(2)
