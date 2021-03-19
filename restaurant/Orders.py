@@ -309,7 +309,8 @@ class Orders(BaseTestCase):
         self.html.clickElement('Pizza (testreszabható)', 'a')
         self.html.wait(1)
         self.html.clickElement('Sonkás pizza', 'span')
-        self.html.wait(1)
+        self.html.wait(2)
+        self.html.refresh()
 
         self.html.clickElement('Ital', 'a')
         self.html.wait(2)
