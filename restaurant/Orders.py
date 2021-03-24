@@ -817,11 +817,14 @@ class Orders(BaseTestCase):
         self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
 
-
-
     def testCustomizable(self):
+        self.menu.openProducts()
+        self.createProductChose()
+        self.menu.openProducts()
+        self.createProductFix()
+        self.createProductAsRawMaterial()
         self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
-                         tab=True)
+                         module=True)
 
         # assert
         self.productAssert.assertPizzaExists('Sonkás pizza', '1400.00')
@@ -840,8 +843,9 @@ class Orders(BaseTestCase):
         self.assertEqual(bigQty[:4], '0.18')
         self.html.refresh()
 
-        self.productseed.deletePizza('Sonkás pizza')
+        #self.productseed.deletePizza('Sonkás pizza')
 
+    # eddig------------------------------------------------------------------------------------------------------------------
 
     #@unittest.skip
     def testDynamic1(self):
