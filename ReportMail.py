@@ -34,7 +34,7 @@ def sendReport(filePath,):
         server.starttls()
         server.login('dev.gr33nt3ch@gmail.com', 'ucepkwvwjkipford')
         text = msg.as_string('html')
-        server.sendmail(fromAddr, toAddr, text)
+        server.sendmail(fromAddr, toAddr.split(','), text)
         server.quit()
 
 
