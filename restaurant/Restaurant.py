@@ -69,6 +69,29 @@ class Restaurant(BaseTestCase):
         self.assertEqual(name.text, productName)
         self.assertEqual(qty.text, quantity)
 
+    def testOrderPayed(self):
+        self.addProductToList(data.Product['Babgulyás']['Name'], '1.00')
+        self.html.refresh()
+        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
+        name = self.html.getTxtFromListTable2('2', '3')
+        qty = self.html.getTxtFromListTable2('2', '5')
+        storno = self.html.getTxtFromListTable2('2', '8')
+
+        self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
+        self.assertEqual(qty.text, '1.00')
+        self.assertEqual(storno.text, 'Sztornó')
+
+        self.html.clickElement('Fizetés')
+        self.html.clickElement('Kitölt')
+
+        self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
+        self.html.refresh()
+
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
+                                    data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
+
     def testOrderStorno(self):
         # mennyiseg ellenorzese
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
@@ -105,7 +128,63 @@ class Restaurant(BaseTestCase):
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
                                      data.RawMaterial['Bundas_kenyer']['Warehouse'], '10')
 
-    def testOrderPayed(self):
+    def testQualityStorno(self):
+        # mennyiseg ellenorzese
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
+                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '10')
+        # vissza az etterembe
+        self.menu.openRestaurant()
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
+        # rendeles bekuldese
+        self.addProductToList(data.Product['Babgulyás']['Name'], '1.00')
+        self.html.refresh()
+        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
+        name = self.html.getTxtFromListTable2('2', '3')
+        qty = self.html.getTxtFromListTable2('2', '5')
+        storno = self.html.getTxtFromListTable2('2', '8')
+
+        # csekkolas
+        self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
+        self.assertEqual(qty.text, '1.00')
+        self.assertEqual(storno.text, 'Sztornó')
+
+        # ez lehet itt nem kell, de nem baj ha van
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
+
+        self.menu.openRestaurant()
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
+        # johet a sztorno
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', data.Product['Babgulyás']['Name'], 'div', 'Sztornó')
+        self.html.clickElement('Minőségi kifogás', waitSeconds=1)
+        self.html.fillInput('Minőségi kifogás indoka', 'teszt01 sztornó', 'textarea', options=Options(htmlAttribute='placeholder'))
+        self.html.clickElement('Minőségi kifogás küldése', waitSeconds=2)
+
+        self.restaurantAssert.assertProductNotInList()
+        self.restaurantAssert.assertStornoSucces(data.Product['Babgulyás']['Name'])
+
+        # mennyiseg ellenorzese
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
+                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
+        # selejt ellenorzese
+        self.html.clickElement('Selejtezések', 'a')
+        name = self.html.getElementInTable(data.RawMaterial['Bundas_kenyer']['Name'], 'component_waste', 'Selejtezések').is_displayed()
+        excuse = self.html.getTxtFromTable('1', '5', 'component_waste')
+        self.assertTrue(name)
+        self.assertEqual(excuse, 'teszt01 sztornó')
+
+    def testWrongorderStorno(self):
+        # mennyiseg ellenorzese
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
+                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '10')
+        # vissza az etterembe
+        self.menu.openRestaurant()
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
+        # rendeles bekuldese
         self.addProductToList(data.Product['Babgulyás']['Name'], '1.00')
         self.html.refresh()
         self.html.clickElement('Rendelés beküldése', waitSeconds=3)
@@ -119,14 +198,22 @@ class Restaurant(BaseTestCase):
         self.assertEqual(qty.text, '1.00')
         self.assertEqual(storno.text, 'Sztornó')
 
-        self.html.clickElement('Fizetés')
-        self.html.clickElement('Kitölt')
+        # ez lehet itt nem kell, de nem baj ha van
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
 
-        self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
-        self.html.refresh()
+        self.menu.openRestaurant()
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
+        # johet a sztorno
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', data.Product['Babgulyás']['Name'], 'div', 'Sztornó')
+        self.html.clickElement('Hibás rendelés (raktárba visszatesz)', waitSeconds=4)
+
+        self.restaurantAssert.assertProductNotInList()
+        self.restaurantAssert.assertStornoSucces(data.Product['Babgulyás']['Name'])
+
+        # mennyiseg ellenorzese
         self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
-                                    data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
+                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '10')
 
     def testUnion(self):
         inputName = data.Product['Babgulyás']['Name']
@@ -292,93 +379,6 @@ class Restaurant(BaseTestCase):
         self.html.clickElement('Sztornó', 'a')
         self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
         self.restaurantAssert.assertStornoSucces(inputName2)
-
-    def testQualityStorno(self):
-        # mennyiseg ellenorzese
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
-                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '10')
-        # vissza az etterembe
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        # rendeles bekuldese
-        self.addProductToList(data.Product['Babgulyás']['Name'], '1.00')
-        self.html.refresh()
-        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        name = self.html.getTxtFromListTable2('2', '3')
-        qty = self.html.getTxtFromListTable2('2', '5')
-        storno = self.html.getTxtFromListTable2('2', '8')
-
-        # csekkolas
-        self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
-        self.assertEqual(qty.text, '1.00')
-        self.assertEqual(storno.text, 'Sztornó')
-
-        # ez lehet itt nem kell, de nem baj ha van
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
-
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        # johet a sztorno
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', data.Product['Babgulyás']['Name'], 'div', 'Sztornó')
-        self.html.clickElement('Minőségi kifogás', waitSeconds=1)
-        self.html.fillInput('Minőségi kifogás indoka', 'teszt01 sztornó', 'textarea', options=Options(htmlAttribute='placeholder'))
-        self.html.clickElement('Minőségi kifogás küldése', waitSeconds=2)
-
-        self.restaurantAssert.assertProductNotInList()
-        self.restaurantAssert.assertStornoSucces(data.Product['Babgulyás']['Name'])
-
-        # mennyiseg ellenorzese
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
-                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
-        # selejt ellenorzese
-        self.html.clickElement('Selejtezések', 'a')
-        name = self.html.getElementInTable(data.RawMaterial['Bundas_kenyer']['Name'], 'component_waste', 'Selejtezések').is_displayed()
-        excuse = self.html.getTxtFromTable('1', '5', 'component_waste')
-        self.assertTrue(name)
-        self.assertEqual(excuse, 'teszt01 sztornó')
-
-    def testWrongorderStorno(self):
-        # mennyiseg ellenorzese
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
-                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '10')
-        # vissza az etterembe
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        # rendeles bekuldese
-        self.addProductToList(data.Product['Babgulyás']['Name'], '1.00')
-        self.html.refresh()
-        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        name = self.html.getTxtFromListTable2('2', '3')
-        qty = self.html.getTxtFromListTable2('2', '5')
-        storno = self.html.getTxtFromListTable2('2', '8')
-
-        self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
-        self.assertEqual(qty.text, '1.00')
-        self.assertEqual(storno.text, 'Sztornó')
-
-        # ez lehet itt nem kell, de nem baj ha van
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
-
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        # johet a sztorno
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', data.Product['Babgulyás']['Name'], 'div', 'Sztornó')
-        self.html.clickElement('Hibás rendelés (raktárba visszatesz)', waitSeconds=4)
-
-        self.restaurantAssert.assertProductNotInList()
-        self.restaurantAssert.assertStornoSucces(data.Product['Babgulyás']['Name'])
-
-        # mennyiseg ellenorzese
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
-                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '10')
 
     def testMoveToReservedTable(self):
         inputName = data.Product['Babgulyás']['Name']
