@@ -816,7 +816,6 @@ class Orders(BaseTestCase):
 
         self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
-
     def testCustomizable(self):
         self.menu.openProducts()
         self.createProductChose()
@@ -926,6 +925,7 @@ class Orders(BaseTestCase):
 
     # sztorno
     #@unittest.skip
+    '''_______________________________________________________WORKS__________________________________________________'''
     def testOrderStorno(self):
         self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'], module=True)
         self.menu.openProducts()
@@ -938,7 +938,7 @@ class Orders(BaseTestCase):
         # mennyiseg ellenorzese
         self.menu.openReceiving()
         self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        # self.html.clickElement('Új')
+        self.html.clickElement('Új')
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Számla azonosító', 'KomplexTest')
@@ -990,6 +990,161 @@ class Orders(BaseTestCase):
         self.restaurantAssert.assertStornoSucces('Kóla')
 
         self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
+        self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
+
+    '''_______________________________________________________WORKS__________________________________________________'''
+    def testWrongorderStorno(self):
+        self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'],
+                                         module=True)
+        self.menu.openProducts()
+        self.createProductChose()
+        self.menu.openProducts()
+        self.createProductFix()
+        self.createProductAsRawMaterial()
+        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
+                         module=True)
+        # mennyiseg ellenorzese
+        self.menu.openReceiving()
+        self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
+        self.html.clickElement('Új')
+        self.html.switchFrame('iframe')
+
+        self.html.fillInput('Számla azonosító', 'KomplexTest')
+        self.html.clickDropdown('Fizetési mód', 'Készpénz')
+        self.html.clickDropdown('Beszállító', data.Partner['Szallito']['Name'])
+
+        self.html.fillAutocomplete('Nyersanyag neve', 'input', 'Kóla', 'Kóla', 'li',
+                                   Options(htmlAttribute='data-title'))
+        self.html.fillInput('Mennyiség', '10', 'data-title')
+        self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
+        self.html.clickElement('Válassz...')
+        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
+        self.html.clickElement('Hozzáad')
+        self.html.wait(2)
+
+        self.html.clickElement('Rögzít')
+
+        self.html.switchFrame()
+
+        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
+        self.html.wait(2)
+
+        # vissza az etterembe
+        self.menu.openRestaurant()
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
+        # rendeles bekuldese
+        self.addProductToList('Kóla', '1.00')
+        self.html.refresh()
+        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
+        name = self.html.getTxtFromListTable2('2', '3')
+        qty = self.html.getTxtFromListTable2('2', '5')
+        storno = self.html.getTxtFromListTable2('2', '8')
+
+        self.assertEqual(name.text, 'Kóla')
+        self.assertEqual(qty.text, '1.00')
+        self.assertEqual(storno.text, 'Sztornó')
+
+        # ez lehet itt nem kell, de nem baj ha van
+        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '9')
+
+        self.menu.openRestaurant()
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
+        # johet a sztorno
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'Kóla', 'div', 'Sztornó')
+        self.html.clickElement('Hibás rendelés (raktárba visszatesz)', waitSeconds=4)
+
+        self.restaurantAssert.assertProductNotInList()
+        self.restaurantAssert.assertStornoSucces('Kóla')
+
+        # mennyiseg ellenorzese
+        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
+        self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
+
+    '''_______________________________________________________WORKS__________________________________________________'''
+    def testQualityStorno(self):
+        self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'],
+                                         module=True)
+        self.menu.openProducts()
+        self.createProductChose()
+        self.menu.openProducts()
+        self.createProductFix()
+        self.createProductAsRawMaterial()
+        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
+                         module=True)
+        # mennyiseg ellenorzese
+        self.menu.openReceiving()
+        self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
+        self.html.clickElement('Új')
+        self.html.switchFrame('iframe')
+
+        self.html.fillInput('Számla azonosító', 'KomplexTest')
+        self.html.clickDropdown('Fizetési mód', 'Készpénz')
+        self.html.clickDropdown('Beszállító', data.Partner['Szallito']['Name'])
+
+        self.html.fillAutocomplete('Nyersanyag neve', 'input', 'Kóla', 'Kóla', 'li',
+                                   Options(htmlAttribute='data-title'))
+        self.html.fillInput('Mennyiség', '10', 'data-title')
+        self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
+        self.html.clickElement('Válassz...')
+        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
+        self.html.clickElement('Hozzáad')
+        self.html.wait(2)
+
+        self.html.clickElement('Rögzít')
+
+        self.html.switchFrame()
+
+        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
+        self.html.wait(2)
+
+        # vissza az etterembe
+        self.menu.openRestaurant()
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
+        # rendeles bekuldese
+        self.addProductToList('Kóla', '1.00')
+        self.html.refresh()
+        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
+        name = self.html.getTxtFromListTable2('2', '3')
+        qty = self.html.getTxtFromListTable2('2', '5')
+        storno = self.html.getTxtFromListTable2('2', '8')
+
+        # csekkolas
+        self.assertEqual(name.text, 'Kóla')
+        self.assertEqual(qty.text, '1.00')
+        self.assertEqual(storno.text, 'Sztornó')
+
+        # ez lehet itt nem kell, de nem baj ha van
+        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '9')
+
+        self.menu.openRestaurant()
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
+        # johet a sztorno
+        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'Kóla', 'div', 'Sztornó')
+        self.html.clickElement('Minőségi kifogás', waitSeconds=1)
+        self.html.fillInput('Minőségi kifogás indoka', 'teszt01 sztornó', 'textarea', options=Options(htmlAttribute='placeholder'))
+        self.html.clickElement('Minőségi kifogás küldése', waitSeconds=2)
+
+        self.restaurantAssert.assertProductNotInList()
+        self.restaurantAssert.assertStornoSucces('Kóla')
+
+        # mennyiseg ellenorzese
+        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '9')
+
+        # selejt ellenorzese
+        self.html.clickElement('Selejtezések', 'a')
+        name = self.html.getElementInTable('Kóla', 'component_waste', 'Selejtezések').is_displayed()
+        excuse = self.html.getTxtFromTable('1', '5', 'component_waste')
+        self.assertTrue(name)
+        self.assertEqual(excuse, 'teszt01 sztornó')
+
         self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
     '''_______________________________________________________WORKS__________________________________________________'''
