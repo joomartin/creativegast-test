@@ -112,12 +112,12 @@ class Orders(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
-        self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
-        self.restaurantseed.deleteTable(data.Table['Courier']['Name'], module=True)
+        #self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
+        #self.restaurantseed.deleteTable(data.Table['Courier']['Name'], module=True)
         super().tearDownClass()
 
     def tearDown(self):
-
+        '''
         self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
         self.productseed.deleteProduct('Roston csirkemell') #TODO Ezt itt ki kell pakolni
         self.productseed.deleteProduct('Rántott csirkemell')
@@ -139,6 +139,8 @@ class Orders(BaseTestCase):
         #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
 
         self.clientseed.deleteRegular(self.name, module=True)
+        '''
+        pass
 
     def createProductChose(self):
         self.html.clickElement('Új termék felvitele', 'a')
@@ -645,8 +647,6 @@ class Orders(BaseTestCase):
 
         self.restaurantseed.deleteTable('Elvitel', module=True)
 
-
-
     def testPartPrice(self):
         self.menu.openFinance()
         try:
@@ -701,7 +701,6 @@ class Orders(BaseTestCase):
         actInt = int(actual[0] + actual[1])
 
         self.assertEqual(expected, actInt)
-
 
     def testReceiving(self):
         self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'], module=True)
@@ -856,6 +855,7 @@ class Orders(BaseTestCase):
             startValue = '0 0'
         print(startValue)
 
+        self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'], module=True)
         self.menu.openProducts()
         self.createProductChose()
         self.menu.openProducts()
@@ -864,6 +864,32 @@ class Orders(BaseTestCase):
 
         self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
                          module=True)
+
+        # mennyiseg ellenorzese
+        self.menu.openReceiving()
+        self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
+        self.html.clickElement('Új')
+        self.html.switchFrame('iframe')
+
+        self.html.fillInput('Számla azonosító', 'KomplexTest')
+        self.html.clickDropdown('Fizetési mód', 'Készpénz')
+        self.html.clickDropdown('Beszállító', data.Partner['Szallito']['Name'])
+
+        self.html.fillAutocomplete('Nyersanyag neve', 'input', 'Kóla', 'Kóla', 'li',
+                                   Options(htmlAttribute='data-title'))
+        self.html.fillInput('Mennyiség', '10', 'data-title')
+        self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
+        self.html.clickElement('Válassz...')
+        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
+        self.html.clickElement('Hozzáad')
+        self.html.wait(2)
+
+        self.html.clickElement('Rögzít')
+
+        self.html.switchFrame()
+
+        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
+        self.html.wait(2)
 
         self.menu.openRestaurant()
         self.html.clickElement('Dinamikus futár asztalok', 'a')
@@ -883,8 +909,8 @@ class Orders(BaseTestCase):
         self.html.clickElement('Üdítők', 'a')
         self.html.wait(2)
         ''' -----------------------------------------------------------------  Kólával nem működik ---------------------'''
-        # self.html.clickElement('Kóla', 'span')
-        self.html.clickElement('Gyömbér', 'span')
+        self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
+        #self.html.clickElement('Gyömbér', 'span')
         self.html.wait(2)
 
         self.addProductToList('Roston csirkemell', '1.00')
@@ -922,6 +948,7 @@ class Orders(BaseTestCase):
         print('act ' + str(actInt))
 
         self.assertEqual(expected, actInt)
+        self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
     # sztorno
     #@unittest.skip
