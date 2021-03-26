@@ -117,7 +117,7 @@ class Orders(BaseTestCase):
         super().tearDownClass()
 
     def tearDown(self):
-        '''
+
         self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
         self.productseed.deleteProduct('Roston csirkemell') #TODO Ezt itt ki kell pakolni
         self.productseed.deleteProduct('Rántott csirkemell')
@@ -139,8 +139,8 @@ class Orders(BaseTestCase):
         #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
 
         self.clientseed.deleteRegular(self.name, module=True)
-        '''
-        pass
+
+
 
     def createProductChose(self):
         self.html.clickElement('Új termék felvitele', 'a')
@@ -1685,8 +1685,7 @@ class Orders(BaseTestCase):
 
     @unittest.skip
     def testCreateRegular(self):
-        self.clientAssert.assertRegularExist(self.name, self.address, self.phone,
-                                            self.discount, self.code)
+        self.clientAssert.assertRegularExist(self.name, self.address, self.phone, self.discount, self.code)
 
         self.clientseed.deleteRegular(self.name)
 
