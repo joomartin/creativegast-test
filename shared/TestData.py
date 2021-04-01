@@ -250,7 +250,7 @@ class TestData:
     Client = {
         'Pista':
             {
-                'Name': 'Pista',
+                'Name': 'Péntek',
                 'Code': '987654321',
                 'Phone': '123456789',
                 'Discount': '10',
