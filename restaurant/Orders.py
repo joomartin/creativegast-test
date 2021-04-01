@@ -919,13 +919,13 @@ class Orders(BaseTestCase):
 
         self.menu.openRestaurant()
         self.html.clickElement('Dinamikus futár asztalok', 'a')
-        self.html.clickElement('Pista ' + self.city + ' ' + self.street, 'a')
+        self.html.clickElement(self.name + ' ' + self.city + ' ' + self.street, 'a')
 
         self.html.wait(2)
         self.html.clickElement('Rendelés beküldése', waitSeconds=3)
 
         self.html.clickElement('Dinamikus futár asztalok', 'a')
-        self.html.clickElement('Pista ' + self.city + ' ' + self.street, 'a')
+        self.html.clickElement(self.name + ' ' + self.city + ' ' + self.street, 'a')
         self.html.clickElement('Fizetés')
 
         #self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
