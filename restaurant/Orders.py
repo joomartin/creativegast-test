@@ -112,8 +112,8 @@ class Orders(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
-        #self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
-        #self.restaurantseed.deleteTable(data.Table['Courier']['Name'], module=True)
+        self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
+        self.restaurantseed.deleteTable(data.Table['Courier']['Name'], module=True)
         super().tearDownClass()
 
     def tearDown(self):
@@ -1683,8 +1683,13 @@ class Orders(BaseTestCase):
         self.clientAssert.assertDiscountCardExist(name, code, discount, group=productGroup, category='Ital', products=product)
         self.clientseed.deleteCard(data.DiscountCard['White Friday']['Name'])
 
-    @unittest.skip
+    #@unittest.skip
     def testCreateRegular(self):
+        self.menu.openProducts()
+        self.createProductChose()
+        self.menu.openProducts()
+        self.createProductFix()
+        self.createProductAsRawMaterial()
         self.clientAssert.assertRegularExist(self.name, self.address, self.phone, self.discount, self.code)
 
         self.clientseed.deleteRegular(self.name)
