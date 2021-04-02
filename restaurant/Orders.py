@@ -138,7 +138,7 @@ class Orders(BaseTestCase):
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
 
-        self.clientseed.deleteRegular(self.name, module=True)
+        #self.clientseed.deleteRegular(self.name, module=True)
 
 
 
@@ -919,13 +919,13 @@ class Orders(BaseTestCase):
 
         self.menu.openRestaurant()
         self.html.clickElement('Dinamikus futár asztalok', 'a')
-        self.html.clickElement('Pista ' + self.city + ' ' + self.street, 'a')
+        self.html.clickElement(self.name + ' ' + self.city + ' ' + self.street, 'a')
 
         self.html.wait(2)
         self.html.clickElement('Rendelés beküldése', waitSeconds=3)
 
         self.html.clickElement('Dinamikus futár asztalok', 'a')
-        self.html.clickElement('Pista ' + self.city + ' ' + self.street, 'a')
+        self.html.clickElement(self.name + ' ' + self.city + ' ' + self.street, 'a')
         self.html.clickElement('Fizetés')
 
         #self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
@@ -1690,6 +1690,9 @@ class Orders(BaseTestCase):
         self.menu.openProducts()
         self.createProductFix()
         self.createProductAsRawMaterial()
+
+        self.menu.openClientManagement()
+        self.html.clickElement('Törzsvendégek', 'a')
         self.clientAssert.assertRegularExist(self.name, self.address, self.phone, self.discount, self.code)
 
         self.clientseed.deleteRegular(self.name)
