@@ -868,7 +868,7 @@ class Orders(BaseTestCase):
         # mennyiseg ellenorzese
         self.menu.openReceiving()
         self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        self.html.clickElement('Új')
+        #self.html.clickElement('Új')
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Számla azonosító', 'KomplexTest')
@@ -1033,7 +1033,7 @@ class Orders(BaseTestCase):
         # mennyiseg ellenorzese
         self.menu.openReceiving()
         self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        self.html.clickElement('Új')
+        #self.html.clickElement('Új')
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Számla azonosító', 'KomplexTest')
@@ -1105,7 +1105,7 @@ class Orders(BaseTestCase):
         # mennyiseg ellenorzese
         self.menu.openReceiving()
         self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        self.html.clickElement('Új')
+        #self.html.clickElement('Új')
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Számla azonosító', 'KomplexTest')
@@ -1716,6 +1716,7 @@ class Orders(BaseTestCase):
         self.menu.openUsers()
 
         self.usersSeed.createUser(surname, firstName, userName, password, position, group)
+        self.menu.openUsers()
         self.usersAssert.assertUserExist(surname, firstName, position, rights, group=group)
 
         self.html.clickElement('Kilépés a rendszerből', 'a')
