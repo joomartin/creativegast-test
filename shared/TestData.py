@@ -256,8 +256,8 @@ class TestData:
                 'Discount': '10',
                 'TaxNumber': '2468',
                 'Country': 'Hungary',
-                'PostalCode': '1171',
-                'City': 'Budapest',
+                'PostalCode': '9700',
+                'City': 'Szombathely',
                 'Street': 'Csak utca',
                 'HouseNumber': '1'
             }

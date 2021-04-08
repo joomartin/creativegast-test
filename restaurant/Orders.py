@@ -847,7 +847,6 @@ class Orders(BaseTestCase):
 
     #@unittest.skip
     def testDynamic1(self):
-
         self.menu.openFinance()
         try:
             startValue = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2]
@@ -965,7 +964,7 @@ class Orders(BaseTestCase):
         # mennyiseg ellenorzese
         self.menu.openReceiving()
         self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        self.html.clickElement('Új')
+        #self.html.clickElement('Új')
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Számla azonosító', 'KomplexTest')
