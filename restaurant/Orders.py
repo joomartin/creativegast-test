@@ -1689,6 +1689,8 @@ class Orders(BaseTestCase):
         self.menu.openProducts()
         self.createProductFix()
         self.createProductAsRawMaterial()
+        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
+                         module=True)
 
         self.menu.openClientManagement()
         self.html.clickElement('Törzsvendégek', 'a')
