@@ -138,7 +138,7 @@ class Orders(BaseTestCase):
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
 
-        #self.clientseed.deleteRegular(self.name, module=True)
+        self.clientseed.deleteRegular(self.name, module=True)
 
 
 
@@ -355,7 +355,9 @@ class Orders(BaseTestCase):
         self.html.wait(2)
         self.html.clickElement('Üdítők', 'a')
         self.html.wait(2)
-        self.html.clickElement('Kóla', 'span')
+        #self.html.clickElement('Kóla', 'span')
+        self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
+
 
         self.addProductToList('Roston csirkemell', '1.00')
         self.html.wait(2)
@@ -423,7 +425,8 @@ class Orders(BaseTestCase):
         self.html.wait(2)
         self.html.clickElement('Üdítők', 'a')
         self.html.wait(2)
-        self.html.clickElement('Kóla', 'span')
+        #self.html.clickElement('Kóla', 'span')
+        self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
 
         self.addProductToList('Roston csirkemell', '1.00')
         self.html.wait(2)
@@ -540,7 +543,8 @@ class Orders(BaseTestCase):
         self.html.wait(2)
         self.html.clickElement('Üdítők', 'a')
         self.html.wait(2)
-        self.html.clickElement('Kóla', 'span')
+        #self.html.clickElement('Kóla', 'span')
+        self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
 
         self.addProductToList('Roston csirkemell', '1.00')
         self.html.wait(2)
@@ -577,8 +581,9 @@ class Orders(BaseTestCase):
 
         self.restaurantseed.deleteTable('Kedvezmeny',module=True)
 
+    # 47664 != 47663
     def testTake(self):
-        self.restaurantseed.createTable('Elvitel','Kör','Elvitel','10', module=True)
+        self.restaurantseed.createTable('Elvitel', 'Kör', 'Elvitel', '10', module=True)
 
         self.menu.openFinance()
         try:
@@ -610,7 +615,8 @@ class Orders(BaseTestCase):
         self.html.wait(2)
         self.html.clickElement('Üdítők', 'a')
         self.html.wait(2)
-        self.html.clickElement('Kóla', 'span')
+        #self.html.clickElement('Kóla', 'span')
+        self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
 
         self.addProductToList('Roston csirkemell', '1.00')
         self.html.wait(2)
