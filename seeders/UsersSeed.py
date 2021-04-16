@@ -24,6 +24,7 @@ class UsersSeed:
 
     def createUser(self, surname, firstName, userName, password, position, group):
         self.html.fillInput('Vezetéknév', surname)
+        #self.html.fillInput('Vezetéknévasdasd', surname)
         self.html.fillInput('Keresztnév', firstName)
         self.html.fillInput('Felhasználónév', userName)
         self.html.fillInput('Jelszó', password)
