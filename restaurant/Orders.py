@@ -140,8 +140,9 @@ class Orders(BaseTestCase):
 
         self.clientseed.deleteRegular(self.name, module=True)
 
-
-
+    ####################################################################################################################
+    # help functions
+    ####################################################################################################################
     def createProductChose(self):
         self.html.clickElement('Új termék felvitele', 'a')
         self.html.switchFrame('iframe')
@@ -224,6 +225,56 @@ class Orders(BaseTestCase):
         #self.html.fillInput('Termék mennyiségi tartalma', '100')
         self.html.clickElement('Rögzít')
 
+    def createPizza(self, pizzaName, baseComponent, topping, module=False, tab=False):
+        if module:
+            self.menu.openProducts()
+            self.html.clickElement('Pizza (testreszabható)', 'a')
+        elif tab:
+            self.html.clickElement('Pizza (testreszabható)', 'a')
+
+        self.html.clickElement('Új pizza (testreszabható)', 'a')
+
+        self.html.switchFrame('iframe')
+        self.html.clickDropdown('Nyomtatási részleg', 'Pizza')
+        self.html.fillInput('Termék neve', pizzaName)
+        self.html.fillInput('Kód', '1333')
+
+        self.html.clickDropdown('Szósz', 'Paradicsomszósz')
+
+        self.html.fillAutocomplete('baseComponentName', 'input', baseComponent, baseComponent, 'li',
+                                   Options(htmlAttribute='id'))
+        table = self.html.getElement('baseComponents', 'table', Options(htmlAttribute='id'))
+        self.html.getElement('Hozzáad', 'button', Options(element=table)).click()
+
+        self.html.fillAutocomplete('toppingComponentName', 'input', topping, topping, 'li',
+                                   Options(htmlAttribute='id'))
+        table = self.html.getElement('toppingComponents', 'table', Options(htmlAttribute='id'))
+        self.html.getElement('Hozzáad', 'button', options=Options(element=table)).click()
+
+        self.html.clickElement('Mennyiségek', 'a')
+        self.html.wait(2)
+
+        self.html.clickElement('edit actionButton fright editPriceBtn', 'a', Options(htmlAttribute='class'))
+        self.html.fillInput('grossPrice-2-1', '1400', 'input', options=Options(htmlAttribute='name'))
+        self.html.fillInput('grossPrice-5-1', '2000', 'input', options=Options(htmlAttribute='name'))
+        self.html.wait(2)
+        self.html.clickElement('Rögzít', 'a', waitSeconds=2)
+        self.html.clickElement('Rögzít')
+
+        self.html.clickTableElement('customproduct-2', 'id', 'Sonkás pizza', 'a', 'Szerkeszt',
+                                    'Pizza (testreszabható)')
+        self.html.switchFrame('iframe')
+        self.html.clickElement('Mennyiségek', 'a')
+        self.html.wait(2)
+        inputFields = self.html.getElements('inputmask-numeric qtys', 'input',
+                                            options=Options(htmlAttribute='class'))
+
+        inputFields[0].send_keys('0,18')
+        inputFields[1].send_keys('0,18')
+        # self.html.fillInput('inputmask-numeric qtys', '0,18', 'input', options=Options(htmlAttribute='class', element=inputFields[0]))
+        # self.html.fillInput('inputmask-numeric qtys', '0,18', 'input', options=Options(htmlAttribute='class', element=inputFields[1]))
+        self.html.clickElement('Rögzít')
+
     def addProductToList(self, productName, quantity):
         self.html.fillAutocomplete('Terméknév', 'input', productName[:-1], productName, 'li',
                                    Options(htmlAttribute='placeholder'))
@@ -238,6 +289,10 @@ class Orders(BaseTestCase):
 
         self.assertEqual(name.text, productName)
         self.assertEqual(qty.text, quantity)
+
+    ####################################################################################################################
+    # tests
+    ####################################################################################################################
 
     def testMultipleOrders(self):
         self.menu.openFinance()
@@ -275,7 +330,8 @@ class Orders(BaseTestCase):
         self.html.wait(2)
         self.html.clickElement('Üdítők', 'a')
         self.html.wait(2)
-        self.html.clickElement('Kóla', 'span')
+        # self.html.clickElement('Kóla', 'span')
+        self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
         self.html.wait(2)
 
         
@@ -460,56 +516,6 @@ class Orders(BaseTestCase):
 
         self.assertEqual(expected, actInt)
 
-    def createPizza(self, pizzaName, baseComponent, topping, module=False, tab=False):
-        if module:
-            self.menu.openProducts()
-            self.html.clickElement('Pizza (testreszabható)', 'a')
-        elif tab:
-            self.html.clickElement('Pizza (testreszabható)', 'a')
-
-        self.html.clickElement('Új pizza (testreszabható)', 'a')
-
-        self.html.switchFrame('iframe')
-        self.html.clickDropdown('Nyomtatási részleg', 'Pizza')
-        self.html.fillInput('Termék neve', pizzaName)
-        self.html.fillInput('Kód', '1333')
-
-        self.html.clickDropdown('Szósz', 'Paradicsomszósz')
-
-        self.html.fillAutocomplete('baseComponentName', 'input', baseComponent, baseComponent, 'li',
-                                   Options(htmlAttribute='id'))
-        table = self.html.getElement('baseComponents', 'table', Options(htmlAttribute='id'))
-        self.html.getElement('Hozzáad', 'button', Options(element=table)).click()
-
-        self.html.fillAutocomplete('toppingComponentName', 'input', topping, topping, 'li',
-                                   Options(htmlAttribute='id'))
-        table = self.html.getElement('toppingComponents', 'table', Options(htmlAttribute='id'))
-        self.html.getElement('Hozzáad', 'button', options=Options(element=table)).click()
-
-        self.html.clickElement('Mennyiségek', 'a')
-        self.html.wait(2)
-
-        self.html.clickElement('edit actionButton fright editPriceBtn', 'a', Options(htmlAttribute='class'))
-        self.html.fillInput('grossPrice-2-1', '1400', 'input', options=Options(htmlAttribute='name'))
-        self.html.fillInput('grossPrice-5-1', '2000', 'input', options=Options(htmlAttribute='name'))
-        self.html.wait(2)
-        self.html.clickElement('Rögzít', 'a', waitSeconds=2)
-        self.html.clickElement('Rögzít')
-
-        self.html.clickTableElement('customproduct-2', 'id', 'Sonkás pizza', 'a', 'Szerkeszt',
-                                    'Pizza (testreszabható)')
-        self.html.switchFrame('iframe')
-        self.html.clickElement('Mennyiségek', 'a')
-        self.html.wait(2)
-        inputFields = self.html.getElements('inputmask-numeric qtys', 'input',
-                                            options=Options(htmlAttribute='class'))
-
-        inputFields[0].send_keys('0,18')
-        inputFields[1].send_keys('0,18')
-        # self.html.fillInput('inputmask-numeric qtys', '0,18', 'input', options=Options(htmlAttribute='class', element=inputFields[0]))
-        # self.html.fillInput('inputmask-numeric qtys', '0,18', 'input', options=Options(htmlAttribute='class', element=inputFields[1]))
-        self.html.clickElement('Rögzít')
-
     def testDiscountedTable(self):
         self.restaurantseed.createTable('Kedvezmeny','Kör','Személyzeti','10', module=True)
 
@@ -581,7 +587,6 @@ class Orders(BaseTestCase):
 
         self.restaurantseed.deleteTable('Kedvezmeny',module=True)
 
-    # 47664 != 47663
     def testTake(self):
         self.restaurantseed.createTable('Elvitel', 'Kör', 'Elvitel', '10', module=True)
 
@@ -1702,6 +1707,7 @@ class Orders(BaseTestCase):
         self.html.clickElement('Törzsvendégek', 'a')
         self.clientAssert.assertRegularExist(self.name, self.address, self.phone, self.discount, self.code)
 
+        # nem hasznaljuk mert a teardown tartalmazza
         #self.clientseed.deleteRegular(self.name)
 
     '''_______________________________________________________WORKS__________________________________________________'''

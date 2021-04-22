@@ -15,9 +15,9 @@ us = UsersController()
 #sc.run()
 #pc.run()
 #rc.run()
-resc.run()
+#resc.run()
 #cm.run()
-#us.run()
+us.run()
 
 
 
