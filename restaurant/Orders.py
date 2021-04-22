@@ -1702,7 +1702,7 @@ class Orders(BaseTestCase):
         self.html.clickElement('Törzsvendégek', 'a')
         self.clientAssert.assertRegularExist(self.name, self.address, self.phone, self.discount, self.code)
 
-        self.clientseed.deleteRegular(self.name)
+        #self.clientseed.deleteRegular(self.name)
 
     '''_______________________________________________________WORKS__________________________________________________'''
     def testCreateUser(self):
