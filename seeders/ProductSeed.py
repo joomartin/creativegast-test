@@ -223,7 +223,7 @@ class ProductSeed:
         self.html.refresh()
 
         self.html.clickTableElement('products', 'id', name, 'a', 'Törlés', 'Termékek')
-        self.html.clickElement('Igen', waitSeconds=1)
+        self.html.clickElement('Igen', waitSeconds=2)
         self.html.search('', 'Termékek')
 
     def createCounter(self, name, position, module=False, tab=False):
