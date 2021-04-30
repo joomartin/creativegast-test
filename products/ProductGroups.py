@@ -24,7 +24,7 @@ class ProductGroups(BaseTestCase):
         self.productAssert.assertGroupExists(testName)
         self.productseed.deleteProductGroup(testName)
 
-    '''
+
     def testCreateWithParentGroup(self):
         testName = td.ProductGroup['Egyeb']['Name']
         self.html.clickElement('Új termékcsoport felvitele', 'a')
@@ -35,15 +35,14 @@ class ProductGroups(BaseTestCase):
         self.html.clickDropdown('Kategória', 'Étel')
         self.html.clickElement('Ételek', 'a')
         self.html.clickElement('Rögzít')
-        #self.html.wait(5)
-        self.driver.implicitly_wait(100000)
+        self.html.wait(40)
+        #self.driver.implicitly_wait(100000)
 
         self.html.switchFrame()
-        self.html.wait(8000)
         self.productAssert.asseretParentGroup(testName, 'Ételek')
 
         self.productseed.deleteProductGroup(testName, module=True)
-    '''
+
 
     def testUpdateGroup(self):
         testName = td.ProductGroup['Egyeb']['Name']

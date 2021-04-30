@@ -1,14 +1,9 @@
-import unittest
-
 from shared.BaseTestCase import BaseTestCase
 from shared.TestData import TestData as data
 from selenium.webdriver.common.keys import Keys
 from core.Options import Options
-from selenium.webdriver.common.action_chains import ActionChains
-from restaurant.Restaurant import Restaurant
 
-
-class Orders(BaseTestCase):
+class Tables(BaseTestCase):
     name = data.Client['Pista']['Name']
     code = data.Client['Pista']['Code']
     phone = data.Client['Pista']['Phone']
@@ -21,8 +16,6 @@ class Orders(BaseTestCase):
     housenumber = data.Client['Pista']['HouseNumber']
     address = None
 
-    days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap']
-
     @classmethod
     def setUpClass(self):
         super().setUpClass()
@@ -30,20 +23,22 @@ class Orders(BaseTestCase):
         self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
         self.restaurantseed.createTable(data.Table['Courier']['Name'], module=True)
 
-
     def setUp(self):
+
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
 
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Csirkemell']['Name'],
                                                     data.RawMaterial['Csirkemell']['GrosPrice'],
                                                     data.RawMaterial['Csirkemell']['Quantity'],
-                                                    data.RawMaterial['Csirkemell']['Warehouse'], data.RawMaterial['Csirkemell']['ME'],
+                                                    data.RawMaterial['Csirkemell']['Warehouse'],
+                                                    data.RawMaterial['Csirkemell']['ME'],
                                                     module=True)
 
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Finomliszt']['Name'],
                                                     data.RawMaterial['Finomliszt']['GrosPrice'],
                                                     data.RawMaterial['Finomliszt']['Quantity'],
-                                                    data.RawMaterial['Finomliszt']['Warehouse'], data.RawMaterial['Finomliszt']['ME'],
+                                                    data.RawMaterial['Finomliszt']['Warehouse'],
+                                                    data.RawMaterial['Finomliszt']['ME'],
                                                     module=True)
 
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Almalé']['Name'],
@@ -76,38 +71,38 @@ class Orders(BaseTestCase):
 
         self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'],
                                        module=True)
-        #self.productseed.createProductGroup(data.ProductGroup['Egyeb']['Name'], tab=True)
+        # self.productseed.createProductGroup(data.ProductGroup['Egyeb']['Name'], tab=True)
         self.html.wait(5)
         self.productseed.createProduct(data.Product['Hasábburgonya']['Name'], 'Köretek',
                                        data.Product['Hasábburgonya']['Code'], data.Counter['TestCounter']['Name'],
-                                       data.RawMaterial['Hasábburgonya']['Name'], data.Product['Hasábburgonya']['Quantity'],
+                                       data.RawMaterial['Hasábburgonya']['Name'],
+                                       data.Product['Hasábburgonya']['Quantity'],
                                        data.Product['Hasábburgonya']['NetPrice'], module=True)
 
         self.productseed.createProduct('Almalé', 'Kiszereléses',
-                                       '99', data.Counter['TestCounter']['Name'], data.RawMaterial['Almalé']['Name'], '1', '2200',
+                                       '99', data.Counter['TestCounter']['Name'], data.RawMaterial['Almalé']['Name'],
+                                       '1', '2200',
                                        module=True)
 
         self.productseed.createProduct(data.Product['Sonka']['Name'], data.Product['Sonka']['ProductGroup'],
                                        data.Product['Sonka']['Code'], data.Counter['TestCounter']['Name'],
-                                       data.RawMaterial['Sonka']['Name'], data.Product['Sonka']['Quantity'], data.Product['Sonka']['NetPrice'],
+                                       data.RawMaterial['Sonka']['Name'], data.Product['Sonka']['Quantity'],
+                                       data.Product['Sonka']['NetPrice'],
                                        module=True)
 
         self.productseed.createProduct(data.Product['Paradicsomszósz']['Name'],
                                        data.Product['Paradicsomszósz']['ProductGroup'],
                                        data.Product['Paradicsomszósz']['Code'], data.Counter['TestCounter']['Name'],
-                                       data.RawMaterial['Paradicsomszósz']['Name'], data.Product['Paradicsomszósz']['Quantity'], '0',
+                                       data.RawMaterial['Paradicsomszósz']['Name'],
+                                       data.Product['Paradicsomszósz']['Quantity'], '0',
                                        module=True)
-
 
         # self.menu.openRestaurant()
         # self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
-
         self.address = self.clientseed.createRegular(self.name, self.code, self.phone, self.discount, self.taxnumber,
-                                                self.country, self.postalCode, self.city,
-                                                self.street, self.housenumber, module=True)
-
-
+                                                     self.country, self.postalCode, self.city,
+                                                     self.street, self.housenumber, module=True)
 
         self.menu.openProducts()
 
@@ -118,9 +113,8 @@ class Orders(BaseTestCase):
         super().tearDownClass()
 
     def tearDown(self):
-
         self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
-        self.productseed.deleteProduct('Roston csirkemell') #TODO Ezt itt ki kell pakolni
+        self.productseed.deleteProduct('Roston csirkemell')  # TODO Ezt itt ki kell pakolni
         self.productseed.deleteProduct('Rántott csirkemell')
         self.productseed.deleteProduct('Almalé')
         self.productseed.deleteProduct('Kóla')
@@ -137,13 +131,11 @@ class Orders(BaseTestCase):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Paradicsomszósz']['Name'], module=True)
         self.stockseed.deleteRawMaterial('Kóla', module=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
-        #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
+        # self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
 
         self.clientseed.deleteRegular(self.name, module=True)
+        super().tearDownClass()
 
-    ####################################################################################################################
-    # help functions
-    ####################################################################################################################
     def createProductChose(self):
         self.html.clickElement('Új termék felvitele', 'a')
         self.html.switchFrame('iframe')
@@ -166,7 +158,8 @@ class Orders(BaseTestCase):
         self.html.clickElement('taxPriceSave', 'a', options=Options(htmlAttribute='id'))
         self.html.wait(2)
 
-        self.html.fillAutocomplete('componentName', 'input', 'Csirkemell', 'Csirkemell', 'li', Options(htmlAttribute='id'))
+        self.html.fillAutocomplete('componentName', 'input', 'Csirkemell', 'Csirkemell', 'li',
+                                   Options(htmlAttribute='id'))
         self.html.fillInput('componentQty', '0.20', 'input', options=Options(htmlAttribute='id'))
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
@@ -196,12 +189,14 @@ class Orders(BaseTestCase):
         self.html.clickElement('Válasszon köretet')
         self.html.clickElement(data.Product['Hasábburgonya']['Name'], 'label')
 
-        self.html.fillAutocomplete('componentName', 'input', 'Csirkemell', 'Csirkemell', 'li', Options(htmlAttribute='id'))
+        self.html.fillAutocomplete('componentName', 'input', 'Csirkemell', 'Csirkemell', 'li',
+                                   Options(htmlAttribute='id'))
         self.html.fillInput('componentQty', '0.20', 'input', options=Options(htmlAttribute='id'))
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
 
-    # modositottam h adjon mennyiseget is hozza (BA)
+        # modositottam h adjon mennyiseget is hozza (BA)
+
     def createProductAsRawMaterial(self):
         self.menu.openProducts()
 
@@ -223,7 +218,7 @@ class Orders(BaseTestCase):
         self.html.wait(2)
 
         self.html.clickElement('Felvétel nyersanyagként', 'label', Options(following='i'))
-        #self.html.fillInput('Termék mennyiségi tartalma', '100')
+        # self.html.fillInput('Termék mennyiségi tartalma', '100')
         self.html.clickElement('Rögzít')
 
     def createPizza(self, pizzaName, baseComponent, topping, module=False, tab=False):
@@ -291,10 +286,6 @@ class Orders(BaseTestCase):
         self.assertEqual(name.text, productName)
         self.assertEqual(qty.text, quantity)
 
-    ####################################################################################################################
-    # tests
-    ####################################################################################################################
-
     def testMultipleOrders(self):
         self.menu.openFinance()
         try:
@@ -306,7 +297,7 @@ class Orders(BaseTestCase):
         self.createProductChose()
         self.menu.openProducts()
         self.createProductFix()
-        self.createProductAsRawMaterial() # cola
+        self.createProductAsRawMaterial()  # cola
 
         self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
                          module=True)
@@ -318,14 +309,13 @@ class Orders(BaseTestCase):
         self.html.wait(1)
         self.html.clickElement('Sonkás pizza', 'span')
         self.html.wait(1)
-       # self.html.clickElement(None,
+        # self.html.clickElement(None,
         #                       '//div[@id="pizzaCustomizeDialog"]//span',
         #                      Options(uniqueSelector=True))
-        #self.html.clickElement('pizzaCustomizeDialog', 'div', Options(htmlAttribute='id', following='span/span/span'))
-        #self.html.clickElement('Rögzít')
+        # self.html.clickElement('pizzaCustomizeDialog', 'div', Options(htmlAttribute='id', following='span/span/span'))
+        # self.html.clickElement('Rögzít')
         self.html.refresh()
         self.addProductToList('Rántott csirkemell', '1.00')
-
 
         self.html.clickElement('Ital', 'a')
         self.html.wait(2)
@@ -335,7 +325,6 @@ class Orders(BaseTestCase):
         self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
         self.html.wait(2)
 
-        
         # self.html.clickElement('Kiszereléses', 'a')
         # self.html.wait(2)
         # self.html.clickElement('Almalé', 'a')
@@ -343,13 +332,12 @@ class Orders(BaseTestCase):
         # ActionChains(self.driver).move_by_offset(400, 130).click().perform()
         # self.html.switchFrame()
         # self.html.wait(2)
-        
 
         self.addProductToList('Roston csirkemell', '1.00')
         self.html.wait(2)
         self.html.wait(2)
-        #self.html.clickElement('Hasábburgonya','label')
-        #self.html.clickElement('sideDishSaveButton', 'button', Options(htmlAttribute='id'))
+        # self.html.clickElement('Hasábburgonya','label')
+        # self.html.clickElement('sideDishSaveButton', 'button', Options(htmlAttribute='id'))
         # self.html.switchFrame('iframe')
 
         self.menu.openRestaurant()
@@ -360,7 +348,7 @@ class Orders(BaseTestCase):
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
         self.html.clickElement('Fizetés')
 
-        #self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
+        # self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
         price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
         print(price)
 
@@ -368,15 +356,15 @@ class Orders(BaseTestCase):
 
         self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
         stvalue = startValue.split(' ')
-        prc= price.split(' ')
+        prc = price.split(' ')
         prcInt = int(prc[0] + prc[1])
-        expected = int(stvalue[0]+stvalue[1]) + prcInt
-        print('ex '+ str(expected))
+        expected = int(stvalue[0] + stvalue[1]) + prcInt
+        print('ex ' + str(expected))
         self.menu.openFinance()
         self.html.refresh()
         self.html.wait()
         actual = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2].split(' ')
-        actInt=int(actual[0] + actual[1])
+        actInt = int(actual[0] + actual[1])
         print('act ' + str(actInt))
 
         self.assertEqual(expected, actInt)
@@ -412,14 +400,13 @@ class Orders(BaseTestCase):
         self.html.wait(2)
         self.html.clickElement('Üdítők', 'a')
         self.html.wait(2)
-        #self.html.clickElement('Kóla', 'span')
+        # self.html.clickElement('Kóla', 'span')
         self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
-
 
         self.addProductToList('Roston csirkemell', '1.00')
         self.html.wait(2)
-        #self.html.clickElement('Hasábburgonya','label')
-        #self.html.clickElement('sideDishSaveButton', 'button', Options(htmlAttribute='id'))
+        # self.html.clickElement('Hasábburgonya','label')
+        # self.html.clickElement('sideDishSaveButton', 'button', Options(htmlAttribute='id'))
 
         self.menu.openRestaurant()
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
@@ -429,7 +416,7 @@ class Orders(BaseTestCase):
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
         self.html.clickElement('Fizetés')
 
-        #self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
+        # self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
         price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
         print(price)
 
@@ -439,17 +426,16 @@ class Orders(BaseTestCase):
         stvalue = startValue.split(' ')
         prc = price.split(' ')
         prcInt = int(prc[0] + prc[1])
-        expected = int(stvalue[0]+stvalue[1]) + prcInt
+        expected = int(stvalue[0] + stvalue[1]) + prcInt
         self.menu.openFinance()
         self.html.refresh()
         self.html.wait()
         actual = self.html.getElement('Bankkártya', 'td', Options(following='td')).text[:-2].split(' ')
         actInt = int(actual[0] + actual[1])
 
-
         self.assertEqual(expected, actInt)
         self.assertEqual(expected, actInt)
-        #self.html.switchFrame('iframe')
+        # self.html.switchFrame('iframe')
 
     def testInstantPayment(self):
         self.menu.openFinance()
@@ -482,7 +468,7 @@ class Orders(BaseTestCase):
         self.html.wait(2)
         self.html.clickElement('Üdítők', 'a')
         self.html.wait(2)
-        #self.html.clickElement('Kóla', 'span')
+        # self.html.clickElement('Kóla', 'span')
         self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
 
         self.addProductToList('Roston csirkemell', '1.00')
@@ -493,9 +479,9 @@ class Orders(BaseTestCase):
         self.menu.openRestaurant()
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
         self.html.wait(2)
-        #self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+        # self.html.clickElement('Rendelés beküldése', waitSeconds=3)
 
-        #self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+        # self.html.clickElement(data.Table['Normal']['Name'], tag='i')
         self.html.clickElement('Azonnali fizetés')
 
         # self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
@@ -518,7 +504,7 @@ class Orders(BaseTestCase):
         self.assertEqual(expected, actInt)
 
     def testDiscountedTable(self):
-        self.restaurantseed.createTable('Kedvezmeny','Kör','Személyzeti','10', module=True)
+        self.restaurantseed.createTable('Kedvezmeny', 'Kör', 'Személyzeti', '10', module=True)
 
         self.menu.openFinance()
         try:
@@ -550,7 +536,7 @@ class Orders(BaseTestCase):
         self.html.wait(2)
         self.html.clickElement('Üdítők', 'a')
         self.html.wait(2)
-        #self.html.clickElement('Kóla', 'span')
+        # self.html.clickElement('Kóla', 'span')
         self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
 
         self.addProductToList('Roston csirkemell', '1.00')
@@ -586,7 +572,7 @@ class Orders(BaseTestCase):
         self.assertEqual(expected, actInt)
         self.assertEqual(expected, actInt)
 
-        self.restaurantseed.deleteTable('Kedvezmeny',module=True)
+        self.restaurantseed.deleteTable('Kedvezmeny', module=True)
 
     def testTake(self):
         self.restaurantseed.createTable('Elvitel', 'Kör', 'Elvitel', '10', module=True)
@@ -621,7 +607,7 @@ class Orders(BaseTestCase):
         self.html.wait(2)
         self.html.clickElement('Üdítők', 'a')
         self.html.wait(2)
-        #self.html.clickElement('Kóla', 'span')
+        # self.html.clickElement('Kóla', 'span')
         self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
 
         self.addProductToList('Roston csirkemell', '1.00')
@@ -687,7 +673,7 @@ class Orders(BaseTestCase):
 
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
         self.html.clickElement('Fizetendő részösszeg')
-        self.html.fillInput('Részösszeg','10000')
+        self.html.fillInput('Részösszeg', '10000')
         self.html.getElements(None, '//button[contains(.,"OK")]', Options(uniqueSelector='True'))[1].click()
         self.html.wait(2)
         self.html.clickElement('Kijelöltek fizetése')
@@ -695,14 +681,13 @@ class Orders(BaseTestCase):
         price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
         print(price)
 
-
         self.html.clickElement('Készpénz', 'td', Options(following='button'))
 
         self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
         stvalue = startValue.split(' ')
         prc = price.split(' ')
         prcInt = int(prc[0] + prc[1])
-        self.assertGreaterEqual(prcInt,10000)
+        self.assertGreaterEqual(prcInt, 10000)
         print('prcInt:')
         print(prcInt)
         expected = int(stvalue[0] + stvalue[1]) + prcInt
@@ -714,150 +699,6 @@ class Orders(BaseTestCase):
 
         self.assertEqual(expected, actInt)
 
-    def testReceiving(self):
-        self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'], module=True)
-        self.menu.openProducts()
-        self.createProductChose()
-        self.menu.openProducts()
-        self.createProductFix()
-        self.createProductAsRawMaterial()
-        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
-                         module=True)
-        self.menu.openReceiving()
-        self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        # self.html.clickElement('Új')
-        self.html.switchFrame('iframe')
-
-        self.html.fillInput('Számla azonosító', 'KomplexTest')
-        self.html.clickDropdown('Fizetési mód', 'Készpénz')
-        self.html.clickDropdown('Beszállító', data.Partner['Szallito']['Name'])
-
-
-        self.html.fillAutocomplete('Nyersanyag neve', 'input', data.RawMaterial['Csirkemell']['Name'],  data.RawMaterial['Csirkemell']['Name'], 'li', Options(htmlAttribute='data-title'))
-        self.html.fillInput('Mennyiség', '10', 'data-title')
-        self.html.fillInput('Bruttó egységár (Ft)', '1000', 'data-title')
-        self.html.clickElement('Válassz...')
-        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
-        self.html.clickElement('Hozzáad')
-        self.html.wait(2)
-
-        self.html.fillAutocomplete('Nyersanyag neve', 'input', data.RawMaterial['Finomliszt']['Name'],
-                                   data.RawMaterial['Finomliszt']['Name'], 'li',
-                                   Options(htmlAttribute='data-title'))
-        self.html.fillInput('Mennyiség', '10', 'data-title')
-        self.html.fillInput('Bruttó egységár (Ft)', '150', 'data-title')
-        self.html.clickElement('Válassz...')
-        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
-        self.html.clickElement('Hozzáad')
-        self.html.wait(2)
-
-        self.html.fillAutocomplete('Nyersanyag neve', 'input', data.RawMaterial['Almalé']['Name'],
-                                   data.RawMaterial['Almalé']['Name'], 'li',
-                                   Options(htmlAttribute='data-title'))
-        self.html.fillInput('Mennyiség', '10', 'data-title')
-        self.html.fillInput('Bruttó egységár (Ft)', '300', 'data-title')
-        self.html.clickElement('Válassz...')
-        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
-        self.html.clickElement('Hozzáad')
-        self.html.wait(2)
-
-        self.html.fillAutocomplete('Nyersanyag neve', 'input', data.RawMaterial['Hasábburgonya']['Name'],
-                                   data.RawMaterial['Hasábburgonya']['Name'], 'li',
-                                   Options(htmlAttribute='data-title'))
-        self.html.fillInput('Mennyiség', '10', 'data-title')
-        self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
-        self.html.clickElement('Válassz...')
-        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
-        self.html.clickElement('Hozzáad')
-        self.html.wait(2)
-
-        self.html.fillAutocomplete('Nyersanyag neve', 'input', data.RawMaterial['Sonka']['Name'],
-                                   data.RawMaterial['Sonka']['Name'], 'li',
-                                   Options(htmlAttribute='data-title'))
-        self.html.fillInput('Mennyiség', '10', 'data-title')
-        self.html.fillInput('Bruttó egységár (Ft)', '1800', 'data-title')
-        self.html.clickElement('Válassz...')
-        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
-        self.html.clickElement('Hozzáad')
-        self.html.wait(2)
-
-        self.html.fillAutocomplete('Nyersanyag neve', 'input', data.RawMaterial['Paradicsomszósz']['Name'],
-                                   data.RawMaterial['Paradicsomszósz']['Name'], 'li',
-                                   Options(htmlAttribute='data-title'))
-        self.html.fillInput('Mennyiség', '10', 'data-title')
-        self.html.fillInput('Bruttó egységár (Ft)', '2000', 'data-title')
-        self.html.clickElement('Válassz...')
-        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
-        self.html.clickElement('Hozzáad')
-        self.html.wait(2)
-
-        self.html.fillAutocomplete('Nyersanyag neve', 'input', 'Kóla', 'Kóla', 'li', Options(htmlAttribute='data-title'))
-        self.html.fillInput('Mennyiség', '10', 'data-title')
-        self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
-        self.html.clickElement('Válassz...')
-        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
-        self.html.clickElement('Hozzáad')
-        self.html.wait(2)
-
-
-        self.html.clickElement('Rögzít')
-
-        self.html.switchFrame()
-
-        self.stockAssert.assertStock(data.RawMaterial['Csirkemell']['Name'],data.WareHouses['Szeszraktár']['Name'], '20')
-        self.html.wait(2)
-
-        self.stockAssert.assertStock(data.RawMaterial['Finomliszt']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
-        self.html.wait(2)
-
-        self.stockAssert.assertStock(data.RawMaterial['Almalé']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
-        self.html.wait(2)
-
-        self.stockAssert.assertStock(data.RawMaterial['Hasábburgonya']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
-        self.html.wait(2)
-
-        self.stockAssert.assertStock(data.RawMaterial['Sonka']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
-        self.html.wait(2)
-
-        self.stockAssert.assertStock(data.RawMaterial['Paradicsomszósz']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
-        self.html.wait(2)
-
-        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
-        self.html.wait(2)
-
-        self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
-
-    def testCustomizable(self):
-        self.menu.openProducts()
-        self.createProductChose()
-        self.menu.openProducts()
-        self.createProductFix()
-        self.createProductAsRawMaterial()
-        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
-                         module=True)
-
-        # assert
-        self.productAssert.assertPizzaExists('Sonkás pizza', '1400.00')
-        self.html.clickTableElement('customproduct-2', 'id', 'Sonkás pizza', 'a', 'Részletek',
-                                    'Pizza (testreszabható)')
-        self.html.switchFrame('iframe')
-        # self.assertTrue(self.html.getElement('Paradicsomszósz', 'button').is_displayed())
-
-        # self.assertTrue(self.html.getElement('Finomliszt', 'td').is_displayed())
-
-        baseName = self.html.getTxtFromTable('3', '1', tableId='baseQuantities')
-        littleQty = self.html.getTxtFromTable('3', '2', tableId='baseQuantities')
-        bigQty = self.html.getTxtFromTable('3', '3', tableId='baseQuantities')
-        self.assertEqual(baseName, 'Finomliszt')
-        self.assertEqual(littleQty[:4], '0.18')
-        self.assertEqual(bigQty[:4], '0.18')
-        self.html.refresh()
-
-        #self.productseed.deletePizza('Sonkás pizza')
-
-    # eddig------------------------------------------------------------------------------------------------------------------
-
-    #@unittest.skip
     def testDynamic1(self):
         self.menu.openFinance()
         try:
@@ -961,232 +802,6 @@ class Orders(BaseTestCase):
         self.assertEqual(expected, actInt)
         self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
-    # sztorno
-    #@unittest.skip
-    '''_______________________________________________________WORKS__________________________________________________'''
-    def testOrderStorno(self):
-        self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'], module=True)
-        self.menu.openProducts()
-        self.createProductChose()
-        self.menu.openProducts()
-        self.createProductFix()
-        self.createProductAsRawMaterial()
-        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
-                         module=True)
-        # mennyiseg ellenorzese
-        self.menu.openReceiving()
-        self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        #self.html.clickElement('Új')
-        self.html.switchFrame('iframe')
-
-        self.html.fillInput('Számla azonosító', 'KomplexTest')
-        self.html.clickDropdown('Fizetési mód', 'Készpénz')
-        self.html.clickDropdown('Beszállító', data.Partner['Szallito']['Name'])
-
-        self.html.fillAutocomplete('Nyersanyag neve', 'input', 'Kóla', 'Kóla', 'li',
-                                   Options(htmlAttribute='data-title'))
-        self.html.fillInput('Mennyiség', '10', 'data-title')
-        self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
-        self.html.clickElement('Válassz...')
-        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
-        self.html.clickElement('Hozzáad')
-        self.html.wait(2)
-
-        self.html.clickElement('Rögzít')
-
-        self.html.switchFrame()
-
-        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
-        self.html.wait(2)
-
-        # vissza az etterembe
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        self.addProductToList('Kóla', '1.00')
-        self.html.refresh()
-        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        name = self.html.getTxtFromListTable2('2', '3')
-        qty = self.html.getTxtFromListTable2('2', '5')
-        storno = self.html.getTxtFromListTable2('2', '8')
-
-        self.assertEqual(name.text, 'Kóla')
-        self.assertEqual(qty.text, '1.00')
-        self.assertEqual(storno.text, 'Sztornó')
-
-        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '9')
-
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        # johet a sztorno
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'Kóla', 'div', 'Sztornó')
-        self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
-        self.restaurantAssert.assertProductNotInList()
-        self.restaurantAssert.assertStornoSucces('Kóla')
-
-        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
-        self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
-
-    '''_______________________________________________________WORKS__________________________________________________'''
-    def testWrongorderStorno(self):
-        self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'],
-                                         module=True)
-        self.menu.openProducts()
-        self.createProductChose()
-        self.menu.openProducts()
-        self.createProductFix()
-        self.createProductAsRawMaterial()
-        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
-                         module=True)
-        # mennyiseg ellenorzese
-        self.menu.openReceiving()
-        self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        #self.html.clickElement('Új')
-        self.html.switchFrame('iframe')
-
-        self.html.fillInput('Számla azonosító', 'KomplexTest')
-        self.html.clickDropdown('Fizetési mód', 'Készpénz')
-        self.html.clickDropdown('Beszállító', data.Partner['Szallito']['Name'])
-
-        self.html.fillAutocomplete('Nyersanyag neve', 'input', 'Kóla', 'Kóla', 'li',
-                                   Options(htmlAttribute='data-title'))
-        self.html.fillInput('Mennyiség', '10', 'data-title')
-        self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
-        self.html.clickElement('Válassz...')
-        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
-        self.html.clickElement('Hozzáad')
-        self.html.wait(2)
-
-        self.html.clickElement('Rögzít')
-
-        self.html.switchFrame()
-
-        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
-        self.html.wait(2)
-
-        # vissza az etterembe
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        # rendeles bekuldese
-        self.addProductToList('Kóla', '1.00')
-        self.html.refresh()
-        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        name = self.html.getTxtFromListTable2('2', '3')
-        qty = self.html.getTxtFromListTable2('2', '5')
-        storno = self.html.getTxtFromListTable2('2', '8')
-
-        self.assertEqual(name.text, 'Kóla')
-        self.assertEqual(qty.text, '1.00')
-        self.assertEqual(storno.text, 'Sztornó')
-
-        # ez lehet itt nem kell, de nem baj ha van
-        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '9')
-
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        # johet a sztorno
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'Kóla', 'div', 'Sztornó')
-        self.html.clickElement('Hibás rendelés (raktárba visszatesz)', waitSeconds=4)
-
-        self.restaurantAssert.assertProductNotInList()
-        self.restaurantAssert.assertStornoSucces('Kóla')
-
-        # mennyiseg ellenorzese
-        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
-        self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
-
-    '''_______________________________________________________WORKS__________________________________________________'''
-    def testQualityStorno(self):
-        self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'],
-                                         module=True)
-        self.menu.openProducts()
-        self.createProductChose()
-        self.menu.openProducts()
-        self.createProductFix()
-        self.createProductAsRawMaterial()
-        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
-                         module=True)
-        # mennyiseg ellenorzese
-        self.menu.openReceiving()
-        self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        #self.html.clickElement('Új')
-        self.html.switchFrame('iframe')
-
-        self.html.fillInput('Számla azonosító', 'KomplexTest')
-        self.html.clickDropdown('Fizetési mód', 'Készpénz')
-        self.html.clickDropdown('Beszállító', data.Partner['Szallito']['Name'])
-
-        self.html.fillAutocomplete('Nyersanyag neve', 'input', 'Kóla', 'Kóla', 'li',
-                                   Options(htmlAttribute='data-title'))
-        self.html.fillInput('Mennyiség', '10', 'data-title')
-        self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
-        self.html.clickElement('Válassz...')
-        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
-        self.html.clickElement('Hozzáad')
-        self.html.wait(2)
-
-        self.html.clickElement('Rögzít')
-
-        self.html.switchFrame()
-
-        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
-        self.html.wait(2)
-
-        # vissza az etterembe
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        # rendeles bekuldese
-        self.addProductToList('Kóla', '1.00')
-        self.html.refresh()
-        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        name = self.html.getTxtFromListTable2('2', '3')
-        qty = self.html.getTxtFromListTable2('2', '5')
-        storno = self.html.getTxtFromListTable2('2', '8')
-
-        # csekkolas
-        self.assertEqual(name.text, 'Kóla')
-        self.assertEqual(qty.text, '1.00')
-        self.assertEqual(storno.text, 'Sztornó')
-
-        # ez lehet itt nem kell, de nem baj ha van
-        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '9')
-
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        # johet a sztorno
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', 'Kóla', 'div', 'Sztornó')
-        self.html.clickElement('Minőségi kifogás', waitSeconds=1)
-        self.html.fillInput('Minőségi kifogás indoka', 'teszt01 sztornó', 'textarea', options=Options(htmlAttribute='placeholder'))
-        self.html.clickElement('Minőségi kifogás küldése', waitSeconds=2)
-
-        self.restaurantAssert.assertProductNotInList()
-        self.restaurantAssert.assertStornoSucces('Kóla')
-
-        # mennyiseg ellenorzese
-        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '9')
-
-        # selejt ellenorzese
-        self.html.clickElement('Selejtezések', 'a')
-        name = self.html.getElementInTable('Kóla', 'component_waste', 'Selejtezések').is_displayed()
-        excuse = self.html.getTxtFromTable('1', '5', 'component_waste')
-        self.assertTrue(name)
-        self.assertEqual(excuse, 'teszt01 sztornó')
-
-        self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
-
-    '''_______________________________________________________WORKS__________________________________________________'''
-    # athelyezes reszasztalra
     def testMove(self):
         inputName = data.Product['Sonka']['Name']
 
@@ -1495,312 +1110,3 @@ class Orders(BaseTestCase):
         self.html.clickElement('Igen', waitSeconds=2)
         # itt azt csekkoljuk hogy a rendeles bekuldese gomb eltunt e
         self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
-
-    '''_______________________________________________________WORKS__________________________________________________'''
-    def testCreateCardDrink(self):
-        name = data.DiscountCard['White Friday']['Name']
-        code = data.DiscountCard['White Friday']['Code']
-        discount = data.DiscountCard['White Friday']['Discount']
-        category = data.DiscountCard['White Friday']['Category']
-
-        self.menu.openProducts()
-        self.createProductChose()
-        self.menu.openProducts()
-        self.createProductFix()
-        self.createProductAsRawMaterial()  # cola
-
-        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
-                         module=True)
-
-        self.menu.openClientManagement()
-        self.html.clickElement('Kedvezménykártyák', 'a')
-
-        self.html.clickElement('Új kedvezménykártya', 'a')
-        self.html.switchFrame('iframe')
-
-        self.html.fillInput('Megnevezés', name)
-        self.html.fillInput('Kód', code)
-
-        self.html.clickDropdown('Kategóriák', category)
-        self.html.clickElement('Kategóriák', 'label')
-        self.html.clickElement('dc_is_percent', 'label', options=Options(htmlAttribute='data-name'))
-
-        for day in self.days:
-            self.html.fillInput(day, discount, 'input', options=Options(htmlAttribute='data-title'))
-
-        self.html.clickElement('Rögzít')
-
-        self.clientAssert.assertDiscountCardExist(name, code, discount, category='Ital')
-        self.clientseed.deleteCard(data.DiscountCard['White Friday']['Name'])
-
-    '''_______________________________________________________WORKS__________________________________________________'''
-    def testCreateCardFood(self):
-        name = data.DiscountCard['Blue Friday']['Name']
-        code = data.DiscountCard['Blue Friday']['Code']
-        discount = data.DiscountCard['Blue Friday']['Discount']
-        category = data.DiscountCard['Blue Friday']['Category']
-
-        self.menu.openProducts()
-        self.createProductChose()
-        self.menu.openProducts()
-        self.createProductFix()
-        self.createProductAsRawMaterial()  # cola
-        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
-                         module=True)
-
-        self.menu.openClientManagement()
-        self.html.clickElement('Kedvezménykártyák', 'a')
-
-        self.html.clickElement('Új kedvezménykártya', 'a')
-        self.html.switchFrame('iframe')
-
-        self.html.fillInput('Megnevezés', name)
-        self.html.fillInput('Kód', code)
-
-        self.html.clickDropdown('Kategóriák', category)
-        self.html.clickElement('Kategóriák', 'label')
-        self.html.clickElement('dc_is_percent', 'label', options=Options(htmlAttribute='data-name'))
-
-        for day in self.days:
-            self.html.fillInput(day, discount, 'input', options=Options(htmlAttribute='data-title'))
-
-        self.html.clickElement('Rögzít')
-
-        self.clientAssert.assertDiscountCardExist(name, code, discount, category='Étel')
-        self.clientseed.deleteCard(data.DiscountCard['Blue Friday']['Name'])
-
-    '''_______________________________________________________WORKS__________________________________________________'''
-    def testCreateCardAll(self):
-        name = data.DiscountCard['Blue Friday']['Name']
-        code = data.DiscountCard['Blue Friday']['Code']
-        discount = data.DiscountCard['Blue Friday']['Discount']
-        category = data.DiscountCard['Blue Friday']['Category']
-
-        self.menu.openProducts()
-        self.createProductChose()
-        self.menu.openProducts()
-        self.createProductFix()
-        self.createProductAsRawMaterial()  # cola
-        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
-                         module=True)
-
-        self.menu.openClientManagement()
-        self.html.clickElement('Kedvezménykártyák', 'a')
-
-        self.html.clickElement('Új kedvezménykártya', 'a')
-        self.html.switchFrame('iframe')
-
-        self.html.fillInput('Megnevezés', name)
-        self.html.fillInput('Kód', code)
-
-        self.html.getElement('Kategóriák', 'label', Options(following='button')).click()
-        self.html.clickElement('Mind', 'a')
-        #self.html.clickDropdown('Kategóriák', category)
-        self.html.clickElement('Kategóriák', 'label')
-        self.html.clickElement('dc_is_percent', 'label', options=Options(htmlAttribute='data-name'))
-
-        for day in self.days:
-            self.html.fillInput(day, discount, 'input', options=Options(htmlAttribute='data-title'))
-
-        self.html.clickElement('Rögzít')
-
-        self.clientAssert.assertDiscountCardExist(name, code, discount, category='all')
-        self.clientseed.deleteCard(data.DiscountCard['Blue Friday']['Name'])
-
-    '''_______________________________________________________WORKS__________________________________________________'''
-    def testCreateCardGroup(self):
-        name = data.DiscountCard['White Friday']['Name']
-        code = data.DiscountCard['White Friday']['Code']
-        discount = data.DiscountCard['White Friday']['Discount']
-        category = data.DiscountCard['White Friday']['Category']
-        productGroup = data.DiscountCard['White Friday']['ProductGroup']
-
-        self.menu.openProducts()
-        self.createProductChose()
-        self.menu.openProducts()
-        self.createProductFix()
-        self.createProductAsRawMaterial()  # cola
-        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
-                         module=True)
-
-        self.menu.openClientManagement()
-        self.html.clickElement('Kedvezménykártyák', 'a')
-
-        self.html.clickElement('Új kedvezménykártya', 'a')
-        self.html.switchFrame('iframe')
-
-        self.html.fillInput('Megnevezés', name)
-        self.html.fillInput('Kód', code)
-
-        self.html.clickDropdown('Kategóriák', category)
-        self.html.clickElement('Kategóriák', 'label')
-        self.html.clickElement('Termékcsoportok', 'label', options=Options(following='input'))
-        self.html.switchFrame('iframe')
-        self.html.clickElement(productGroup, 'a')
-        self.html.clickElement('Rögzít')
-        self.html.switchFrame('iframe')
-        self.html.clickElement('dc_is_percent', 'label', options=Options(htmlAttribute='data-name'))
-
-        for day in self.days:
-            self.html.fillInput(day, discount, 'input', options=Options(htmlAttribute='data-title'))
-
-        self.html.clickElement('Rögzít')
-
-        self.clientAssert.assertDiscountCardExist(name, code, discount, group=productGroup, category='Ital')
-        self.clientseed.deleteCard(data.DiscountCard['White Friday']['Name'])
-
-    '''_______________________________________________________WORKS__________________________________________________'''
-    def testCreateCardProduct(self):
-        name = data.DiscountCard['White Friday']['Name']
-        code = data.DiscountCard['White Friday']['Code']
-        discount = data.DiscountCard['White Friday']['Discount']
-        category = data.DiscountCard['White Friday']['Category']
-        productGroup = data.DiscountCard['White Friday']['ProductGroup']
-        product = data.DiscountCard['White Friday']['Product']
-
-        self.menu.openProducts()
-        self.createProductChose()
-        self.menu.openProducts()
-        self.createProductFix()
-        self.createProductAsRawMaterial()  # cola
-        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
-                         module=True)
-
-        self.menu.openClientManagement()
-        self.html.clickElement('Kedvezménykártyák', 'a')
-
-        self.html.clickElement('Új kedvezménykártya', 'a')
-        self.html.switchFrame('iframe')
-
-        self.html.fillInput('Megnevezés', name)
-        self.html.fillInput('Kód', code)
-
-        self.html.clickDropdown('Kategóriák', category)
-        self.html.clickElement('Kategóriák', 'label')
-        self.html.clickElement('Termékcsoportok', 'label', options=Options(following='input'))
-        self.html.switchFrame('iframe')
-        self.html.clickElement(productGroup, 'a')
-        self.html.clickElement('Rögzít')
-        self.html.switchFrame('iframe')
-        self.html.clickDropdown('Termékek', product) # itt majd lehet egy keresest be kell epiteni
-        self.html.clickElement('Termékek', 'label')
-        self.html.clickElement('dc_is_percent', 'label', options=Options(htmlAttribute='data-name'))
-
-        for day in self.days:
-            self.html.fillInput(day, discount, 'input', options=Options(htmlAttribute='data-title'))
-
-        self.html.clickElement('Rögzít')
-
-        self.clientAssert.assertDiscountCardExist(name, code, discount, group=productGroup, category='Ital', products=product)
-        self.clientseed.deleteCard(data.DiscountCard['White Friday']['Name'])
-
-    #@unittest.skip
-    def testCreateRegular(self):
-        self.menu.openProducts()
-        self.createProductChose()
-        self.menu.openProducts()
-        self.createProductFix()
-        self.createProductAsRawMaterial()
-        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
-                         module=True)
-
-        self.menu.openClientManagement()
-        self.html.clickElement('Törzsvendégek', 'a')
-        self.clientAssert.assertRegularExist(self.name, self.address, self.phone, self.discount, self.code)
-
-        # nem hasznaljuk mert a teardown tartalmazza
-        #self.clientseed.deleteRegular(self.name)
-
-    '''_______________________________________________________WORKS__________________________________________________'''
-    def testCreateUser(self):
-        surname = data.User['Géza']['Surname']
-        firstName = data.User['Géza']['FirstName']
-        userName = data.User['Géza']['UserName']
-        position = data.User['Géza']['Position']
-        password = data.User['Géza']['Password']
-        group = data.User['Géza']['Group']
-        rights = data.Group['Felszolgáló2']['Rights'].values()
-
-        self.menu.openProducts()
-        self.createProductChose()
-        self.menu.openProducts()
-        self.createProductFix()
-        self.createProductAsRawMaterial()  # cola
-
-        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
-                         module=True)
-
-        self.menu.openUsers()
-
-        self.usersSeed.createUser(surname, firstName, userName, password, position, group)
-        self.menu.openUsers()
-        self.usersAssert.assertUserExist(surname, firstName, position, rights, group=group)
-
-        self.html.clickElement('Kilépés a rendszerből', 'a')
-        self.html.fillInput('Felhasználónév', userName, selector='placeholder')
-        self.html.fillInput('Jelszó', password, selector='placeholder')
-        self.html.clickElement('Belépés')
-        self.html.fillInput('Belépési kód', password, selector='placeholder')
-        self.html.clickElement('Belépés')
-        self.menu.openUsers()
-
-        self.html.clickElement('Kilépés a rendszerből', 'a')
-        super().setUpClass()
-        super().login()
-        self.menu.openUsers()
-
-        self.usersSeed.deleteUser(surname)
-
-    '''_______________________________________________________WORKS__________________________________________________'''
-    def testUpdateUserGroup(self):
-        name = data.Group['Felszolgáló2']['Name']
-        rights = data.Group['Felszolgáló2']['Rights'].values()
-
-        self.menu.openProducts()
-        self.createProductChose()
-        self.menu.openProducts()
-        self.createProductFix()
-        self.createProductAsRawMaterial()  # cola
-
-        self.createPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'], data.Product['Sonka']['Name'],
-                         module=True)
-
-        self.menu.openUsers()
-        self.html.clickElement('Csoportok', 'a')
-
-        self.usersSeed.createGroup(name)
-
-        self.html.clickTableElement('groups', 'id', name, 'a', 'Szerkeszt', 'Csoportok')
-        self.html.clickElement('Jogok', 'a')
-        self.html.switchFrame('iframe')
-        self.html.clickElement('inside scrollableContent', 'div', options=Options(htmlAttribute='class'))
-        html = self.driver.find_element_by_tag_name('html')
-
-        # oke, egyelore jo lesz igy
-        # NASA code
-        # a megjeleno iframe-ben gorgetunk lefele es bepipaljuk a szukseges elemeket
-        selected = 0
-        while selected != len(rights):
-            for i in rights:
-                try:
-                    self.html.getElement(None, '//span[contains(., "' + i + '") and @class="dynatree-node dynatree-exp-c dynatree-ico-c"]', options=Options(uniqueSelector=True)).click()
-                    selected += 1
-                except Exception as ex:
-                    pass
-            html.send_keys(Keys.DOWN)
-            self.html.wait(0.5)
-
-        self.html.clickElement('Rögzít', waitSeconds=2)
-        self.usersAssert.assertGroupExist(name, rights)
-
-        self.usersSeed.deleteGroup(name)
-
-
-
-
-
-
-
-
-
-

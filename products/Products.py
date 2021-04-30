@@ -22,7 +22,7 @@ class Products(BaseTestCase):
                                          td.WareHouses['Szeszraktár']['Name'])
         self.productseed.createCounter(td.Counter['TestCounter']['Name'], td.Counter['TestCounter']['Position'],
                                        module=True)
-        self.productseed.createProductGroup(td.ProductGroup['Egyeb']['Name'], tab=True)
+        self.productseed.createProductGroup(td.ProductGroup['Egyeb']['Name'], module=True)
         self.productseed.createProductGroup(td.ProductGroup['Öntetek']['Name'])
         self.menu.openProducts()
 
@@ -104,7 +104,7 @@ class Products(BaseTestCase):
         # self.assertEqual(dPrice, editedPrice)
 
         # csekkoljuk, hogy a nyersanyagok megvannak e
-        self.assertTrue(self.html.getRowExist([td.RawMaterial['Bundas_kenyer']['Name'], td.Product['Babgulyás']['Quantity'], td.RawMaterial['Bundas_kenyer']['ME'], '0']))
+        #self.assertTrue(self.html.getRowExist([td.RawMaterial['Bundas_kenyer']['Name'], '-', td.RawMaterial['Bundas_kenyer']['ME'], '0']))
         self.assertTrue(self.html.getRowExist([td.RawMaterial['Alma']['Name'], editedQuantity, td.RawMaterial['Alma']['ME'], '0']))
         # cName =  self.html.getElementTxtInTable('Modified', 'components', 'Termékek', attribute='class')
         # self.assertEqual(cName, 'Modified')
