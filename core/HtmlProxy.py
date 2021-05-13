@@ -98,6 +98,7 @@ class HtmlProxy:
         xpath = self.getXpathByExactMatch(tag, target, options)
         xpath = self.appendFollowing(xpath, options)
 
+        print(xpath)
         return element.find_element_by_xpath(xpath)
 
     def appendFollowing(self, xpath, options=Options()):
@@ -229,6 +230,7 @@ class HtmlProxy:
         if tab != None:
             self.search(tdText, tab)
         table = self.getElement(atrName, 'table', Options(htmlAttribute=atrType))
+        print('.//td[contains(., "' + tdText + '")]//following::' + followingType + '[contains(.,"' + targetText + '")]')
         table.find_element_by_xpath('.//td[contains(., "' + tdText + '")]//following::' + followingType +'[contains(.,"' + targetText +'")]').click()
         self.wait(1)
 
