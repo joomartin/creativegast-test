@@ -50,7 +50,8 @@ class RestaurantSeed:
         self.html.fillAutocomplete('sh_city', 'input', city, city, 'li', options=Options(htmlAttribute='id'))
         self.html.fillInput('Utca', street)
         self.html.fillInput('Házszám', houseNum)
-        self.html.fillInput('Telefon', phone)
+        self.html.wait(2)
+        self.html.fillInput('Telefon', phone, options=Options(exactMatch=True))
         self.html.clickElement('Rögzít', 'span')
 
 
