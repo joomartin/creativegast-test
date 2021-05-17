@@ -1,3 +1,5 @@
+from datetime import datetime
+
 
 class TestData:
     RawMaterial = {
@@ -250,7 +252,8 @@ class TestData:
     Client = {
         'Pista':
             {
-                'Name': 'Péntek',
+                #'Name': 'Péntek',
+                'Name': str(datetime.now()),
                 'Code': '987654321',
                 'Phone': '123456789',
                 'Discount': '10',

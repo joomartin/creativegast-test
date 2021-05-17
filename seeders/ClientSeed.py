@@ -13,7 +13,10 @@ class ClientSeed:
         self.menu = MainMenuProxy(self.driver)
         self.clientAssert = ClientManagementAssert(self.html, self.driver)
 
-    def createClient(self, name, code, phone, discount, taxnumber, country, postalCode, city, street, houseNumber, tab=False):
+    def createClient(self, name, code, phone, discount, taxnumber, country, postalCode, city, street, houseNumber, module=False, tab=False):
+        if module:
+            self.menu.openClientManagement()
+            self.html.clickElement('Házhozszállítási cím', 'a')
         if tab:
             self.html.clickElement('Házhozszállítási cím', 'a')
 

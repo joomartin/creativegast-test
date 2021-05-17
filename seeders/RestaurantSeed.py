@@ -44,7 +44,15 @@ class RestaurantSeed:
         self.html.fillAutocomplete('cl_name', 'input', name, name, 'li', options=Options(htmlAttribute='id'))
         self.html.clickElement('Rögzít', 'span')
 
-
+    def createDynCTableForNew(self, name, city, street, houseNum, phone):
+        self.html.clickElement('+', waitSeconds=1)
+        self.html.fillInput('Vendég neve', name)
+        self.html.fillAutocomplete('sh_city', 'input', city, city, 'li', options=Options(htmlAttribute='id'))
+        self.html.fillInput('Utca', street)
+        self.html.fillInput('Házszám', houseNum)
+        self.html.wait(2)
+        self.html.fillInput('Telefon', phone, options=Options(exactMatch=True))
+        self.html.clickElement('Rögzít', 'span')
 
 
 

@@ -18,20 +18,24 @@ from seeders.ProductSeed import ProductSeed
 from seeders.ReceivingSeed import ReceivingSeed
 from seeders.RestaurantSeed import RestaurantSeed
 from selenium.webdriver.chrome.options import Options
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 class BaseTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-
+        print(os.environ['CHROME_DRIVER'])
+        print(os.environ.get('DRIVER'))
         chrome_options = Options()
         #chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--window-size=1920,1080')
+        #chrome_options.add_argument('--window-size=1920,1080')
         # chrome_options.add_argument("--auto-open-devtools-for-tabs")
         #chrome_options.add_argument('--disable-gpu')
         #chrome_options.headless = True
-        self.driver = webdriver.Chrome(executable_path='C:/webdrivers/chromedriver.exe', options=chrome_options)
+        self.driver = webdriver.Chrome(executable_path=os.environ.get('DRIVER'), options=chrome_options)
 
         self.driver.delete_all_cookies()
         self.driver.maximize_window()
@@ -78,11 +82,11 @@ class BaseTestCase(unittest.TestCase):
     '''
 
     def login(self):
-        self.html.fillInput('Felhasználónév', 'admin', selector='placeholder')
-        self.html.fillInput('Jelszó', 'admin', selector='placeholder')
+        self.html.fillInput('Felhasználónév', os.environ.get('USER_NAME'), selector='placeholder')
+        self.html.fillInput('Jelszó', os.environ.get('USER_PASS'), selector='placeholder')
 
         self.html.clickElement('Belépés')
-        self.html.fillInput('Belépési kód', 'admin', selector='placeholder')
+        self.html.fillInput('Belépési kód', os.environ.get('CODE'), selector='placeholder')
         self.html.clickElement('Belépés')
 
 
