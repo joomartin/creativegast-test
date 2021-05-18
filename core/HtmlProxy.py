@@ -282,7 +282,7 @@ class HtmlProxy:
 
     def getRowExist(self, elements):
         xPath = ''
-        for index,elem in enumerate(elements):
+        for index, elem in enumerate(elements):
             if index != len(elements)-1:
                 xPath += 'contains(., "' + elem + '") and '
             else:

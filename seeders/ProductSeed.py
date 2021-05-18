@@ -28,9 +28,9 @@ class ProductSeed:
         self.html.fillInput('Termékcsoport neve', groupName)
         self.html.clickDropdown('Kategória', 'Étel')
         self.html.clickElement('Rögzít')
-        self.html.wait(12)
+        self.html.wait(60)
         self.html.switchFrame()
-        self.html.wait(5)
+        self.html.wait(10)
 
     def deleteProductGroup(self, groupName, module=False, tab=False):
         if module:
@@ -253,6 +253,28 @@ class ProductSeed:
         self.html.clickElement('Igen', waitSeconds=1)
         self.html.search('', 'Számlálók')
 
+    def createProductAsRawMaterial(self, module=False):
+        if module:
+            self.menu.openProducts()
 
+        self.html.clickElement('Új termék felvitele', 'a')
+        self.html.switchFrame('iframe')
 
+        self.html.clickDropdown('Nyomtatási részleg', 'Pult')
+        self.html.switchFrame('iframe')
+
+        self.html.clickElement('Üdítők', 'a')
+        self.html.clickElement('Rögzít')
+        self.html.switchFrame('iframe')
+        self.html.fillInput('Termék neve', 'Kóla')
+        places = self.html.getElement('Eladási ár (Kötelező)', 'td')
+        self.html.clickElement('Ár megadása', options=Options(element=places))
+        self.html.fillInput('Nettó', '300')
+        self.html.wait(1)
+        self.html.clickElement('taxPriceSave', 'a', options=Options(htmlAttribute='id'))
+        self.html.wait(2)
+
+        self.html.clickElement('Felvétel nyersanyagként', 'label', Options(following='i'))
+        #self.html.fillInput('Termék mennyiségi tartalma', '100')
+        self.html.clickElement('Rögzít')
 

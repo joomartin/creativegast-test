@@ -1,11 +1,7 @@
-import unittest
-
 from shared.BaseTestCase import BaseTestCase
 from shared.TestData import TestData as data
 from selenium.webdriver.common.keys import Keys
 from core.Options import Options
-from selenium.webdriver.common.action_chains import ActionChains
-from restaurant.Restaurant import Restaurant
 
 
 class Orders(BaseTestCase):
@@ -36,13 +32,15 @@ class Orders(BaseTestCase):
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Csirkemell']['Name'],
                                                     data.RawMaterial['Csirkemell']['GrosPrice'],
                                                     data.RawMaterial['Csirkemell']['Quantity'],
-                                                    data.RawMaterial['Csirkemell']['Warehouse'], data.RawMaterial['Csirkemell']['ME'],
+                                                    data.RawMaterial['Csirkemell']['Warehouse'],
+                                                    data.RawMaterial['Csirkemell']['ME'],
                                                     module=True)
 
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Finomliszt']['Name'],
                                                     data.RawMaterial['Finomliszt']['GrosPrice'],
                                                     data.RawMaterial['Finomliszt']['Quantity'],
-                                                    data.RawMaterial['Finomliszt']['Warehouse'], data.RawMaterial['Finomliszt']['ME'],
+                                                    data.RawMaterial['Finomliszt']['Warehouse'],
+                                                    data.RawMaterial['Finomliszt']['ME'],
                                                     module=True)
 
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Almalé']['Name'],

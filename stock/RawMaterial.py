@@ -21,7 +21,9 @@ class RawMaterial(BaseTestCase):
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
 
     def testCreate(self):
-        self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
+        self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'],
+                                         data.RawMaterial['Bundas_kenyer']['ME'],
+                                         data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
     def testUpdate(self):
@@ -190,8 +192,20 @@ class RawMaterial(BaseTestCase):
 
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
+    def testCreateRawMaterialWithOpening(self):
+        rawMaterials = ['Csirkemell', 'Finomliszt', 'Almalé', 'Hasábburgonya', 'Sonka', 'Paradicsomszósz']
 
+        for material in rawMaterials:
+            self.stockseed.createRawMaterialWithOpening(data.RawMaterial[material]['Name'],
+                                                        data.RawMaterial[material]['GrosPrice'],
+                                                        data.RawMaterial[material]['Quantity'],
+                                                        data.RawMaterial[material]['Warehouse'],
+                                                        data.RawMaterial[material]['ME'],
+                                                        module=True)
 
+        for material in rawMaterials:
+            self.stockAssert.assertMaterialExist(data.RawMaterial[material]['Name'], 'Raktárkészlet')
 
-
+        for material in rawMaterials:
+            self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True)
 
