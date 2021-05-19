@@ -28,7 +28,7 @@ class ProductSeed:
         self.html.fillInput('Termékcsoport neve', groupName)
         self.html.clickDropdown('Kategória', 'Étel')
         self.html.clickElement('Rögzít')
-        self.html.wait(60)
+        self.html.wait(120)
         self.html.switchFrame()
         self.html.wait(10)
 
@@ -278,3 +278,30 @@ class ProductSeed:
         #self.html.fillInput('Termék mennyiségi tartalma', '100')
         self.html.clickElement('Rögzít')
 
+    # termek valaszthato korettel
+    def createProductChose(self, name):
+        self.html.clickElement('Új termék felvitele', 'a')
+        self.html.switchFrame('iframe')
+
+        self.html.clickDropdown('Nyomtatási részleg', 'Pult')
+        self.html.switchFrame('iframe')
+
+        self.html.clickElement('Ételek', 'a')
+        self.html.clickElement('Rögzít')
+
+        self.html.switchFrame('iframe')
+        self.html.fillInput('Termék neve', name)
+
+        self.html.clickElement('Ez a termék tartalmaz köretet', 'label', Options(following='i'))
+
+        places = self.html.getElement('Eladási ár (Kötelező)', 'td')
+        self.html.clickElement('Ár megadása', options=Options(element=places))
+        self.html.fillInput('Nettó', '1800')
+        self.html.wait(1)
+        self.html.clickElement('taxPriceSave', 'a', options=Options(htmlAttribute='id'))
+        self.html.wait(2)
+
+        self.html.fillAutocomplete('componentName', 'input', 'Csirkemell', 'Csirkemell', 'li', Options(htmlAttribute='id'))
+        self.html.fillInput('componentQty', '0.20', 'input', options=Options(htmlAttribute='id'))
+        self.html.clickElement('Hozzáad')
+        self.html.clickElement('Rögzít')

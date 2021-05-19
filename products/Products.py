@@ -18,14 +18,13 @@ class Products(BaseTestCase):
         super().tearDownClass()
 
     def setUp(self):
-
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'],
                                          data.RawMaterial['Bundas_kenyer']['ME'],
                                          data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.createRawMaterial(data.RawMaterial['Alma']['Name'], data.RawMaterial['Alma']['ME'],
                                          data.WareHouses['Szeszraktár']['Name'])
-        '''
+
         for material in self.rawMaterials:
             self.stockseed.createRawMaterialWithOpening(data.RawMaterial[material]['Name'],
                                                         data.RawMaterial[material]['GrosPrice'],
@@ -33,21 +32,24 @@ class Products(BaseTestCase):
                                                         data.RawMaterial[material]['Warehouse'],
                                                         data.RawMaterial[material]['ME'],
                                                         module=True)
-        '''
+
         self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'],
                                        module=True)
-        self.productseed.createProductGroup(data.ProductGroup['Egyeb']['Name'], tab=True)
-        self.productseed.createProductGroup(data.ProductGroup['Öntetek']['Name'])
+        #self.productseed.createProductGroup(data.ProductGroup['Egyeb']['Name'], tab=True)
+        #self.productseed.createProductGroup(data.ProductGroup['Öntetek']['Name'])
         self.menu.openProducts()
 
     def tearDown(self):
+        for material in self.rawMaterials:
+            self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Alma']['Name'], module=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], module=True)
-        self.productseed.deleteProductGroup(data.ProductGroup['Egyeb']['Name'], module=True)
-        self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
+        #self.productseed.deleteProductGroup(data.ProductGroup['Egyeb']['Name'], module=True)
+        #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
 
+    @unittest.skip
     def testCreate(self):
         self.productseed.createProduct(data.Product['Babgulyás']['Name'], data.ProductGroup['Egyeb']['Name'],
                                        data.Product['Babgulyás']['Code'], data.Counter['TestCounter']['Name'],
@@ -55,6 +57,7 @@ class Products(BaseTestCase):
         self.productAssert.assertProductExist(data.Product['Babgulyás']['Name'], 'Termékek')
         self.productseed.deleteProduct(data.Product['Babgulyás']['Name'])
 
+    @unittest.skip
     def testCreateConvenience(self):
         self.productseed.createProductConveniencies(data.Product['Babgulyás']['Name'],
                                                     data.ProductGroup['Egyeb']['Conveniences'],
@@ -63,6 +66,7 @@ class Products(BaseTestCase):
         self.productAssert.assertProductExist(data.Product['Babgulyás']['Name'], 'Termékek')
         self.productseed.deleteProduct(data.Product['Babgulyás']['Name'])
 
+    @unittest.skip
     def testEdit(self):
         editedPlace = 'Pizza'
         editedName = 'Bableves'
@@ -160,16 +164,60 @@ class Products(BaseTestCase):
         self.productseed.deleteProduct('Kóla', module=True)
         self.stockseed.deleteRawMaterial('Kóla', module=True)
 
-    @unittest.skip
-    def testvalami(self):
+    def testPotato(self):
         self.productseed.createProduct(data.Product['Hasábburgonya']['Name'], 'Köretek',
                                        data.Product['Hasábburgonya']['Code'], data.Counter['TestCounter']['Name'],
                                        data.RawMaterial['Hasábburgonya']['Name'],
                                        data.Product['Hasábburgonya']['Quantity'],
                                        data.Product['Hasábburgonya']['NetPrice'], module=True)
 
+        self.productAssert.assertProductExist(data.Product['Hasábburgonya']['Name'], 'Termékek')
+        self.html.search(data.Product['Hasábburgonya']['Name'], 'Termékek')
+        self.html.clickTableElement('products', 'id', data.Product['Hasábburgonya']['Name'], 'a', 'Részletek',
+                                    'Termékek')
+        self.html.switchFrame('iframe')
 
+        dName = self.html.getElementTxtInTable(data.Product['Hasábburgonya']['Name'], 'details', 'Termékek',
+                                               attribute='class')
+        self.assertEqual(dName, data.Product['Hasábburgonya']['Name'])
+        self.assertTrue(self.html.getRowExist(['Termék neve:', data.Product['Hasábburgonya']['Name']]))
+        self.assertTrue(self.html.getRowExist(['Nyomtatási részleg:', 'Pult']))
+        self.assertTrue(self.html.getRowExist(['Termékcsoport:', 'Köretek']))
+        self.assertTrue(self.html.getRowExist(['Eladási ár', data.Product['Hasábburgonya']['NetPrice']]))
+        # csekkoljuk, hogy a nyersanyag megvan e
+        self.assertTrue(self.html.getRowExist([data.RawMaterial['Hasábburgonya']['Name'], '0.18', 'kg', '90']))
 
+        self.html.switchFrame()
+        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+        self.html.search('', 'Termékek')
+
+        self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
+
+    def testCreateProductChose(self):
+        self.productseed.createProductChose('Roston csirkemell')
+
+        # assert
+        self.productAssert.assertProductExist('Roston csirkemell', 'Termékek')
+        self.html.search('Roston csirkemell', 'Termékek')
+        self.html.clickTableElement('products', 'id', 'Roston csirkemell', 'a', 'Részletek',
+                                    'Termékek')
+        self.html.switchFrame('iframe')
+
+        dName = self.html.getElementTxtInTable('Roston csirkemell', 'details', 'Termékek',
+                                               attribute='class')
+        self.assertEqual(dName, 'Roston csirkemell')
+        self.assertTrue(self.html.getRowExist(['Termék neve:', 'Roston csirkemell']))
+        self.assertTrue(self.html.getRowExist(['Nyomtatási részleg:', 'Pult']))
+        self.assertTrue(self.html.getRowExist(['Termékcsoport:', 'Ételek']))
+        self.assertTrue(self.html.getRowExist(['Eladási ár', '1 800']))
+        # csekkoljuk, hogy a nyersanyag megvan e
+        self.assertTrue(self.html.getRowExist([data.RawMaterial['Csirkemell']['Name'], '0.2', 'kg', '100']))
+
+        self.html.switchFrame()
+        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+        self.html.search('', 'Termékek')
+
+        self.productseed.deleteProduct('Roston csirkemell')
 
 
 
