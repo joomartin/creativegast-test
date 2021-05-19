@@ -2,8 +2,7 @@ from core.HtmlProxy import HtmlProxy
 from mainMenu.MainMenuProxy import MainMenuProxy
 from core.Options import Options
 from stock.StockAssert import StockAssert
-from shared.TestData import TestData as td
-
+from shared.TestData import TestData as data
 
 class ProductSeed:
 
@@ -67,8 +66,8 @@ class ProductSeed:
         self.html.getElement('27%', 'td', Options(following='td//input')).send_keys('100')
 
         self.html.fillInput('Fogás neve', 'Előétel')
-        self.html.clickDropdown('Termékcsoport:', td.ProductGroup['Egyeb']['Name'])
-        self.html.clickElement(td.ProductGroup['Egyeb']['Name'])
+        self.html.clickDropdown('Termékcsoport:', data.ProductGroup['Egyeb']['Name'])
+        self.html.clickElement(data.ProductGroup['Egyeb']['Name'])
         self.html.fillInput('Mennyiség', '1')
         self.html.getInput('Mennyiség', 'label').click()
         self.html.clickElement('Hozzáad')
@@ -80,8 +79,8 @@ class ProductSeed:
 
         tab = self.html.getElement('tabs-2', 'div', Options(htmlAttribute='id'))
         self.html.fillInput('Fogás neve', 'Főétel', options=Options(element=tab))
-        self.html.clickDropdown('Termékcsoport:', td.ProductGroup['Egyeb']['Name'], options=Options(element=tab))
-        self.html.clickElement(td.ProductGroup['Egyeb']['Name'], options=Options(element=tab))
+        self.html.clickDropdown('Termékcsoport:', data.ProductGroup['Egyeb']['Name'], options=Options(element=tab))
+        self.html.clickElement(data.ProductGroup['Egyeb']['Name'], options=Options(element=tab))
         self.html.fillInput('Mennyiség', '1', options=Options(element=tab))
         self.html.getInput('Mennyiség', 'label', options=Options(element=tab)).click()
         self.html.clickElement('Hozzáad', options=Options(element=tab))
@@ -305,3 +304,88 @@ class ProductSeed:
         self.html.fillInput('componentQty', '0.20', 'input', options=Options(htmlAttribute='id'))
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
+
+    def createProductFix(self, name, sideDish, module=False):
+        if module:
+            self.menu.openProducts()
+
+        self.html.clickElement('Új termék felvitele', 'a')
+        self.html.switchFrame('iframe')
+
+        self.html.clickDropdown('Nyomtatási részleg', 'Pult')
+        self.html.switchFrame('iframe')
+
+        self.html.clickElement('Ételek', 'a')
+        self.html.clickElement('Rögzít')
+
+        self.html.switchFrame('iframe')
+        self.html.fillInput('Termék neve', name)
+
+        self.html.clickElement('Ez a termék tartalmaz köretet', 'label', Options(following='i'))
+
+        places = self.html.getElement('Eladási ár (Kötelező)', 'td')
+        self.html.clickElement('Ár megadása', options=Options(element=places))
+        self.html.fillInput('Nettó', '2200')
+        self.html.wait(1)
+        self.html.clickElement('taxPriceSave', 'a', options=Options(htmlAttribute='id'))
+        self.html.wait(2)
+
+        self.html.clickElement('Válasszon köretet')
+        self.html.clickElement(data.Product[sideDish]['Name'], 'label')
+
+        self.html.fillAutocomplete('componentName', 'input', 'Csirkemell', 'Csirkemell', 'li',
+                                   Options(htmlAttribute='id'))
+        self.html.fillInput('componentQty', '0.20', 'input', options=Options(htmlAttribute='id'))
+        self.html.clickElement('Hozzáad')
+        self.html.clickElement('Rögzít')
+
+    def createSpecialPizza(self, pizzaName, baseComponent, topping, module=False, tab=False):
+        if module:
+            self.menu.openProducts()
+            self.html.clickElement('Pizza (testreszabható)', 'a')
+        elif tab:
+            self.html.clickElement('Pizza (testreszabható)', 'a')
+
+        self.html.clickElement('Új pizza (testreszabható)', 'a')
+
+        self.html.switchFrame('iframe')
+        self.html.clickDropdown('Nyomtatási részleg', 'Pizza')
+        self.html.fillInput('Termék neve', pizzaName)
+        self.html.fillInput('Kód', '1333')
+
+        self.html.clickDropdown('Szósz', 'Paradicsomszósz')
+
+        self.html.fillAutocomplete('baseComponentName', 'input', baseComponent, baseComponent, 'li',
+                                   Options(htmlAttribute='id'))
+        table = self.html.getElement('baseComponents', 'table', Options(htmlAttribute='id'))
+        self.html.getElement('Hozzáad', 'button', Options(element=table)).click()
+
+        self.html.fillAutocomplete('toppingComponentName', 'input', topping, topping, 'li',
+                                   Options(htmlAttribute='id'))
+        table = self.html.getElement('toppingComponents', 'table', Options(htmlAttribute='id'))
+        self.html.getElement('Hozzáad', 'button', options=Options(element=table)).click()
+
+        self.html.clickElement('Mennyiségek', 'a')
+        self.html.wait(2)
+
+        self.html.clickElement('edit actionButton fright editPriceBtn', 'a', Options(htmlAttribute='class'))
+        self.html.fillInput('grossPrice-2-1', '1400', 'input', options=Options(htmlAttribute='name'))
+        self.html.fillInput('grossPrice-5-1', '2000', 'input', options=Options(htmlAttribute='name'))
+        self.html.wait(2)
+        self.html.clickElement('Rögzít', 'a', waitSeconds=2)
+        self.html.clickElement('Rögzít')
+
+        self.html.clickTableElement('customproduct-2', 'id', 'Sonkás pizza', 'a', 'Szerkeszt',
+                                    'Pizza (testreszabható)')
+        self.html.switchFrame('iframe')
+        self.html.clickElement('Mennyiségek', 'a')
+        self.html.wait(2)
+        inputFields = self.html.getElements('inputmask-numeric qtys', 'input',
+                                            options=Options(htmlAttribute='class'))
+
+        inputFields[0].send_keys('0,18')
+        inputFields[1].send_keys('0,18')
+        # self.html.fillInput('inputmask-numeric qtys', '0,18', 'input', options=Options(htmlAttribute='class', element=inputFields[0]))
+        # self.html.fillInput('inputmask-numeric qtys', '0,18', 'input', options=Options(htmlAttribute='class', element=inputFields[1]))
+        self.html.clickElement('Rögzít')
+

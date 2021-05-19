@@ -219,8 +219,42 @@ class Products(BaseTestCase):
 
         self.productseed.deleteProduct('Roston csirkemell')
 
+    def testCreateProductFix(self):
+        self.productseed.createProduct(data.Product['Hasábburgonya']['Name'], 'Köretek',
+                                       data.Product['Hasábburgonya']['Code'], data.Counter['TestCounter']['Name'],
+                                       data.RawMaterial['Hasábburgonya']['Name'],
+                                       data.Product['Hasábburgonya']['Quantity'],
+                                       data.Product['Hasábburgonya']['NetPrice'], module=True)
 
+        self.productseed.createProductFix('Rántott csirkemell', 'Hasábburgonya', module=True)
+        # assert
+        self.productAssert.assertProductExist('Rántott csirkemell', 'Termékek')
+        self.html.search('Rántott csirkemell', 'Termékek')
+        self.html.clickTableElement('products', 'id', 'Rántott csirkemell', 'a', 'Részletek',
+                                    'Termékek')
+        self.html.switchFrame('iframe')
 
+        dName = self.html.getElementTxtInTable('Rántott csirkemell', 'details', 'Termékek',
+                                               attribute='class')
+        self.assertEqual(dName, 'Rántott csirkemell')
+        self.assertTrue(self.html.getRowExist(['Termék neve:', 'Rántott csirkemell']))
+        self.assertTrue(self.html.getRowExist(['Nyomtatási részleg:', 'Pult']))
+        self.assertTrue(self.html.getRowExist(['Termékcsoport:', 'Ételek']))
+        self.assertTrue(self.html.getRowExist(['Eladási ár', '2 200']))
+        # csekkoljuk, hogy a nyersanyag megvan e
+        self.assertTrue(self.html.getRowExist([data.RawMaterial['Csirkemell']['Name'], '0.2', 'kg', '100']))
+        self.html.switchFrame()
+        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+        self.html.clickTableElement('products', 'id', 'Rántott csirkemell', 'a', 'Szerkeszt',
+                                    'Termékek')
+        self.html.switchFrame('iframe')
+        self.assertTrue(self.html.getElement('Hasábburgonya', 'button').is_displayed())
+        self.html.switchFrame()
+        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+        self.html.search('', 'Termékek')
+
+        self.productseed.deleteProduct('Rántott csirkemell')
+        self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
 
 
 
