@@ -12,6 +12,7 @@ class DiscountCards(BaseTestCase):
         super().login(self)
 
     def setUp(self):
+        self.productseed.createProductAsRawMaterial(module=True)
         self.menu.openClientManagement()
         self.html.clickElement('Kedvezménykártyák', 'a')
 
@@ -21,7 +22,8 @@ class DiscountCards(BaseTestCase):
         pass
 
     def tearDown(self):
-        pass
+        self.productseed.deleteProduct('Kóla', module=True)
+        self.stockseed.deleteRawMaterial('Kóla', module=True)
 
     def testCreateCardDrink(self):
         name = data.DiscountCard['White Friday']['Name']

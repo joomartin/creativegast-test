@@ -1,16 +1,16 @@
 from selenium.common.exceptions import NoSuchElementException
 
 from core.HtmlProxy import HtmlProxy
-from Config import read_section
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 class MainMenuProxy:
 
     def __init__(self, driver):
         self.driver = driver
         self.html = HtmlProxy(self.driver)
-        config = read_section()
-        self.baseUrl = (config.get('path'))
+        self.baseUrl = os.environ.get('URL')
 
     def openRestaurant(self):
         self.navigate('restaurant/index')

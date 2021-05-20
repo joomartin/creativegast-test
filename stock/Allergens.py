@@ -7,7 +7,6 @@ from core.HtmlProxy import HtmlProxy
 from core.Options import Options
 from mainMenu.MainMenuProxy import MainMenuProxy
 from stock.StockAssert import StockAssert
-from Config import read_section
 from shared.BaseTestCase import BaseTestCase
 from stock.RawMaterial import RawMaterial
 

@@ -12,7 +12,6 @@ from receiving.ReceivingAssert import ReceivingAssert
 from restaurant.RestaurantAssert import RestaurantAssert
 from clientManagement.ClientManagementAssert import ClientManagementAssert
 from users.UsersAssert import UserAssert
-from Config import read_section
 from seeders.StockSeed import StockSeed
 from seeders.ProductSeed import ProductSeed
 from seeders.ReceivingSeed import ReceivingSeed
@@ -40,8 +39,7 @@ class BaseTestCase(unittest.TestCase):
         self.driver.delete_all_cookies()
         self.driver.maximize_window()
 
-        config = read_section()
-        self.driver.get(config.get('path'))
+        self.driver.get(os.environ.get('URL'))
 
         self.html = HtmlProxy(self.driver)
         self.menu = MainMenuProxy(self.driver)

@@ -3,6 +3,5 @@ reports
 **/*.pyc
 __pychache__
 debug.log
-config.ini
 stock/geckodriver.log
 /screenShots/

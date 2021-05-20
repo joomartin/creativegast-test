@@ -32,11 +32,14 @@ class Pizza(BaseTestCase):
                                                         data.RawMaterial[material]['Warehouse'],
                                                         data.RawMaterial[material]['ME'],
                                                         module=True)
+        self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'],
+                                       module=True)
 
         self.menu.openProducts()
         self.html.clickElement('Pizza (testreszabható)', 'a')
 
     def tearDown(self):
+        self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], module=True)
         for material in self.rawMaterials:
             self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
@@ -108,10 +111,25 @@ class Pizza(BaseTestCase):
         self.productseed.deletePizza(data.Pizza['Sonkas_pizza']['Name'])
 
     def testCreatePizza(self):
+        self.productseed.createProduct(data.Product['Sonka']['Name'], data.Product['Sonka']['ProductGroup'],
+                                       data.Product['Sonka']['Code'], data.Counter['TestCounter']['Name'],
+                                       data.RawMaterial['Sonka']['Name'], data.Product['Sonka']['Quantity'],
+                                       data.Product['Sonka']['NetPrice'],
+                                       module=True)
+
+        self.productseed.createProduct(data.Product['Paradicsomszósz']['Name'],
+                                       data.Product['Paradicsomszósz']['ProductGroup'],
+                                       data.Product['Paradicsomszósz']['Code'], data.Counter['TestCounter']['Name'],
+                                       data.RawMaterial['Paradicsomszósz']['Name'],
+                                       data.Product['Paradicsomszósz']['Quantity'], '0',
+                                       module=True)
         self.productseed.createSpecialPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'],
                                             data.Product['Sonka']['Name'], module=True)
 
-        self.productAssert.assertPizzaExists('Sonkás pizza', '1 400')
+        self.productAssert.assertPizzaExists('Sonkás pizza', '1400.00')
 
+        self.productseed.deleteProduct(data.Product['Sonka']['Name'], module=True)
+        self.productseed.deleteProduct(data.Product['Paradicsomszósz']['Name'], module=True)
+        self.productseed.deletePizza('Sonkás pizza', module=True)
 
 

@@ -4,6 +4,7 @@ from core.Options import Options
 from stock.StockAssert import StockAssert
 from shared.TestData import TestData as data
 
+
 class ProductSeed:
 
     def __init__(self, driver):
