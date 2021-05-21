@@ -253,6 +253,7 @@ class ProductSeed:
         self.html.clickElement('Igen', waitSeconds=1)
         self.html.search('', 'Számlálók')
 
+    # kola
     def createProductAsRawMaterial(self, module=False):
         if module:
             self.menu.openProducts()
@@ -390,3 +391,8 @@ class ProductSeed:
         # self.html.fillInput('inputmask-numeric qtys', '0,18', 'input', options=Options(htmlAttribute='class', element=inputFields[1]))
         self.html.clickElement('Rögzít')
 
+    def createAppleJuice(self):
+        self.productseed.createProduct('Almalé', 'Kiszereléses',
+                                       '99', data.Counter['TestCounter']['Name'], data.RawMaterial['Almalé']['Name'],
+                                       '1', '1800',
+                                       module=True)

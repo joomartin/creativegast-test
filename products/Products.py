@@ -256,10 +256,30 @@ class Products(BaseTestCase):
         self.productseed.deleteProduct('Rántott csirkemell')
         self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
 
+    def testCreateAppleJuice(self):
+        self.productseed.createAppleJuice()
 
+        self.productAssert.assertProductExist('Almalé', 'Termékek')
+        self.html.search('Almalé', 'Termékek')
+        self.html.clickTableElement('products', 'id', 'Almalé', 'a', 'Részletek', 'Termékek')
+        self.html.switchFrame('iframe')
 
+        dName = self.html.getElementTxtInTable('Almalé', 'details', 'Termékek', attribute='class')
+        self.assertEqual(dName, 'Almalé')
+        self.assertTrue(self.html.getRowExist(['Termék neve:', 'Almalé']))
+        self.assertTrue(self.html.getRowExist(['Nyomtatási részleg:', 'Pult']))
+        self.assertTrue(self.html.getRowExist(['Termékcsoport:', 'Kiszereléses']))
+        self.assertTrue(self.html.getRowExist(['Eladási ár', '1 800']))
+        # csekkoljuk, hogy a nyersanyag megvan e
+        self.assertTrue(self.html.getRowExist([data.RawMaterial['Almalé']['Name'], '1',
+                                               data.RawMaterial['Almalé']['ME'],
+                                               data.RawMaterial['Almalé']['GrosPrice']]))
 
+        self.html.switchFrame()
+        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+        self.html.search('', 'Termékek')
 
+        self.productseed.deleteProduct('Almalé', module=True)
 
 
 

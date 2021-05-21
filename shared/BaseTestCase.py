@@ -26,8 +26,6 @@ class BaseTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        print(os.environ['CHROME_DRIVER'])
-        print(os.environ.get('DRIVER'))
         chrome_options = Options()
         #chrome_options.add_argument('--headless')
         #chrome_options.add_argument('--window-size=1920,1080')

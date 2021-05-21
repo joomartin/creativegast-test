@@ -298,7 +298,7 @@ class Orders(BaseTestCase):
             startValue = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2]
         except:
             startValue = '0 0'
-        print(startValue)
+        #print(startValue)
         self.menu.openProducts()
         self.createProductChose()
         self.menu.openProducts()
@@ -359,7 +359,7 @@ class Orders(BaseTestCase):
 
         #self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
         price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
-        print(price)
+        #print(price)
 
         self.html.clickElement('Kitölt')
 
@@ -368,13 +368,13 @@ class Orders(BaseTestCase):
         prc= price.split(' ')
         prcInt = int(prc[0] + prc[1])
         expected = int(stvalue[0]+stvalue[1]) + prcInt
-        print('ex '+ str(expected))
+        #print('ex '+ str(expected))
         self.menu.openFinance()
         self.html.refresh()
         self.html.wait()
         actual = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2].split(' ')
         actInt=int(actual[0] + actual[1])
-        print('act ' + str(actInt))
+        #print('act ' + str(actInt))
 
         self.assertEqual(expected, actInt)
 
@@ -712,7 +712,8 @@ class Orders(BaseTestCase):
         self.assertEqual(expected, actInt)
 
     def testReceiving(self):
-        self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'], module=True)
+        self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'],
+                                         module=True)
         self.menu.openProducts()
         self.createProductChose()
         self.menu.openProducts()
@@ -729,8 +730,8 @@ class Orders(BaseTestCase):
         self.html.clickDropdown('Fizetési mód', 'Készpénz')
         self.html.clickDropdown('Beszállító', data.Partner['Szallito']['Name'])
 
-
-        self.html.fillAutocomplete('Nyersanyag neve', 'input', data.RawMaterial['Csirkemell']['Name'],  data.RawMaterial['Csirkemell']['Name'], 'li', Options(htmlAttribute='data-title'))
+        self.html.fillAutocomplete('Nyersanyag neve', 'input', data.RawMaterial['Csirkemell']['Name'],
+                                   data.RawMaterial['Csirkemell']['Name'], 'li', Options(htmlAttribute='data-title'))
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '1000', 'data-title')
         self.html.clickElement('Válassz...')
@@ -788,7 +789,8 @@ class Orders(BaseTestCase):
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
 
-        self.html.fillAutocomplete('Nyersanyag neve', 'input', 'Kóla', 'Kóla', 'li', Options(htmlAttribute='data-title'))
+        self.html.fillAutocomplete('Nyersanyag neve', 'input', 'Kóla', 'Kóla', 'li',
+                                   Options(htmlAttribute='data-title'))
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
         self.html.clickElement('Válassz...')
@@ -796,27 +798,30 @@ class Orders(BaseTestCase):
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
 
-
         self.html.clickElement('Rögzít')
 
         self.html.switchFrame()
 
-        self.stockAssert.assertStock(data.RawMaterial['Csirkemell']['Name'],data.WareHouses['Szeszraktár']['Name'], '20')
+        self.stockAssert.assertStock(data.RawMaterial['Csirkemell']['Name'],data.WareHouses['Szeszraktár']['Name'],
+                                     '20')
         self.html.wait(2)
 
-        self.stockAssert.assertStock(data.RawMaterial['Finomliszt']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
+        self.stockAssert.assertStock(data.RawMaterial['Finomliszt']['Name'], data.WareHouses['Szeszraktár']['Name'],
+                                     '20')
         self.html.wait(2)
 
         self.stockAssert.assertStock(data.RawMaterial['Almalé']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
         self.html.wait(2)
 
-        self.stockAssert.assertStock(data.RawMaterial['Hasábburgonya']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
+        self.stockAssert.assertStock(data.RawMaterial['Hasábburgonya']['Name'], data.WareHouses['Szeszraktár']['Name'],
+                                     '20')
         self.html.wait(2)
 
         self.stockAssert.assertStock(data.RawMaterial['Sonka']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
         self.html.wait(2)
 
-        self.stockAssert.assertStock(data.RawMaterial['Paradicsomszósz']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
+        self.stockAssert.assertStock(data.RawMaterial['Paradicsomszósz']['Name'],
+                                     data.WareHouses['Szeszraktár']['Name'], '20')
         self.html.wait(2)
 
         self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')

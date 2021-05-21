@@ -1,6 +1,7 @@
 import HTMLTestRunner
 import os
 import unittest
+import ReportMail as mail
 
 from core.contracts.Controller import Controller
 from clientManagement.Regulars import Regulars
@@ -27,5 +28,5 @@ class ClientManagementController(Controller):
 
         # run the suite using HTMLTestRunner
         runner.run(test_suite)
-
+        mail.sendReport(dir + '\\reports\ClientManagementTestReport.html')
 
