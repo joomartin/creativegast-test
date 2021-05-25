@@ -12,11 +12,11 @@ resc = RestaurantController()
 cm = ClientManagementController()
 us = UsersController()
 
-sc.run()
+#sc.run()
 #pc.run()
-rc.run()
-#resc.run()
-cm.run()
+#rc.run()
+resc.run()
+#cm.run()
 #us.run()
 
 
