@@ -443,8 +443,6 @@ class Orders(BaseTestCase):
         actual = self.html.getElement('Bankkártya', 'td', Options(following='td')).text[:-2].split(' ')
         actInt = int(actual[0] + actual[1])
 
-
-        self.assertEqual(expected, actInt)
         self.assertEqual(expected, actInt)
         #self.html.switchFrame('iframe')
 

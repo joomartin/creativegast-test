@@ -607,13 +607,12 @@ class _TestResult(TestResult):
         else:
             sys.stderr.write('F')
 
-
     def generateTestScreenshot(self, test):
         dir = os.getcwd()
         imgdir = dir +'\\screenShots\\'
         imgpath = ''
         stamp = datetime.datetime.now()
-        stamp= stamp.strftime('%m.%d.%Y')
+        stamp = stamp.strftime('%m.%d.%Y_%H_%M_%S')
         if imgdir:
             x = str(test).split()
             tf = x[0]
