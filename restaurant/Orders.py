@@ -513,7 +513,7 @@ class Orders(BaseTestCase):
         self.assertEqual(expected, actInt)
 
     def testDiscountedTable(self):
-        self.restaurantseed.createTable('Kedvezmeny','Kör','Személyzeti','10', module=True)
+        self.restaurantseed.createTable('Kedvezmeny', 'Kör', 'Személyzeti', '10', module=True)
 
         self.menu.openFinance()
         try:
@@ -581,7 +581,7 @@ class Orders(BaseTestCase):
         self.assertEqual(expected, actInt)
         self.assertEqual(expected, actInt)
 
-        self.restaurantseed.deleteTable('Kedvezmeny',module=True)
+        self.restaurantseed.deleteTable('Kedvezmeny', module=True)
 
     def testTake(self):
         self.restaurantseed.createTable('Elvitel', 'Kör', 'Elvitel', '10', module=True)
@@ -643,13 +643,13 @@ class Orders(BaseTestCase):
         prc = price.split(' ')
         prcInt = int(prc[0] + prc[1])
         expected = int(stvalue[0] + stvalue[1]) + prcInt
+        self.html.wait(5)
         self.menu.openFinance()
         self.html.refresh()
         self.html.wait()
         actual = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2].split(' ')
         actInt = int(actual[0] + actual[1])
 
-        self.assertEqual(expected, actInt)
         self.assertEqual(expected, actInt)
 
         self.restaurantseed.deleteTable('Elvitel', module=True)

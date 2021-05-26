@@ -18,6 +18,7 @@ class Restaurant(BaseTestCase):
         self.restaurantseed.createTable(data.Table['Courier']['Name'], module=True)
 
     def setUp(self):
+
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
                                                     data.RawMaterial['Bundas_kenyer']['GrossPrice'],
@@ -78,6 +79,7 @@ class Restaurant(BaseTestCase):
         self.productseed.createProductAsRawMaterial(module=True)
         self.productseed.createSpecialPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'],
                                             data.Product['Sonka']['Name'], module=True)
+
         self.menu.openRestaurant()
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
@@ -88,6 +90,7 @@ class Restaurant(BaseTestCase):
         super().tearDownClass()
 
     def tearDown(self):
+        print('TEARDOWN')
         self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True)
         self.productseed.deleteProduct(data.Product['Palacsinta']['Name'], module=True)
         self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], tab=True)
@@ -583,6 +586,7 @@ class Restaurant(BaseTestCase):
         self.assertEqual(expected, actInt)
 
     # kozbe jo kozbe nem
+    @unittest.skip
     def testMultipleOrdersCredit(self):
         self.menu.openFinance()
         try:
@@ -647,6 +651,7 @@ class Restaurant(BaseTestCase):
         self.assertEqual(expected, actInt)
         #self.html.switchFrame('iframe')
 
+    @unittest.skip
     def testInstantPayment(self):
         self.menu.openFinance()
         try:
@@ -703,6 +708,138 @@ class Restaurant(BaseTestCase):
         actInt = int(actual[0] + actual[1])
 
         self.assertEqual(expected, actInt)
+
+    def testDiscountedTable(self):
+        self.restaurantseed.createTable('Kedvezmeny', 'Kör', 'Személyzeti', '10', module=True)
+
+        self.menu.openFinance()
+        try:
+            startValue = self.html.getElement('Bankkártya', 'td', Options(following='td')).text[:-2]
+        except:
+            startValue = '0 0'
+
+        self.menu.openRestaurant()
+
+        self.html.clickElement('Kedvezmeny', tag='i')
+        self.addProductToList('Rántott csirkemell', '1.00')
+
+        self.html.clickElement('Pizza (testreszabható)', 'a')
+        self.html.wait(1)
+        self.html.clickElement('Sonkás pizza', 'span')
+        self.html.wait(1)
+        self.html.refresh()
+
+        self.html.clickElement('Ital', 'a')
+        self.html.wait(2)
+        self.html.clickElement('Üdítők', 'a')
+        print('ADD COLA')
+        print(self.driver.current_url)
+        self.html.wait(10)
+        self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
+
+        self.addProductToList('Roston csirkemell', '1.00')
+        self.html.wait(2)
+        # self.html.clickElement('Hasábburgonya','label')
+        # self.html.clickElement('sideDishSaveButton', 'button', Options(htmlAttribute='id'))
+
+        self.menu.openRestaurant()
+        self.html.clickElement('Kedvezmeny', tag='i')
+        print('RENDELES BEKULDESE')
+        print(self.driver.current_url)
+        self.html.wait(2)
+        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+
+        self.html.clickElement('Kedvezmeny', tag='i')
+        self.html.clickElement('Fizetés')
+
+        # self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
+        price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
+        print(price)
+
+        print('BANKKARTYA')
+        print(self.driver.current_url)
+        self.html.clickElement('Bankkártya', 'td', Options(following='button'))
+
+        self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
+        stvalue = startValue.split(' ')
+        prc = price.split(' ')
+        prcInt = int(prc[0] + prc[1])
+        expected = int(stvalue[0] + stvalue[1]) + prcInt
+        self.menu.openFinance()
+        self.html.refresh()
+        self.html.wait()
+        actual = self.html.getElement('Bankkártya', 'td', Options(following='td')).text[:-2].split(' ')
+        actInt = int(actual[0] + actual[1])
+
+        self.assertEqual(expected, actInt)
+
+        self.restaurantseed.deleteTable('Kedvezmeny', module=True)
+
+    def testTake(self):
+        self.restaurantseed.createTable('Elvitel', 'Kör', 'Elvitel', '10', module=True)
+
+        self.menu.openFinance()
+        try:
+            startValue = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2]
+        except:
+            startValue = '0 0'
+
+        self.menu.openRestaurant()
+
+        self.html.clickElement('Elvitel', tag='i')
+        self.addProductToList('Rántott csirkemell', '1.00')
+
+        self.html.clickElement('Pizza (testreszabható)', 'a')
+        self.html.wait(1)
+        self.html.clickElement('Sonkás pizza', 'span')
+        self.html.wait(1)
+        self.html.refresh()
+
+        self.html.clickElement('Ital', 'a')
+        self.html.wait(2)
+        self.html.clickElement('Üdítők', 'a')
+        self.html.wait(2)
+        #self.html.clickElement('Kóla', 'span')
+        self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
+
+        self.addProductToList('Roston csirkemell', '1.00')
+        self.html.wait(2)
+        # self.html.clickElement('Hasábburgonya','label')
+        # self.html.clickElement('sideDishSaveButton', 'button', Options(htmlAttribute='id'))
+
+        self.menu.openRestaurant()
+        self.html.clickElement('Elvitel', tag='i')
+        self.html.wait(2)
+        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+
+        self.html.clickElement('Elvitel', tag='i')
+        self.html.clickElement('Fizetés')
+
+        # self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
+        price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
+        print(price)
+
+        self.html.clickElement('Készpénz', 'td', Options(following='button'))
+
+        self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
+        stvalue = startValue.split(' ')
+        prc = price.split(' ')
+        prcInt = int(prc[0] + prc[1])
+        expected = int(stvalue[0] + stvalue[1]) + prcInt
+        self.html.wait(5)
+        self.menu.openFinance()
+        self.html.refresh()
+        self.html.wait()
+        actual = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2].split(' ')
+        actInt = int(actual[0] + actual[1])
+
+        self.assertEqual(expected, actInt)
+        self.assertEqual(expected, actInt)
+
+        self.restaurantseed.deleteTable('Elvitel', module=True)
+
+
+
 
 
 
