@@ -57,7 +57,7 @@ class Restaurant(BaseTestCase):
                                        data.Product['Hasábburgonya']['NetPrice'], module=True)
 
         self.productseed.createProduct('Almalé', 'Kiszereléses',
-                                       '99', data.Counter['TestCounter']['Name'], data.RawMaterial['Almalé']['Name'],
+                                       '9999', data.Counter['TestCounter']['Name'], data.RawMaterial['Almalé']['Name'],
                                        '1', '2200',
                                        module=True)
 
@@ -89,6 +89,7 @@ class Restaurant(BaseTestCase):
         self.restaurantseed.deleteTable(data.Table['Courier']['Name'], module=True)
         super().tearDownClass()
 
+
     def tearDown(self):
         print('TEARDOWN')
         self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True)
@@ -97,15 +98,15 @@ class Restaurant(BaseTestCase):
         self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
         self.productseed.deleteProduct('Roston csirkemell', module=True)
         self.productseed.deleteProduct('Rántott csirkemell', module=True)
-        #self.productseed.deleteProduct('Almalé')
+        self.productseed.deleteProduct('Almalé')
         self.productseed.deleteProduct('Kóla', module=True)
         self.productseed.deleteProduct(data.Product['Sonka']['Name'], module=True)
         self.productseed.deleteProduct(data.Product['Paradicsomszósz']['Name'], module=True)
         self.productseed.deletePizza('Sonkás pizza', module=True)
-        #self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], tab=True)
 
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Alma']['Name'], module=True)
+        self.stockseed.deleteRawMaterial('Kóla', module=True)
         for material in self.rawMaterials:
             self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
@@ -586,7 +587,7 @@ class Restaurant(BaseTestCase):
         self.assertEqual(expected, actInt)
 
     # kozbe jo kozbe nem
-    @unittest.skip
+
     def testMultipleOrdersCredit(self):
         self.menu.openFinance()
         try:
@@ -642,6 +643,7 @@ class Restaurant(BaseTestCase):
         prc = price.split(' ')
         prcInt = int(prc[0] + prc[1])
         expected = int(stvalue[0]+stvalue[1]) + prcInt
+        self.html.wait(5)
         self.menu.openFinance()
         self.html.refresh()
         self.html.wait()
@@ -651,7 +653,7 @@ class Restaurant(BaseTestCase):
         self.assertEqual(expected, actInt)
         #self.html.switchFrame('iframe')
 
-    @unittest.skip
+
     def testInstantPayment(self):
         self.menu.openFinance()
         try:
@@ -765,6 +767,7 @@ class Restaurant(BaseTestCase):
         prc = price.split(' ')
         prcInt = int(prc[0] + prc[1])
         expected = int(stvalue[0] + stvalue[1]) + prcInt
+        self.html.wait(5)
         self.menu.openFinance()
         self.html.refresh()
         self.html.wait()
@@ -798,7 +801,7 @@ class Restaurant(BaseTestCase):
         self.html.clickElement('Ital', 'a')
         self.html.wait(2)
         self.html.clickElement('Üdítők', 'a')
-        self.html.wait(2)
+        self.html.wait(10)
         #self.html.clickElement('Kóla', 'span')
         self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
 
@@ -840,6 +843,99 @@ class Restaurant(BaseTestCase):
 
 
 
+    def testDynamic1(self):
+        self.menu.openFinance()
+        try:
+            startValue = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2]
+        except:
+            startValue = '0 0'
+        print(startValue)
+
+        self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'], module=True)
+
+        # mennyiseg ellenorzese
+        self.menu.openReceiving()
+        self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
+        #self.html.clickElement('Új')
+        self.html.switchFrame('iframe')
+
+        self.html.fillInput('Számla azonosító', 'KomplexTest')
+        self.html.clickDropdown('Fizetési mód', 'Készpénz')
+        self.html.clickDropdown('Beszállító', data.Partner['Szallito']['Name'])
+
+        self.html.fillAutocomplete('Nyersanyag neve', 'input', 'Kóla', 'Kóla', 'li',
+                                   Options(htmlAttribute='data-title'))
+        self.html.fillInput('Mennyiség', '10', 'data-title')
+        self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
+        self.html.clickElement('Válassz...')
+        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
+        self.html.clickElement('Hozzáad')
+        self.html.wait(2)
+
+        self.html.clickElement('Rögzít')
+
+        self.html.switchFrame()
+
+        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
+        self.html.wait(2)
+
+        self.menu.openRestaurant()
+        self.html.clickElement('Dinamikus futár asztalok', 'a')
+        self.restaurantseed.createDynamicCourierTable(self.name)
+        self.html.wait(5)
+
+        self.html.clickElement('Pizza (testreszabható)', 'a')
+        self.html.wait(1)
+        self.html.clickElement('Sonkás pizza', 'span')
+        self.html.wait(1)
+
+        self.html.refresh()
+        self.addProductToList('Rántott csirkemell', '1.00')
+
+        self.html.clickElement('Ital', 'a')
+        self.html.wait(2)
+        self.html.clickElement('Üdítők', 'a')
+        self.html.wait(2)
+        self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
+        #self.html.clickElement('Gyömbér', 'span')
+        self.html.wait(2)
+
+        self.addProductToList('Roston csirkemell', '1.00')
+        self.html.wait(2)
+        self.html.wait(2)
+
+        self.menu.openRestaurant()
+        self.html.clickElement('Dinamikus futár asztalok', 'a')
+        self.html.clickElement(self.name + ' ' + self.city + ' ' + self.street, 'a')
+
+        self.html.wait(2)
+        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+
+        self.html.clickElement('Dinamikus futár asztalok', 'a')
+        self.html.clickElement(self.name + ' ' + self.city + ' ' + self.street, 'a')
+        self.html.clickElement('Fizetés')
+
+        #self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
+        price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
+        print(price)
+
+        self.html.clickElement('Kitölt')
+
+        self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
+        stvalue = startValue.split(' ')
+        prc = price.split(' ')
+        prcInt = int(prc[0] + prc[1])
+        expected = int(stvalue[0]+stvalue[1]) + prcInt
+        print('ex ' + str(expected))
+        self.menu.openFinance()
+        self.html.refresh()
+        self.html.wait()
+        actual = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2].split(' ')
+        actInt = int(actual[0] + actual[1])
+        print('act ' + str(actInt))
+
+        self.assertEqual(expected, actInt)
+        self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
 
 

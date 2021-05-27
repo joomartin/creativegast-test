@@ -572,13 +572,13 @@ class Orders(BaseTestCase):
         prc = price.split(' ')
         prcInt = int(prc[0] + prc[1])
         expected = int(stvalue[0] + stvalue[1]) + prcInt
+        self.html-wait(5)
         self.menu.openFinance()
         self.html.refresh()
         self.html.wait()
         actual = self.html.getElement('Bankkártya', 'td', Options(following='td')).text[:-2].split(' ')
         actInt = int(actual[0] + actual[1])
 
-        self.assertEqual(expected, actInt)
         self.assertEqual(expected, actInt)
 
         self.restaurantseed.deleteTable('Kedvezmeny', module=True)
