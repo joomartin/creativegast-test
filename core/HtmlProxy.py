@@ -232,7 +232,7 @@ class HtmlProxy:
         table = self.getElement(atrName, 'table', Options(htmlAttribute=atrType))
         #print('.//td[contains(., "' + tdText + '")]//following::' + followingType + '[contains(.,"' + targetText + '")]')
         table.find_element_by_xpath('.//td[contains(., "' + tdText + '")]//following::' + followingType +'[contains(.,"' + targetText +'")]').click()
-        self.wait(1)
+        self.wait(3)
 
     def clickTableDropdown(self, materialName, target, tab):
         self.search(materialName, tab)

@@ -55,7 +55,7 @@ class StockSeed:
         self.html.clickElement('Igen')
         self.html.wait(2)
         self.html.search('', 'Raktárkészlet')
-        self.html.wait(2)
+        self.html.wait(4)
 
     def createWarehouse(self, warehouseName, module=False, tab = False):
 
