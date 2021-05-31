@@ -195,8 +195,6 @@ class HtmlProxy:
             # print('asdasd')
             return element.find_element_by_xpath('//tbody//tr[' + str(row) + ']/td/div[' + str(col) + ']')
 
-
-
     def clearInput(self, target, selector='label', options=Options()):
         input  = self.getInput(target, selector, options)
         input.clear()

@@ -25,7 +25,7 @@ class Menus(BaseTestCase):
                                                     data.RawMaterial['Bundas_kenyer']['ME'], module=True)
         self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'],
                                        module=True)
-        self.productseed.createProductGroup(data.ProductGroup['Egyeb']['Name'], tab=True)
+        #self.productseed.createProductGroup(data.ProductGroup['Egyeb']['Name'], tab=True)
         self.productseed.createProduct(data.Product['Babgulyás']['Name'], data.ProductGroup['Egyeb']['Name'],
                                        data.Product['Babgulyás']['Code'], data.Counter['TestCounter']['Name'],
                                        data.RawMaterial['Bundas_kenyer']['Name'], module=True)
@@ -40,7 +40,7 @@ class Menus(BaseTestCase):
         self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True)
         self.productseed.deleteProduct(data.Product['Palacsinta']['Name'])
         self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], module=True)
-        self.productseed.deleteProductGroup(data.ProductGroup['Egyeb']['Name'], module=True)
+        #self.productseed.deleteProductGroup(data.ProductGroup['Egyeb']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
 

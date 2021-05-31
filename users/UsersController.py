@@ -5,6 +5,7 @@ import unittest
 from core.contracts.Controller import Controller
 from users.Users import Users
 from users.Groups import Groups
+import ReportMail as mail
 
 
 class UsersController(Controller):
@@ -26,5 +27,5 @@ class UsersController(Controller):
 
         # run the suite using HTMLTestRunner
         runner.run(test_suite)
-
+        mail.sendReport(dir + '\\reports\\UsersTestReport.html')
 
