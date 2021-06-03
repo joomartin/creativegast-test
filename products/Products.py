@@ -35,19 +35,48 @@ class Products(BaseTestCase):
 
         self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'],
                                        module=True)
-        #self.productseed.createProductGroup(data.ProductGroup['Egyeb']['Name'], tab=True)
-        #self.productseed.createProductGroup(data.ProductGroup['Öntetek']['Name'])
         self.menu.openProducts()
 
     def tearDown(self):
+        try:
+            self.productseed.deleteProduct('Kóla', module=True)
+        except Exception:
+            pass
+        try:
+            self.stockseed.deleteRawMaterial('Kóla', module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteProduct('Roston csirkemell')
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteProduct('Rántott csirkemell')
+        except Exception:
+            pass
+
         for material in self.rawMaterials:
-            self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True)
-        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
-        self.stockseed.deleteRawMaterial(data.RawMaterial['Alma']['Name'], module=True)
-        self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
-        self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], module=True)
-        #self.productseed.deleteProductGroup(data.ProductGroup['Egyeb']['Name'], module=True)
-        #self.productseed.deleteProductGroup(data.ProductGroup['Öntetek']['Name'], module=True)
+            try:
+                self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True)
+            except Exception:
+                pass
+
+        try:
+            self.stockseed.deleteRawMaterial(data.RawMaterial['Alma']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], module=True)
+        except Exception:
+            pass
 
     @unittest.skip
     def testCreate(self):
@@ -161,9 +190,6 @@ class Products(BaseTestCase):
 
         self.stockAssert.assertMaterialExist('Kóla', 'Raktárkészlet', module=True)
 
-        self.productseed.deleteProduct('Kóla', module=True)
-        self.stockseed.deleteRawMaterial('Kóla', module=True)
-
     def testPotato(self):
         self.productseed.createProduct(data.Product['Hasábburgonya']['Name'], 'Köretek',
                                        data.Product['Hasábburgonya']['Code'], data.Counter['TestCounter']['Name'],
@@ -191,8 +217,6 @@ class Products(BaseTestCase):
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
         self.html.search('', 'Termékek')
 
-        self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
-
     def testCreateProductChose(self):
         self.productseed.createProductChose('Roston csirkemell')
 
@@ -216,8 +240,6 @@ class Products(BaseTestCase):
         self.html.switchFrame()
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
         self.html.search('', 'Termékek')
-
-        self.productseed.deleteProduct('Roston csirkemell')
 
     def testCreateProductFix(self):
         self.productseed.createProduct(data.Product['Hasábburgonya']['Name'], 'Köretek',
@@ -253,8 +275,13 @@ class Products(BaseTestCase):
         self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
         self.html.search('', 'Termékek')
 
-        self.productseed.deleteProduct('Rántott csirkemell')
+
         self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
+
+
+
+
+
 
     '''
     def testCreateAppleJuice(self):

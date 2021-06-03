@@ -33,12 +33,32 @@ class Receiving(BaseTestCase):
         self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Id'], module=True)
 
     def tearDown(self):
-        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
-        for material in self.rawMaterials:
-            self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True)
+        try:
+            self.productseed.deleteProduct('Kóla', module=True)
+        except Exception:
+            pass
+        try:
+            self.stockseed.deleteRawMaterial('Kóla', module=True)
+        except Exception:
+            pass
+        try:
+            self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+        except Exception:
+            pass
 
-        self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
+        for material in self.rawMaterials:
+            try:
+                self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True)
+            except Exception:
+                pass
+        try:
+            self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
+        except Exception:
+            pass
 
     def createReceiving(self, billName):
         self.menu.openReceiving()
@@ -56,7 +76,12 @@ class Receiving(BaseTestCase):
                                    Options(htmlAttribute='data-title'))
         self.html.fillInput('Mennyiség', '100', 'data-title')
         self.html.clickElement('Válassz...')
+        self.html.wait(2)
+        self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
+                            options=Options(htmlAttribute='placeholder'))
+        self.html.wait(2)
         self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
+        self.html.wait(2)
 
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
@@ -66,11 +91,11 @@ class Receiving(BaseTestCase):
 
     @unittest.skip
     def testCreate(self):
-        name= 'testBill'
+        name = 'testBill'
         self.createReceiving(name)
         self.html.wait(2)
         self.receivingAssert.assertReceivingExists(data.Partner['Szallito']['Name'])
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],data.WareHouses['Szeszraktár']['Name'],'110')
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'], '110')
         self.menu.openReceiving()
         self.html.clickElement('Keresés')
         self.html.wait(2)
@@ -127,5 +152,5 @@ class Receiving(BaseTestCase):
         self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
         self.html.wait(2)
 
-        self.productseed.deleteProduct('Kóla', module=True)
-        self.stockseed.deleteRawMaterial('Kóla', module=True)
+
+

@@ -4,6 +4,8 @@ from shared.BaseTestCase import BaseTestCase
 
 
 class Partners(BaseTestCase):
+    partnerName = data.Partner['Szallito']['Name']
+    partnerId = data.Partner['Szallito']['Id']
 
     @classmethod
     def setUpClass(self):
@@ -16,9 +18,13 @@ class Partners(BaseTestCase):
     def tearDownClass(self):
         super().tearDownClass()
 
+    def tearDown(self):
+        try:
+            self.receivingseed.deleteParter(self.partnerName, module=True)
+        except Exception:
+            pass
+
     def testCreate(self):
-        partnerName = data.Partner['Szallito']['Name']
-        partnerId = data.Partner['Szallito']['Id']
-        self.receivingseed.createPartner(partnerName, partnerId)
-        self.receivingseed.deleteParter(partnerName)
+        self.receivingseed.createPartner(self.partnerName, self.partnerId)
+
 

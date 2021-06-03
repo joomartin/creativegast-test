@@ -39,11 +39,35 @@ class Pizza(BaseTestCase):
         self.html.clickElement('Pizza (testreszabható)', 'a')
 
     def tearDown(self):
-        self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], module=True)
+        try:
+            self.productseed.deleteProduct(data.Product['Sonka']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteProduct(data.Product['Paradicsomszósz']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deletePizza('Sonkás pizza', module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], module=True)
+        except Exception:
+            pass
         for material in self.rawMaterials:
-            self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True)
-        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
-        self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
+            try:
+                self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True)
+            except Exception:
+                pass
+        try:
+            self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
+        except Exception:
+            pass
 
     @unittest.skip
     def testCreate(self):
@@ -128,8 +152,6 @@ class Pizza(BaseTestCase):
 
         self.productAssert.assertPizzaExists('Sonkás pizza', '1400.00')
 
-        self.productseed.deleteProduct(data.Product['Sonka']['Name'], module=True)
-        self.productseed.deleteProduct(data.Product['Paradicsomszósz']['Name'], module=True)
-        self.productseed.deletePizza('Sonkás pizza', module=True)
+
 
 

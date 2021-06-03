@@ -70,7 +70,14 @@ class ReceivingSeed:
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '1000', 'data-title')
         self.html.clickElement('Válassz...')
+        '''firstrow = self.html.getElement('', 'div')
+        self.html.wait(2)
+        self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
+                            options=Options(htmlAttribute='placeholder', element=warehouselement))
+        self.html.wait(2)
+        '''
         self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
+        self.html.wait(2)
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
 

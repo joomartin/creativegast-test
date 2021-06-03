@@ -159,6 +159,7 @@ class ProductSeed:
         self.html.switchFrame('iframe')
 
         self.html.clickElement(group, 'a')
+        self.html.wait(2)
         self.html.clickElement('Rögzít')
 
         self.html.switchFrame('iframe')

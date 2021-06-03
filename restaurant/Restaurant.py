@@ -102,25 +102,26 @@ class Restaurant(BaseTestCase):
         super().tearDownClass()
 
     def tearDown(self):
-        print('TEARDOWN')
-        self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True)
-        self.productseed.deleteProduct(data.Product['Palacsinta']['Name'], module=True)
-        self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], tab=True)
-        self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
-        self.productseed.deleteProduct('Roston csirkemell', module=True)
-        self.productseed.deleteProduct('Rántott csirkemell', module=True)
-        self.productseed.deleteProduct('Almalé')
-        self.productseed.deleteProduct('Kóla', module=True)
-        self.productseed.deleteProduct(data.Product['Sonka']['Name'], module=True)
-        self.productseed.deleteProduct(data.Product['Paradicsomszósz']['Name'], module=True)
-        self.productseed.deletePizza('Sonkás pizza', module=True)
-
-        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
-        self.stockseed.deleteRawMaterial(data.RawMaterial['Alma']['Name'], module=True)
-        self.stockseed.deleteRawMaterial('Kóla', module=True)
+        self.tryHelper(self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True))
+        self.tryHelper(self.restaurantseed.deleteTable('Kedvezmeny', module=True))
+        self.tryHelper(self.restaurantseed.deleteTable('Elvitel', module=True))
+        self.tryHelper(self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True))
+        self.tryHelper(self.productseed.deleteProduct(data.Product['Palacsinta']['Name'], module=True))
+        self.tryHelper(self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], tab=True))
+        self.tryHelper(self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True))
+        self.tryHelper(self.productseed.deleteProduct('Roston csirkemell', module=True))
+        self.tryHelper(self.productseed.deleteProduct('Rántott csirkemell', module=True))
+        self.tryHelper(self.productseed.deleteProduct('Almalé'))
+        self.tryHelper(self.productseed.deleteProduct('Kóla', module=True))
+        self.tryHelper(self.productseed.deleteProduct(data.Product['Sonka']['Name'], module=True))
+        self.tryHelper(self.productseed.deleteProduct(data.Product['Paradicsomszósz']['Name'], module=True))
+        self.tryHelper(self.productseed.deletePizza('Sonkás pizza', module=True))
+        self.tryHelper(self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True))
+        self.tryHelper(self.stockseed.deleteRawMaterial(data.RawMaterial['Alma']['Name'], module=True))
+        self.tryHelper(self.stockseed.deleteRawMaterial('Kóla', module=True))
         for material in self.rawMaterials:
-            self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True)
-        self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
+            self.tryHelper(self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True))
+        self.tryHelper(self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True))
 
     def addProductToList(self, productName, quantity):
         self.html.fillAutocomplete('Terméknév', 'input', productName[:-1], productName, 'li',
@@ -790,7 +791,7 @@ class Restaurant(BaseTestCase):
 
         self.assertEqual(expected, actInt)
 
-        self.restaurantseed.deleteTable('Kedvezmeny', module=True)
+        # self.restaurantseed.deleteTable('Kedvezmeny', module=True)
 
     # passed
     def testTake(self):
@@ -853,7 +854,7 @@ class Restaurant(BaseTestCase):
 
         self.assertEqual(expected, actInt)
 
-        self.restaurantseed.deleteTable('Elvitel', module=True)
+        # self.restaurantseed.deleteTable('Elvitel', module=True)
 
     # passed
     def testPartPrice(self):
@@ -933,9 +934,12 @@ class Restaurant(BaseTestCase):
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
         self.html.clickElement('Válassz...')
+        self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
+                            options=Options(htmlAttribute='placeholder'))
         self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
+
 
         self.html.clickElement('Rögzít')
 
@@ -1000,7 +1004,6 @@ class Restaurant(BaseTestCase):
         print('act ' + str(actInt))
 
         self.assertEqual(expected, actInt)
-        self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
     # passed
     def testOrderStorno(self):
@@ -1064,7 +1067,7 @@ class Restaurant(BaseTestCase):
         self.restaurantAssert.assertStornoSucces('Kóla')
 
         self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
-        self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
+        #self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
     # passed
     def testWrongorderStorno(self):
@@ -1132,7 +1135,7 @@ class Restaurant(BaseTestCase):
 
         # mennyiseg ellenorzese
         self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
-        self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
+        #self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
     # passed
     def testQualityStorno(self):
@@ -1211,7 +1214,7 @@ class Restaurant(BaseTestCase):
         self.assertTrue(name)
         self.assertEqual(excuse, 'teszt01 sztornó')
 
-        self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
+        #self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
     # passed
     def testMove(self):
@@ -1565,12 +1568,16 @@ class Restaurant(BaseTestCase):
 
         self.assertEqual(expected, actInt)
         self.clientAssert.assertClientExist(self.name, self.address, self.phone, self.discount, self.code, extended=False, module=True)
-        self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
+        #self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
 
 
 
-
+    def tryHelper(self, func):
+        try:
+            func
+        except Exception:
+            pass
 
 
 
