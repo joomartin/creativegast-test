@@ -1842,7 +1842,10 @@ class Orders(BaseTestCase):
         # mennyiseg ellenorzese
         self.menu.openReceiving()
         self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        #self.html.clickElement('Új')
+        try:
+            self.html.clickElement('Új')
+        except Exception:
+            pass
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Számla azonosító', 'KomplexTest')
@@ -1914,6 +1917,7 @@ class Orders(BaseTestCase):
         prcInt = int(prc[0] + prc[1])
         expected = int(stvalue[0]+stvalue[1]) + prcInt
         print('ex ' + str(expected))
+        self.html.wait(5)
         self.menu.openFinance()
         self.html.refresh()
         self.html.wait()

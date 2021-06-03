@@ -120,12 +120,12 @@ class ClientSeed:
         elif tab:
             self.html.clickElement('Házhozszállítási cím', 'a')
 
-        self.html.wait(2)
+        self.html.wait(3)
         self.html.search(name, 'Házhozszállítási cím')
-        self.html.wait(2)
-        self.html.clickTableElement('frequenters', 'id', name, 'a', 'Törlés')
-        self.html.wait(2)
+        self.html.wait(3)
+        self.html.clickTableElement('clients', 'id', name, 'a', 'Törlés')
+        self.html.wait(3)
         self.html.clickElement('Igen')
-        self.html.wait(2)
-        self.html.search('', 'Törzsvendégek')
+        self.html.wait(3)
+        self.html.search('', 'Házhozszállítási cím')
         self.html.wait(2)

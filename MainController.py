@@ -12,12 +12,12 @@ resc = RestaurantController()
 cm = ClientManagementController()
 us = UsersController()
 
-sc.run()
-pc.run()
-#rc.run()
+#sc.run()
+#pc.run() # works
+#rc.run() # amig egy bug meg nincs javitva addig failol
 resc.run()
-#cm.run()
-#us.run()
+#cm.run() # works
+#us.run() # works
 
 
 

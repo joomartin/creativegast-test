@@ -256,6 +256,7 @@ class Products(BaseTestCase):
         self.productseed.deleteProduct('Rántott csirkemell')
         self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
 
+    '''
     def testCreateAppleJuice(self):
         self.productseed.createAppleJuice()
 
@@ -281,7 +282,7 @@ class Products(BaseTestCase):
 
         self.productseed.deleteProduct('Almalé', module=True)
 
-
+    '''
 
 
 

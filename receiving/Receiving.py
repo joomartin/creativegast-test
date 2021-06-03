@@ -43,7 +43,10 @@ class Receiving(BaseTestCase):
     def createReceiving(self, billName):
         self.menu.openReceiving()
         self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        # self.html.clickElement('Új')
+        try:
+            self.html.clickElement('Új')
+        except Exception:
+            pass
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Számla azonosító', billName)

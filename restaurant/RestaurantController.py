@@ -34,4 +34,4 @@ class RestaurantController(Controller):
 
         # run the suite using HTMLTestRunner
         runner.run(test_suite)
-        #mail.sendReport(dir + '\\reports\RestaurantTestReport.html')
+        mail.sendReport(dir + '\\reports\RestaurantTestReport.html')

@@ -18,8 +18,7 @@ class DiscountCards(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
-        # super().tearDownClass()
-        pass
+        super().tearDownClass()
 
     def tearDown(self):
         self.productseed.deleteProduct('Kóla', module=True)

@@ -34,7 +34,7 @@ class ReceivingSeed:
 
         self.receivingAssert.assertPartnerExist(name, 'Beszállítók')
 
-    def deleteParter(self, partnerName,  module=False, tab = False):
+    def deleteParter(self, partnerName,  module=False, tab=False):
         if module:
             self.menu.openReceiving()
             self.html.clickElement('Beszállítók', 'a')
@@ -50,12 +50,15 @@ class ReceivingSeed:
         self.html.clickElement('Igen')
         self.html.refresh()
 
-        self.receivingAssert.assertPartnerNotExist(partnerName,'Beszállítók')
+        self.receivingAssert.assertPartnerNotExist(partnerName, 'Beszállítók')
 
     def createReceiving(self):
         self.menu.openReceiving()
         self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        # self.html.clickElement('Új')
+        try:
+            self.html.clickElement('Új')
+        except Exception:
+            pass
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Számla azonosító', 'KomplexTest')

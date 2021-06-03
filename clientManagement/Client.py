@@ -32,14 +32,13 @@ class Regulars(BaseTestCase):
         city = data.Client['Pista']['City']
         street = data.Client['Pista']['Street']
         housenumber = data.Client['Pista']['HouseNumber']
-        address = self.clientseed.createClient(name, code, phone, discount, taxnumber, country, postalCode, city, street, housenumber)
+        address = self.clientseed.createClient(name, code, phone, discount, taxnumber, country, postalCode, city,
+                                               street, housenumber, module=True)
 
         self.clientAssert.assertClientExist(name, address, phone,
                                             discount, code)
 
         self.clientseed.deleteClient(name)
-
-
 
 
 

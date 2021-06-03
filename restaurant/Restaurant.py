@@ -19,7 +19,7 @@ class Restaurant(BaseTestCase):
     city = data.Client['Pista']['City']
     street = data.Client['Pista']['Street']
     housenumber = data.Client['Pista']['HouseNumber']
-    address = None
+    address = city + ' ' + street + ' ' + housenumber
 
     @classmethod
     def setUpClass(self):
@@ -875,7 +875,7 @@ class Restaurant(BaseTestCase):
 
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
         self.html.clickElement('Fizetendő részösszeg')
-        self.html.fillInput('Részösszeg','10000')
+        self.html.fillInput('Részösszeg', '10000')
         self.html.getElements(None, '//button[contains(.,"OK")]', Options(uniqueSelector='True'))[1].click()
         self.html.wait(2)
         self.html.clickElement('Kijelöltek fizetése')
@@ -912,11 +912,16 @@ class Restaurant(BaseTestCase):
         print(startValue)
 
         self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'], module=True)
+        self.clientseed.createClient(self.name, self.code, self.phone, self.discount, self.taxnumber, self.country,
+                                     self.postalCode, self.city, self.street, self.housenumber, module=True)
 
         # mennyiseg ellenorzese
         self.menu.openReceiving()
         self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        #self.html.clickElement('Új')
+        try:
+            self.html.clickElement('Új')
+        except Exception:
+            pass
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Számla azonosító', 'KomplexTest')
@@ -1004,7 +1009,10 @@ class Restaurant(BaseTestCase):
         # mennyiseg ellenorzese
         self.menu.openReceiving()
         self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        #self.html.clickElement('Új')
+        try:
+            self.html.clickElement('Új')
+        except Exception:
+            pass
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Számla azonosító', 'KomplexTest')
@@ -1065,7 +1073,10 @@ class Restaurant(BaseTestCase):
         # mennyiseg ellenorzese
         self.menu.openReceiving()
         self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        #self.html.clickElement('Új')
+        try:
+            self.html.clickElement('Új')
+        except Exception:
+            pass
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Számla azonosító', 'KomplexTest')
@@ -1130,7 +1141,10 @@ class Restaurant(BaseTestCase):
         # mennyiseg ellenorzese
         self.menu.openReceiving()
         self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        #self.html.clickElement('Új')
+        try:
+            self.html.clickElement('Új')
+        except Exception:
+            pass
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Számla azonosító', 'KomplexTest')
@@ -1452,6 +1466,106 @@ class Restaurant(BaseTestCase):
         # itt azt csekkoljuk hogy a rendeles bekuldese gomb eltunt e
         self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
 
+    # passed
+    def testDynamic2(self):
+        self.menu.openFinance()
+        try:
+            startValue = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2]
+        except:
+            startValue = '0 0'
+        print(startValue)
+
+        self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'], module=True)
+
+        # mennyiseg ellenorzese
+        self.menu.openReceiving()
+        self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
+        try:
+            self.html.clickElement('Új')
+        except Exception:
+            pass
+        self.html.switchFrame('iframe')
+
+        self.html.fillInput('Számla azonosító', 'KomplexTest')
+        self.html.clickDropdown('Fizetési mód', 'Készpénz')
+        self.html.clickDropdown('Beszállító', data.Partner['Szallito']['Name'])
+
+        self.html.fillAutocomplete('Nyersanyag neve', 'input', 'Kóla', 'Kóla', 'li',
+                                   Options(htmlAttribute='data-title'))
+        self.html.fillInput('Mennyiség', '10', 'data-title')
+        self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
+        self.html.clickElement('Válassz...')
+        self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
+        self.html.clickElement('Hozzáad')
+        self.html.wait(2)
+
+        self.html.clickElement('Rögzít')
+
+        self.html.switchFrame()
+
+        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
+        self.html.wait(2)
+
+        self.menu.openRestaurant()
+        self.html.clickElement('Dinamikus futár asztalok', 'a')
+        self.restaurantseed.createDynCTableForNew(self.name, self.city, self.street, self.housenumber, self.phone)
+        self.html.wait(5)
+
+        self.html.clickElement('Pizza (testreszabható)', 'a')
+        self.html.wait(1)
+        self.html.clickElement('Sonkás pizza', 'span')
+        self.html.wait(1)
+
+        self.html.refresh()
+        self.addProductToList('Rántott csirkemell', '1.00')
+
+        self.html.clickElement('Ital', 'a')
+        self.html.wait(2)
+        self.html.clickElement('Üdítők', 'a')
+        self.html.wait(2)
+
+        self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
+        #self.html.clickElement('Gyömbér', 'span')
+        self.html.wait(2)
+
+        self.addProductToList('Roston csirkemell', '1.00')
+        self.html.wait(2)
+        self.html.wait(2)
+
+        self.menu.openRestaurant()
+        self.html.clickElement('Dinamikus futár asztalok', 'a')
+        self.html.clickElement(self.name + ' ' + self.city + ' ' + self.street, 'a')
+
+        self.html.wait(2)
+        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
+
+        self.html.clickElement('Dinamikus futár asztalok', 'a')
+        self.html.clickElement(self.name + ' ' + self.city + ' ' + self.street, 'a')
+        self.html.clickElement('Fizetés')
+
+        #self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
+        price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
+        print(price)
+
+        self.html.clickElement('Kitölt')
+
+        self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
+        stvalue = startValue.split(' ')
+        prc = price.split(' ')
+        prcInt = int(prc[0] + prc[1])
+        expected = int(stvalue[0]+stvalue[1]) + prcInt
+        print('ex ' + str(expected))
+        self.html.wait(5)
+        self.menu.openFinance()
+        self.html.refresh()
+        self.html.wait()
+        actual = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2].split(' ')
+        actInt = int(actual[0] + actual[1])
+        print('act ' + str(actInt))
+
+        self.assertEqual(expected, actInt)
+        self.clientAssert.assertClientExist(self.name, self.address, self.phone, self.discount, self.code, extended=False, module=True)
+        self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
 
 
