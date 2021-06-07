@@ -98,7 +98,7 @@ class HtmlProxy:
         xpath = self.getXpathByExactMatch(tag, target, options)
         xpath = self.appendFollowing(xpath, options)
 
-        print(xpath)
+        #print(xpath)
         return element.find_element_by_xpath(xpath)
 
     def appendFollowing(self, xpath, options=Options()):
@@ -144,7 +144,7 @@ class HtmlProxy:
         else:
             if tableId == '':
                 # asd = element.find_element_by_xpath('./table/tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
-                print('asdasd')
+
                 return element.find_element_by_xpath('./table/tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
             else:
                 return element.find_element_by_xpath('./table[@id="' + tableId + '"]/tbody/tr[' + str(row) + ']/td[' + str(col) + ']').text
@@ -170,7 +170,7 @@ class HtmlProxy:
         else:
             if htmlAttribute == '':
                 # #asd = element.find_element_by_xpath('./table/tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
-                print('asdasd')
+
                 return element.find_element_by_xpath('./table/tbody//tr[' + str(row) + ']/td/div[' + str(col) + ']')
             else:
                 return element.find_element_by_xpath('./table[@' + htmlAttribute + '="' + tableId + '"]/tbody/tr[' + str(row) + ']/td/div[' + str(col) + ']')
@@ -194,8 +194,6 @@ class HtmlProxy:
             # #asd = element.find_element_by_xpath('./table/tbody//tr[' + str(row) + ']/td[' + str(col) + ']').text
             # print('asdasd')
             return element.find_element_by_xpath('//tbody//tr[' + str(row) + ']/td/div[' + str(col) + ']')
-
-
 
     def clearInput(self, target, selector='label', options=Options()):
         input  = self.getInput(target, selector, options)
@@ -230,9 +228,9 @@ class HtmlProxy:
         if tab != None:
             self.search(tdText, tab)
         table = self.getElement(atrName, 'table', Options(htmlAttribute=atrType))
-        print('.//td[contains(., "' + tdText + '")]//following::' + followingType + '[contains(.,"' + targetText + '")]')
+        #print('.//td[contains(., "' + tdText + '")]//following::' + followingType + '[contains(.,"' + targetText + '")]')
         table.find_element_by_xpath('.//td[contains(., "' + tdText + '")]//following::' + followingType +'[contains(.,"' + targetText +'")]').click()
-        self.wait(1)
+        self.wait(3)
 
     def clickTableDropdown(self, materialName, target, tab):
         self.search(materialName, tab)
@@ -282,7 +280,7 @@ class HtmlProxy:
 
     def getRowExist(self, elements):
         xPath = ''
-        for index,elem in enumerate(elements):
+        for index, elem in enumerate(elements):
             if index != len(elements)-1:
                 xPath += 'contains(., "' + elem + '") and '
             else:

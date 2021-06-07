@@ -1,3 +1,5 @@
+import unittest
+
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
 from datetime import datetime
@@ -5,6 +7,7 @@ from shared.TestData import TestData as data
 
 
 class Pizza(BaseTestCase):
+    rawMaterials = ['Csirkemell', 'Finomliszt', 'Almalé', 'Hasábburgonya', 'Sonka', 'Paradicsomszósz']
 
     @classmethod
     def setUpClass(self):
@@ -22,20 +25,60 @@ class Pizza(BaseTestCase):
                                                     data.RawMaterial['Bundas_kenyer']['Quantity'],
                                                     data.WareHouses['Szeszraktár']['Name'],
                                                     data.RawMaterial['Bundas_kenyer']['ME'], module=True)
+        for material in self.rawMaterials:
+            self.stockseed.createRawMaterialWithOpening(data.RawMaterial[material]['Name'],
+                                                        data.RawMaterial[material]['GrosPrice'],
+                                                        data.RawMaterial[material]['Quantity'],
+                                                        data.RawMaterial[material]['Warehouse'],
+                                                        data.RawMaterial[material]['ME'],
+                                                        module=True)
+        self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'],
+                                       module=True)
 
         self.menu.openProducts()
         self.html.clickElement('Pizza (testreszabható)', 'a')
 
     def tearDown(self):
-        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
-        self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
+        try:
+            self.productseed.deleteProduct(data.Product['Sonka']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteProduct(data.Product['Paradicsomszósz']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deletePizza('Sonkás pizza', module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], module=True)
+        except Exception:
+            pass
+        for material in self.rawMaterials:
+            try:
+                self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True)
+            except Exception:
+                pass
+        try:
+            self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
+        except Exception:
+            pass
 
+    @unittest.skip
     def testCreate(self):
         testName = 'Create pizza'
-        self.productseed.createPizza(data.Pizza['Sonkas_pizza']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], 'Pizza feltét')
-        self.productAssert.assertPizzaExists(data.Pizza['Sonkas_pizza']['Name'], data.Pizza['Sonkas_pizza']['GrossPrice'])
+        self.productseed.createPizza(data.Pizza['Sonkas_pizza']['Name'], data.RawMaterial['Bundas_kenyer']['Name'],
+                                     'Pizza feltét')
+        self.productAssert.assertPizzaExists(data.Pizza['Sonkas_pizza']['Name'],
+                                             data.Pizza['Sonkas_pizza']['GrossPrice'])
         self.productseed.deletePizza(data.Pizza['Sonkas_pizza']['Name'])
 
+    @unittest.skip
     def testUpdate(self):
         modofiedName = 'Gumicukros pizza'
         modifiedNetPrice = 3000
@@ -65,6 +108,7 @@ class Pizza(BaseTestCase):
 
         self.productseed.deletePizza(modofiedName)
 
+    @unittest.skip
     def testWasting(self):
         self.productseed.createPizza(data.Pizza['Sonkas_pizza']['Name'], data.RawMaterial['Bundas_kenyer']['Name'], 'Pizza feltét')
         self.productAssert.assertPizzaExists(data.Pizza['Sonkas_pizza']['Name'], data.Pizza['Sonkas_pizza']['GrossPrice'])
@@ -89,4 +133,25 @@ class Pizza(BaseTestCase):
         self.menu.openProducts()
         self.html.clickElement('Pizza (testreszabható)', 'a')
         self.productseed.deletePizza(data.Pizza['Sonkas_pizza']['Name'])
+
+    def testCreatePizza(self):
+        self.productseed.createProduct(data.Product['Sonka']['Name'], data.Product['Sonka']['ProductGroup'],
+                                       data.Product['Sonka']['Code'], data.Counter['TestCounter']['Name'],
+                                       data.RawMaterial['Sonka']['Name'], data.Product['Sonka']['Quantity'],
+                                       data.Product['Sonka']['NetPrice'],
+                                       module=True)
+
+        self.productseed.createProduct(data.Product['Paradicsomszósz']['Name'],
+                                       data.Product['Paradicsomszósz']['ProductGroup'],
+                                       data.Product['Paradicsomszósz']['Code'], data.Counter['TestCounter']['Name'],
+                                       data.RawMaterial['Paradicsomszósz']['Name'],
+                                       data.Product['Paradicsomszósz']['Quantity'], '0',
+                                       module=True)
+        self.productseed.createSpecialPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'],
+                                            data.Product['Sonka']['Name'], module=True)
+
+        self.productAssert.assertPizzaExists('Sonkás pizza', '1400.00')
+
+
+
 

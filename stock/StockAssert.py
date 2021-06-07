@@ -24,7 +24,10 @@ class StockAssert(unittest.TestCase):
     def assertDialogDisplayed(self):
         self.assertTrue(self.html.getElement('iframe', 'body', Options(htmlAttribute='class')).is_displayed())
 
-    def assertMaterialExist(self, materialName, tab):
+    def assertMaterialExist(self, materialName, tab, module=False):
+        if module:
+            self.menu.openStocks()
+
         self.html.search(materialName, tab)
         self.assertTrue(self.html.getElement(materialName, 'td').is_displayed())
         self.html.search('', tab)

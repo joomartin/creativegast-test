@@ -164,7 +164,7 @@ class TestData:
     ProductGroup = {
         'Egyeb':
             {
-                'Name': 'Egyeb',
+                'Name': 'Egyéb',
                 'Conveniences': 'Gyártmányok'
             },
         'Öntetek':

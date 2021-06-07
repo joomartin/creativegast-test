@@ -5,7 +5,6 @@ from selenium import webdriver
 
 from core.contracts.Controller import Controller
 from products.Products import Products
-from products.ProductGroups import ProductGroups
 from products.Menus import Menus
 from products.Pizza import Pizza
 import ReportMail as mail
@@ -17,12 +16,12 @@ class ProductController(Controller):
         driver = webdriver
         # get all tests from SearchText and HomePageTest class
         products = unittest.TestLoader().loadTestsFromTestCase(Products)
-        productGroups = unittest.TestLoader().loadTestsFromTestCase(ProductGroups)
+        #productGroups = unittest.TestLoader().loadTestsFromTestCase(ProductGroups)
         menus = unittest.TestLoader().loadTestsFromTestCase(Menus)
         pizza = unittest.TestLoader().loadTestsFromTestCase(Pizza)
 
         # create a test suite combining search_text and home_page_test
-        test_suite = unittest.TestSuite([products, productGroups, menus, pizza])
+        test_suite = unittest.TestSuite([products, menus, pizza])
         #test_suite = unittest.TestSuite([productGroups])
         #test_suite = unittest.TestSuite([menus, pizza])
 
@@ -35,5 +34,5 @@ class ProductController(Controller):
 
         # run the suite using HTMLTestRunner
         runner.run(test_suite)
-        # mail.sendReport(dir + '\\reports\ProductsTestReport.html')
+        mail.sendReport(dir + '\\reports\ProductsTestReport.html')
 

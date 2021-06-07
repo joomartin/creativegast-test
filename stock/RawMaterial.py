@@ -1,3 +1,5 @@
+import unittest
+
 from core.Options import Options
 from shared.BaseTestCase import BaseTestCase
 from shared.TestData import TestData as data
@@ -21,7 +23,9 @@ class RawMaterial(BaseTestCase):
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
 
     def testCreate(self):
-        self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
+        self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'],
+                                         data.RawMaterial['Bundas_kenyer']['ME'],
+                                         data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
     def testUpdate(self):
@@ -41,6 +45,7 @@ class RawMaterial(BaseTestCase):
 
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
+    @unittest.skip
     def testOpening(self):
         calcNetPrice = self.html.extendedRound(int(float(data.RawMaterial['Bundas_kenyer']['GrossPrice'].replace(' ', ''))) / 1.27, 2)
         calcNetValue = self.html.extendedRound((int(float(data.RawMaterial['Bundas_kenyer']['GrossPrice'].replace(' ', ''))) / 1.27) * int(float(data.RawMaterial['Bundas_kenyer']['Quantity'].replace(' ', ''))), 2)
@@ -99,6 +104,7 @@ class RawMaterial(BaseTestCase):
 
         self.stockAssert.assertDeletedMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'])
 
+    @unittest.skip
     def testDuplicate(self):
 
         self.menu.openStocks()
@@ -145,6 +151,7 @@ class RawMaterial(BaseTestCase):
         self.html.switchFrame()
 
         self.html.clickTableDropdown(data.RawMaterial['Bundas_kenyer']['Name'], 'Selejt', 'Raktárkészlet')
+        self.html.wait(2)
         self.html.switchFrame('iframe')
 
         self.html.clickDropdown('Raktár', data.WareHouses['Szeszraktár']['Name'])
@@ -165,6 +172,7 @@ class RawMaterial(BaseTestCase):
 
         self.stockAssert.assertDeletedMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'])
 
+    @unittest.skip
     def testOpeningButton(self):
         self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
 
@@ -190,8 +198,20 @@ class RawMaterial(BaseTestCase):
 
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
+    def testCreateRawMaterialWithOpening(self):
+        rawMaterials = ['Csirkemell', 'Finomliszt', 'Almalé', 'Hasábburgonya', 'Sonka', 'Paradicsomszósz']
 
+        for material in rawMaterials:
+            self.stockseed.createRawMaterialWithOpening(data.RawMaterial[material]['Name'],
+                                                        data.RawMaterial[material]['GrosPrice'],
+                                                        data.RawMaterial[material]['Quantity'],
+                                                        data.RawMaterial[material]['Warehouse'],
+                                                        data.RawMaterial[material]['ME'],
+                                                        module=True)
 
+        for material in rawMaterials:
+            self.stockAssert.assertMaterialExist(data.RawMaterial[material]['Name'], 'Raktárkészlet')
 
-
+        for material in rawMaterials:
+            self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True)
 

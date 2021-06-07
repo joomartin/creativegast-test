@@ -5,6 +5,16 @@ from core.Options import Options
 
 
 class Regulars(BaseTestCase):
+    name = data.Client['Pista']['Name']
+    code = data.Client['Pista']['Code']
+    phone = data.Client['Pista']['Phone']
+    discount = data.Client['Pista']['Discount']
+    taxnumber = data.Client['Pista']['TaxNumber']
+    country = data.Client['Pista']['Country']
+    postalCode = data.Client['Pista']['PostalCode']
+    city = data.Client['Pista']['City']
+    street = data.Client['Pista']['Street']
+    housenumber = data.Client['Pista']['HouseNumber']
 
     @classmethod
     def setUpClass(self):
@@ -19,25 +29,18 @@ class Regulars(BaseTestCase):
         super().tearDownClass()
 
     def tearDown(self):
-        pass
+        try:
+            self.clientseed.deleteClient(self.name, module=True)
+        except Exception:
+            pass
 
     def testCreateClient(self):
-        name = data.Client['Pista']['Name']
-        code = data.Client['Pista']['Code']
-        phone = data.Client['Pista']['Phone']
-        discount = data.Client['Pista']['Discount']
-        taxnumber = data.Client['Pista']['TaxNumber']
-        country = data.Client['Pista']['Country']
-        postalCode = data.Client['Pista']['PostalCode']
-        city = data.Client['Pista']['City']
-        street = data.Client['Pista']['Street']
-        housenumber = data.Client['Pista']['HouseNumber']
-        address = self.clientseed.createClient(name, code, phone, discount, taxnumber, country, postalCode, city, street, housenumber)
 
-        self.clientAssert.assertClientExist(name, address, phone,
-                                            discount, code)
+        address = self.clientseed.createClient(self.name, self.code, self.phone, self.discount, self.taxnumber,
+                                               self.country, self.postalCode, self.city, self.street, self.housenumber,
+                                               module=True)
 
-        self.clientseed.deleteClient(name)
+        self.clientAssert.assertClientExist(self.name, address, self.phone, self.discount, self.code)
 
 
 

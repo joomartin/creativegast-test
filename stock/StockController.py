@@ -1,6 +1,7 @@
 import HTMLTestRunner
 import os
 import unittest
+import ReportMail as mail
 
 from selenium import webdriver
 from core.contracts.Controller import Controller
@@ -8,7 +9,7 @@ from stock.RawMaterial import RawMaterial
 from stock.Warehouses import Test
 from stock.StockMovement import StockMovement
 from stock.BarCheckings import BarCheckings
-import ReportMail as mail
+
 
 class StockController(Controller):
     def run(self):

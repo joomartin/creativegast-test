@@ -25,7 +25,10 @@ class ClientManagementAssert(unittest.TestCase):
         self.html.switchFrame()
         self.html.clickElement('fancybox-item fancybox-close', 'a', options=Options(htmlAttribute='class'))
 
-    def assertClientExist(self, name, address, phone, discount, code):
+    def assertClientExist(self, name, address, phone, discount, code, extended=True, module=False):
+        if module:
+            self.menu.openClientManagement()
+
         self.html.search(name, 'Házhozszállítási cím')
         self.html.clickTableElement('clients', 'id', name, 'a', 'Részletek')
         self.html.switchFrame('iframe')
@@ -33,8 +36,9 @@ class ClientManagementAssert(unittest.TestCase):
         self.assertTrue(self.html.getTablePairsExist('Név', name))
         self.assertTrue(self.html.getTablePairsExist('Cím', address))
         self.assertTrue(self.html.getTablePairsExist('Telefon', phone))
-        self.assertTrue(self.html.getTablePairsExist('Kedv.', discount))
-        self.assertTrue(self.html.getTablePairsExist('Kód', code))
+        if extended:
+            self.assertTrue(self.html.getTablePairsExist('Kedv.', discount))
+            self.assertTrue(self.html.getTablePairsExist('Kód', code))
 
         self.html.switchFrame()
         self.html.clickElement('fancybox-item fancybox-close', 'a', options=Options(htmlAttribute='class'))

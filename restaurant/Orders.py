@@ -1,11 +1,7 @@
-import unittest
-
 from shared.BaseTestCase import BaseTestCase
 from shared.TestData import TestData as data
 from selenium.webdriver.common.keys import Keys
 from core.Options import Options
-from selenium.webdriver.common.action_chains import ActionChains
-from restaurant.Restaurant import Restaurant
 
 
 class Orders(BaseTestCase):
@@ -37,13 +33,15 @@ class Orders(BaseTestCase):
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Csirkemell']['Name'],
                                                     data.RawMaterial['Csirkemell']['GrosPrice'],
                                                     data.RawMaterial['Csirkemell']['Quantity'],
-                                                    data.RawMaterial['Csirkemell']['Warehouse'], data.RawMaterial['Csirkemell']['ME'],
+                                                    data.RawMaterial['Csirkemell']['Warehouse'],
+                                                    data.RawMaterial['Csirkemell']['ME'],
                                                     module=True)
 
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Finomliszt']['Name'],
                                                     data.RawMaterial['Finomliszt']['GrosPrice'],
                                                     data.RawMaterial['Finomliszt']['Quantity'],
-                                                    data.RawMaterial['Finomliszt']['Warehouse'], data.RawMaterial['Finomliszt']['ME'],
+                                                    data.RawMaterial['Finomliszt']['Warehouse'],
+                                                    data.RawMaterial['Finomliszt']['ME'],
                                                     module=True)
 
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Almalé']['Name'],
@@ -301,7 +299,7 @@ class Orders(BaseTestCase):
             startValue = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2]
         except:
             startValue = '0 0'
-        print(startValue)
+        #print(startValue)
         self.menu.openProducts()
         self.createProductChose()
         self.menu.openProducts()
@@ -362,7 +360,7 @@ class Orders(BaseTestCase):
 
         #self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
         price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
-        print(price)
+        #print(price)
 
         self.html.clickElement('Kitölt')
 
@@ -371,13 +369,13 @@ class Orders(BaseTestCase):
         prc= price.split(' ')
         prcInt = int(prc[0] + prc[1])
         expected = int(stvalue[0]+stvalue[1]) + prcInt
-        print('ex '+ str(expected))
+        #print('ex '+ str(expected))
         self.menu.openFinance()
         self.html.refresh()
         self.html.wait()
         actual = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2].split(' ')
         actInt=int(actual[0] + actual[1])
-        print('act ' + str(actInt))
+        #print('act ' + str(actInt))
 
         self.assertEqual(expected, actInt)
 
@@ -446,8 +444,6 @@ class Orders(BaseTestCase):
         actual = self.html.getElement('Bankkártya', 'td', Options(following='td')).text[:-2].split(' ')
         actInt = int(actual[0] + actual[1])
 
-
-        self.assertEqual(expected, actInt)
         self.assertEqual(expected, actInt)
         #self.html.switchFrame('iframe')
 
@@ -518,7 +514,7 @@ class Orders(BaseTestCase):
         self.assertEqual(expected, actInt)
 
     def testDiscountedTable(self):
-        self.restaurantseed.createTable('Kedvezmeny','Kör','Személyzeti','10', module=True)
+        self.restaurantseed.createTable('Kedvezmeny', 'Kör', 'Személyzeti', '10', module=True)
 
         self.menu.openFinance()
         try:
@@ -577,6 +573,7 @@ class Orders(BaseTestCase):
         prc = price.split(' ')
         prcInt = int(prc[0] + prc[1])
         expected = int(stvalue[0] + stvalue[1]) + prcInt
+        self.html-wait(5)
         self.menu.openFinance()
         self.html.refresh()
         self.html.wait()
@@ -584,9 +581,8 @@ class Orders(BaseTestCase):
         actInt = int(actual[0] + actual[1])
 
         self.assertEqual(expected, actInt)
-        self.assertEqual(expected, actInt)
 
-        self.restaurantseed.deleteTable('Kedvezmeny',module=True)
+        self.restaurantseed.deleteTable('Kedvezmeny', module=True)
 
     def testTake(self):
         self.restaurantseed.createTable('Elvitel', 'Kör', 'Elvitel', '10', module=True)
@@ -648,13 +644,13 @@ class Orders(BaseTestCase):
         prc = price.split(' ')
         prcInt = int(prc[0] + prc[1])
         expected = int(stvalue[0] + stvalue[1]) + prcInt
+        self.html.wait(5)
         self.menu.openFinance()
         self.html.refresh()
         self.html.wait()
         actual = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2].split(' ')
         actInt = int(actual[0] + actual[1])
 
-        self.assertEqual(expected, actInt)
         self.assertEqual(expected, actInt)
 
         self.restaurantseed.deleteTable('Elvitel', module=True)
@@ -715,7 +711,8 @@ class Orders(BaseTestCase):
         self.assertEqual(expected, actInt)
 
     def testReceiving(self):
-        self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'], module=True)
+        self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'],
+                                         module=True)
         self.menu.openProducts()
         self.createProductChose()
         self.menu.openProducts()
@@ -732,8 +729,8 @@ class Orders(BaseTestCase):
         self.html.clickDropdown('Fizetési mód', 'Készpénz')
         self.html.clickDropdown('Beszállító', data.Partner['Szallito']['Name'])
 
-
-        self.html.fillAutocomplete('Nyersanyag neve', 'input', data.RawMaterial['Csirkemell']['Name'],  data.RawMaterial['Csirkemell']['Name'], 'li', Options(htmlAttribute='data-title'))
+        self.html.fillAutocomplete('Nyersanyag neve', 'input', data.RawMaterial['Csirkemell']['Name'],
+                                   data.RawMaterial['Csirkemell']['Name'], 'li', Options(htmlAttribute='data-title'))
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '1000', 'data-title')
         self.html.clickElement('Válassz...')
@@ -791,7 +788,8 @@ class Orders(BaseTestCase):
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
 
-        self.html.fillAutocomplete('Nyersanyag neve', 'input', 'Kóla', 'Kóla', 'li', Options(htmlAttribute='data-title'))
+        self.html.fillAutocomplete('Nyersanyag neve', 'input', 'Kóla', 'Kóla', 'li',
+                                   Options(htmlAttribute='data-title'))
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
         self.html.clickElement('Válassz...')
@@ -799,27 +797,30 @@ class Orders(BaseTestCase):
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
 
-
         self.html.clickElement('Rögzít')
 
         self.html.switchFrame()
 
-        self.stockAssert.assertStock(data.RawMaterial['Csirkemell']['Name'],data.WareHouses['Szeszraktár']['Name'], '20')
+        self.stockAssert.assertStock(data.RawMaterial['Csirkemell']['Name'],data.WareHouses['Szeszraktár']['Name'],
+                                     '20')
         self.html.wait(2)
 
-        self.stockAssert.assertStock(data.RawMaterial['Finomliszt']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
+        self.stockAssert.assertStock(data.RawMaterial['Finomliszt']['Name'], data.WareHouses['Szeszraktár']['Name'],
+                                     '20')
         self.html.wait(2)
 
         self.stockAssert.assertStock(data.RawMaterial['Almalé']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
         self.html.wait(2)
 
-        self.stockAssert.assertStock(data.RawMaterial['Hasábburgonya']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
+        self.stockAssert.assertStock(data.RawMaterial['Hasábburgonya']['Name'], data.WareHouses['Szeszraktár']['Name'],
+                                     '20')
         self.html.wait(2)
 
         self.stockAssert.assertStock(data.RawMaterial['Sonka']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
         self.html.wait(2)
 
-        self.stockAssert.assertStock(data.RawMaterial['Paradicsomszósz']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
+        self.stockAssert.assertStock(data.RawMaterial['Paradicsomszósz']['Name'],
+                                     data.WareHouses['Szeszraktár']['Name'], '20')
         self.html.wait(2)
 
         self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
@@ -1795,6 +1796,10 @@ class Orders(BaseTestCase):
 
         self.usersSeed.deleteGroup(name)
 
+
+
+
+
     def testCreateClient(self):
         self.menu.openProducts()
         self.createProductChose()
@@ -1838,7 +1843,10 @@ class Orders(BaseTestCase):
         # mennyiseg ellenorzese
         self.menu.openReceiving()
         self.html.clickElement('Új bevételezés', 'a', waitSeconds=2)
-        #self.html.clickElement('Új')
+        try:
+            self.html.clickElement('Új')
+        except Exception:
+            pass
         self.html.switchFrame('iframe')
 
         self.html.fillInput('Számla azonosító', 'KomplexTest')
@@ -1910,6 +1918,7 @@ class Orders(BaseTestCase):
         prcInt = int(prc[0] + prc[1])
         expected = int(stvalue[0]+stvalue[1]) + prcInt
         print('ex ' + str(expected))
+        self.html.wait(5)
         self.menu.openFinance()
         self.html.refresh()
         self.html.wait()
