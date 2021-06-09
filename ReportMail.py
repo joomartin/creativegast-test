@@ -6,6 +6,7 @@ from os.path import basename
 
 fromAddr = 'dev.gr33nt3ch@gmail.com'
 toAddr = 'ricsi.sikulitest@gmail.com, tamas.horvath@prosupport.io, ban.adrian.gt@gmail.com'
+#toAddr = 'ricsi.sikulitest@gmail.com, ban.adrian.gt@gmail.com'
 #ide tömb megy majd a cél email címekkel
 
 def sendReport(filePath,):

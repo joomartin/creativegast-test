@@ -12,7 +12,7 @@ class HtmlProxy:
     def __init__(self, driver):
         self.driver = driver
 
-    def clickElement(self, target, tag='button', options=Options(), waitSeconds=0,):
+    def clickElement(self, target, tag='button', options=Options(), waitSeconds=0):
         self.getElement(target, tag, options).click()
         self.wait(waitSeconds)
 

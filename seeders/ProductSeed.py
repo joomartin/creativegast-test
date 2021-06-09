@@ -3,6 +3,9 @@ from mainMenu.MainMenuProxy import MainMenuProxy
 from core.Options import Options
 from stock.StockAssert import StockAssert
 from shared.TestData import TestData as data
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.common.by import By
 
 
 class ProductSeed:
@@ -28,9 +31,14 @@ class ProductSeed:
         self.html.fillInput('Termékcsoport neve', groupName)
         self.html.clickDropdown('Kategória', 'Étel')
         self.html.clickElement('Rögzít')
-        self.html.wait(120)
+        #// *[ @ id = "tabs-productgroups"] / div[1] / div / button
+        wait = WebDriverWait(self.driver, 10000)
+
+        asd = wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="tabs-productgroups"]/div[1]/div/button')))
         self.html.switchFrame()
-        self.html.wait(10)
+        #self.html.wait(120)
+        #self.html.switchFrame()
+        #self.html.wait(10)
 
     def deleteProductGroup(self, groupName, module=False, tab=False):
         if module:
@@ -169,12 +177,14 @@ class ProductSeed:
         self.html.clickElement('p_counters', 'input', Options(htmlAttribute='id'), waitSeconds=1)
         self.html.switchFrame('iframe')
 
+        wait = WebDriverWait(self.driver, 10000)
+        wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id = "fix"]')))
         self.html.clickElement(counter, 'td')
         self.html.clickElement('Rögzít')
         self.html.switchFrame('iframe')
 
         places = self.html.getElement('Eladási ár (Kötelező)', 'td')
-        self.html.clickElement('Ár megadása',options=Options(element=places))
+        self.html.clickElement('Ár megadása', options=Options(element=places))
         self.html.fillInput('Nettó', netPrice)
         self.html.wait(1)
         self.html.clickElement('taxPriceSave', 'a', options=Options(htmlAttribute='id'))

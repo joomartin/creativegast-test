@@ -1,9 +1,13 @@
 ''' Na ez hosszu menet lesz...'''
 import unittest
 
+from selenium.webdriver.support.wait import WebDriverWait
+
 from shared.BaseTestCase import BaseTestCase
 from shared.TestData import TestData as data
 from core.Options import Options
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.common.by import By
 
 
 class Restaurant(BaseTestCase):
@@ -102,6 +106,84 @@ class Restaurant(BaseTestCase):
         super().tearDownClass()
 
     def tearDown(self):
+        try:
+            self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.restaurantseed.deleteTable('Kedvezmeny', module=True)
+        except Exception:
+            pass
+        try:
+            self.restaurantseed.deleteTable('Elvitel', module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteProduct(data.Product['Babgulyás']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteProduct(data.Product['Palacsinta']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteCounter(data.Counter['TestCounter']['Name'], tab=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteProduct('Roston csirkemell', module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteProduct('Rántott csirkemell', module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteProduct('Almalé', module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteProduct('Kóla', module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteProduct(data.Product['Sonka']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deleteProduct(data.Product['Paradicsomszósz']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.productseed.deletePizza('Sonkás pizza', module=True)
+        except Exception:
+            pass
+        try:
+            self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.stockseed.deleteRawMaterial(data.RawMaterial['Alma']['Name'], module=True)
+        except Exception:
+            pass
+        try:
+            self.stockseed.deleteRawMaterial('Kóla', module=True)
+        except Exception:
+            pass
+        for material in self.rawMaterials:
+            try:
+                self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True)
+            except Exception:
+                pass
+        try:
+            self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
+        except Exception:
+            pass
+        '''
         self.tryHelper(self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True))
         self.tryHelper(self.restaurantseed.deleteTable('Kedvezmeny', module=True))
         self.tryHelper(self.restaurantseed.deleteTable('Elvitel', module=True))
@@ -111,7 +193,7 @@ class Restaurant(BaseTestCase):
         self.tryHelper(self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True))
         self.tryHelper(self.productseed.deleteProduct('Roston csirkemell', module=True))
         self.tryHelper(self.productseed.deleteProduct('Rántott csirkemell', module=True))
-        self.tryHelper(self.productseed.deleteProduct('Almalé'))
+        self.tryHelper(self.productseed.deleteProduct('Almalé', module=True))
         self.tryHelper(self.productseed.deleteProduct('Kóla', module=True))
         self.tryHelper(self.productseed.deleteProduct(data.Product['Sonka']['Name'], module=True))
         self.tryHelper(self.productseed.deleteProduct(data.Product['Paradicsomszósz']['Name'], module=True))
@@ -122,6 +204,7 @@ class Restaurant(BaseTestCase):
         for material in self.rawMaterials:
             self.tryHelper(self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True))
         self.tryHelper(self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True))
+        '''
 
     def addProductToList(self, productName, quantity):
         self.html.fillAutocomplete('Terméknév', 'input', productName[:-1], productName, 'li',
@@ -137,394 +220,16 @@ class Restaurant(BaseTestCase):
         self.assertEqual(name.text, productName)
         self.assertEqual(qty.text, quantity)
 
-    @unittest.skip
-    def testOrderPayed(self):
-        self.addProductToList(data.Product['Babgulyás']['Name'], '1.00')
-        self.html.refresh()
-        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
-        name = self.html.getTxtFromListTable2('2', '3')
-        qty = self.html.getTxtFromListTable2('2', '5')
-        storno = self.html.getTxtFromListTable2('2', '8')
 
-        self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
-        self.assertEqual(qty.text, '1.00')
-        self.assertEqual(storno.text, 'Sztornó')
 
-        self.html.clickElement('Fizetés')
-        self.html.clickElement('Kitölt')
 
-        self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
-        self.html.refresh()
 
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
-                                    data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
-
-    @unittest.skip
-    def testOrderStorno(self):
-        # mennyiseg ellenorzese
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
-                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '10')
-
-        # vissza az etterembe
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        self.addProductToList(data.Product['Babgulyás']['Name'], '1.00')
-        self.html.refresh()
-        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        name = self.html.getTxtFromListTable2('2', '3')
-        qty = self.html.getTxtFromListTable2('2', '5')
-        storno = self.html.getTxtFromListTable2('2', '8')
-
-        self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
-        self.assertEqual(qty.text, '1.00')
-        self.assertEqual(storno.text, 'Sztornó')
-
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
-
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        # johet a sztorno
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', data.Product['Babgulyás']['Name'], 'div', 'Sztornó')
-        self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
-        self.restaurantAssert.assertProductNotInList()
-        self.restaurantAssert.assertStornoSucces(data.Product['Babgulyás']['Name'])
-
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
-                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '10')
-
-    @unittest.skip
-    def testQualityStorno(self):
-        # mennyiseg ellenorzese
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
-                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '10')
-        # vissza az etterembe
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        # rendeles bekuldese
-        self.addProductToList(data.Product['Babgulyás']['Name'], '1.00')
-        self.html.refresh()
-        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        name = self.html.getTxtFromListTable2('2', '3')
-        qty = self.html.getTxtFromListTable2('2', '5')
-        storno = self.html.getTxtFromListTable2('2', '8')
-
-        # csekkolas
-        self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
-        self.assertEqual(qty.text, '1.00')
-        self.assertEqual(storno.text, 'Sztornó')
-
-        # ez lehet itt nem kell, de nem baj ha van
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
-
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        # johet a sztorno
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', data.Product['Babgulyás']['Name'], 'div', 'Sztornó')
-        self.html.clickElement('Minőségi kifogás', waitSeconds=1)
-        self.html.fillInput('Minőségi kifogás indoka', 'teszt01 sztornó', 'textarea', options=Options(htmlAttribute='placeholder'))
-        self.html.clickElement('Minőségi kifogás küldése', waitSeconds=2)
-
-        self.restaurantAssert.assertProductNotInList()
-        self.restaurantAssert.assertStornoSucces(data.Product['Babgulyás']['Name'])
-
-        # mennyiseg ellenorzese
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
-                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
-        # selejt ellenorzese
-        self.html.clickElement('Selejtezések', 'a')
-        name = self.html.getElementInTable(data.RawMaterial['Bundas_kenyer']['Name'], 'component_waste', 'Selejtezések').is_displayed()
-        excuse = self.html.getTxtFromTable('1', '5', 'component_waste')
-        self.assertTrue(name)
-        self.assertEqual(excuse, 'teszt01 sztornó')
-
-    @unittest.skip
-    def testWrongorderStorno(self):
-        # mennyiseg ellenorzese
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
-                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '10')
-        # vissza az etterembe
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        # rendeles bekuldese
-        self.addProductToList(data.Product['Babgulyás']['Name'], '1.00')
-        self.html.refresh()
-        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        name = self.html.getTxtFromListTable2('2', '3')
-        qty = self.html.getTxtFromListTable2('2', '5')
-        storno = self.html.getTxtFromListTable2('2', '8')
-
-        self.assertEqual(name.text, data.Product['Babgulyás']['Name'])
-        self.assertEqual(qty.text, '1.00')
-        self.assertEqual(storno.text, 'Sztornó')
-
-        # ez lehet itt nem kell, de nem baj ha van
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['Warehouse'], '8')
-
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        # johet a sztorno
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', data.Product['Babgulyás']['Name'], 'div', 'Sztornó')
-        self.html.clickElement('Hibás rendelés (raktárba visszatesz)', waitSeconds=4)
-
-        self.restaurantAssert.assertProductNotInList()
-        self.restaurantAssert.assertStornoSucces(data.Product['Babgulyás']['Name'])
-
-        # mennyiseg ellenorzese
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
-                                     data.RawMaterial['Bundas_kenyer']['Warehouse'], '10')
-
-    @unittest.skip
-    def testUnion(self):
-        inputName = data.Product['Babgulyás']['Name']
-
-        for i in range(10):
-            self.addProductToList(inputName, '1.00')
-
-        #self.html.clickElement('aaaa', 'div') # ez a verzi nem az elso elemet jelolte ki
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', inputName)
-        self.html.clickElement('Összevonás', waitSeconds=2)
-        for i in range(4):
-            self.html.clickElement('unionMinus', 'a', options=Options(htmlAttribute='id'))
-        self.html.wait(3)
-        self.html.clickElement('Összevonás / Áthelyezés', waitSeconds=4)
-
-        # csekkolás
-        for i in range(2, 7):
-            tempName = self.html.getTxtFromListTable2(str(i), '3')
-            tempQty = self.html.getTxtFromListTable2(str(i), '5')
-
-            self.assertEqual(tempName.text, inputName)
-            if i == 2:
-                self.assertEqual(tempQty.text, '6.00')
-            else:
-                self.assertEqual(tempQty.text, '1.00')
-
-        # törlés
-        self.html.clickElement('Minden összevonása', waitSeconds=4)
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', 'Törlés')
-        self.html.clickElement('Igen', waitSeconds=2)
-        # itt azt csekkoljuk hogy a rendeles bekuldese gomb eltunt e
-        self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
-
-    @unittest.skip
-    def testUnfold(self):
-        self.html.wait(10)
-        inputName = data.Product['Babgulyás']['Name']
-
-        self.addProductToList(inputName, '10.00')
-
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', inputName)
-        self.html.clickElement('Bontás', waitSeconds=2)
-        for i in range(4):
-            self.html.clickElement('unfoldMinus', 'a', options=Options(htmlAttribute='id'))
-
-        self.html.wait(3)
-        self.html.clickElement('Bontás / Áthelyezés', waitSeconds=4)
-
-        name = self.html.getTxtFromListTable2('2', '3')
-        name2 = self.html.getTxtFromListTable2('3', '3')
-        qty = self.html.getTxtFromListTable2('2', '5')
-        qty2 = self.html.getTxtFromListTable2('3', '5')
-
-        self.assertEqual(name.text, inputName)
-        self.assertEqual(qty.text, '6.00')
-        self.assertEqual(name2.text, inputName)
-        self.assertEqual(qty2.text, '4.00')
-
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', 'Törlés')
-        self.html.clickElement('Igen', waitSeconds=2)
-        self.html.refresh()
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', 'Törlés')
-        self.html.clickElement('Igen', waitSeconds=2)
-        # itt azt csekkoljuk hogy a rendeles bekuldese gomb eltunt e
-        self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
-
-    @unittest.skip
-    def testUnionAll(self):
-        inputName = data.Product['Babgulyás']['Name']
-        inputName2 = data.Product['Palacsinta']['Name']
-
-        self.addProductToList(inputName, '1.00')
-        self.addProductToList(inputName, '1.00')
-        self.addProductToList(inputName2, '1.00')
-        self.addProductToList(inputName2, '1.00')
-
-        self.html.clickElement('Minden összevonása', waitSeconds=4)
-
-        name = self.html.getTxtFromListTable2('2', '3')
-        name2 = self.html.getTxtFromListTable2('3', '3')
-        qty = self.html.getTxtFromListTable2('2', '5')
-        qty2 = self.html.getTxtFromListTable2('3', '5')
-
-        self.assertEqual(name.text, inputName2)
-        self.assertEqual(qty.text, '2.00')
-        self.assertEqual(name2.text, inputName)
-        self.assertEqual(qty2.text, '2.00')
-
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', 'Törlés')
-        self.html.clickElement('Igen', waitSeconds=2)
-        self.html.refresh()
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName2, 'div', 'Törlés')
-        self.html.clickElement('Igen', waitSeconds=2)
-        # itt azt csekkoljuk hogy a rendeles bekuldese gomb eltunt e
-        self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
-
-    @unittest.skip
-    def testMove(self):
-        inputName = data.Product['Babgulyás']['Name']
-
-        self.addProductToList(inputName, '1.00')
-        self.html.refresh()
-
-        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        # művelet
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', inputName)
-        self.html.clickElement('Áthelyez részasztalra')
-        partTablesDialog = self.html.getElement('moveDialog', 'div', options=Options(htmlAttribute='id'))
-        self.html.clickElement('2', 'a', options=Options(element=partTablesDialog), waitSeconds=4)
-
-        self.html.clickElement('2', 'a')
-
-        # csekkolas
-        name = self.html.getTxtFromListTable2('2', '3')
-        qty = self.html.getTxtFromListTable2('2', '5')
-        self.assertEqual(name.text, inputName)
-        self.assertEqual(qty.text, '1.00')
-
-        # sztorno
-        self.html.clickElement('Sztornó', 'a')
-        self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
-        self.html.wait(5)  # megkell varni h az ertesitesi ablak megjelenjen
-        self.assertTrue(
-            self.html.getElement(inputName + ' nevű termék a felszolgáló által sztornózva lett! ', 'li').is_displayed())
-        self.html.clickElement('Rendben', 'a')
-
-        self.html.clickElement('1', 'a')
-
-    @unittest.skip
-    def testMoveToTable(self):
-        inputName = data.Product['Babgulyás']['Name']
-        inputName2 = data.Product['Palacsinta']['Name']
-
-        self.addProductToList(inputName, '1.00')
-        self.addProductToList(inputName2, '1.00')
-        self.html.refresh()
-
-        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-
-        # muvelet
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName, 'div', inputName)
-        self.html.clickElement('Áthelyez másik asztalra')
-        self.html.clickElement(data.Table['Courier']['Name'], 'a')
-
-        self.html.refresh()
-        self.html.clickElement('Vissza', 'a', waitSeconds=2)
-        self.html.clickElement(data.Table['Courier']['Name'], tag='i')
-
-        # csekkoljuk a dolgokat
-        name = self.html.getTxtFromListTable('2', '3', tableId='tasks-list products ui-sortable',
-                                             options=Options(htmlAttribute='class'))
-        qty = self.html.getTxtFromListTable('2', '5', tableId='tasks-list products ui-sortable',
-                                            options=Options(htmlAttribute='class'))
-        self.assertEqual(name.text, inputName)
-        self.assertEqual(qty.text, '1.00')
-
-        # sztorno
-        self.html.clickElement('Sztornó', 'a')
-        self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
-        self.restaurantAssert.assertStornoSucces(inputName)
-
-        self.html.clickElement('Vissza', 'a')
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-        self.html.clickElement('Sztornó', 'a')
-        self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
-        self.restaurantAssert.assertStornoSucces(inputName2)
-
-    @unittest.skip
-    def testMoveToReservedTable(self):
-        inputName = data.Product['Babgulyás']['Name']
-        inputName2 = data.Product['Palacsinta']['Name']
-
-        # elso asztalra rendeles bekuldese
-        self.addProductToList(inputName, '1.00')
-        self.html.refresh()
-        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
-        self.html.clickElement(data.Table['Courier']['Name'], tag='i')
-
-        # masodik asztalra rendeles bekuldese
-        self.addProductToList(inputName, '1.00')
-        self.addProductToList(inputName2, '1.00')
-        self.html.refresh()
-        self.html.clickElement('Rendelés beküldése', waitSeconds=3)
-        self.html.clickElement(data.Table['Courier']['Name'], tag='i')
-
-        # muvelet
-        self.html.clickTableElement('tasks-list products ui-sortable', 'class', inputName2, 'div', inputName2)
-        self.html.clickElement('Áthelyez másik asztalra')
-        self.html.clickElement(data.Table['Normal']['Name'], 'a', waitSeconds=2)
-
-        self.html.clickElement('Vissza', 'a', waitSeconds=2)
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
-        #
-        # ide talan kene assert h melyik asztalon is vagyunk
-
-        # csekkoljuk a dolgokat az elso asztalon, ahova athelyeztuk a termeket
-
-        # csekkolas
-
-        name2 = self.html.getTxtFromListTable2('2', '3')
-        qty2 = self.html.getTxtFromListTable2('2', '5')
-        self.assertEqual(name2.text, inputName)
-        self.assertEqual(qty2.text, '1.00')
-        self.html.clickElement('Sztornó', 'a')
-        self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
-        self.restaurantAssert.assertStornoSucces(inputName)
-
-        self.html.clickElement('2', 'a', waitSeconds=2)
-        name = self.html.getTxtFromListTable2('2', '3')
-        qty = self.html.getTxtFromListTable2('2', '5')
-
-        self.assertEqual(name.text, inputName2)
-        self.assertEqual(qty.text, '1.00')
-        self.html.clickElement('Sztornó', 'a')
-        self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
-        self.restaurantAssert.assertStornoSucces(inputName2)
-
-        # vissza a 2. asztalra
-        self.html.clickElement('Vissza', 'a', waitSeconds=2)
-        self.html.clickElement(data.Table['Courier']['Name'], 'a')
-
-        # csekkoljuk a 3. asztalon is a dolgokat
-        name3 = self.html.getTxtFromListTable2('2', '3')
-        qty3 = self.html.getTxtFromListTable2('2', '5')
-        self.assertEqual(name3.text, inputName)
-        self.assertEqual(qty3.text, '1.00')
-
-        # sztorno
-        self.html.clickElement('Sztornó', 'a')
-        self.html.clickElement('Vendég visszamondta (raktárba visszatesz)', waitSeconds=2)
-        self.restaurantAssert.assertStornoSucces(inputName)
 
 
 
     # passed
+    #@unittest.skip
     def testMultipleOrders(self):
         self.menu.openFinance()
         try:
@@ -601,6 +306,7 @@ class Restaurant(BaseTestCase):
         self.assertEqual(expected, actInt)
 
     # passed
+    #@unittest.skip
     def testMultipleOrdersCredit(self):
         self.menu.openFinance()
         try:
@@ -667,6 +373,7 @@ class Restaurant(BaseTestCase):
         #self.html.switchFrame('iframe')
 
     # passed
+    @unittest.skip
     def testInstantPayment(self):
         self.menu.openFinance()
         try:
@@ -726,6 +433,7 @@ class Restaurant(BaseTestCase):
         self.assertEqual(expected, actInt)
 
     # passed
+    @unittest.skip
     def testDiscountedTable(self):
         self.restaurantseed.createTable('Kedvezmeny', 'Kör', 'Személyzeti', '10', module=True)
 
@@ -794,6 +502,7 @@ class Restaurant(BaseTestCase):
         # self.restaurantseed.deleteTable('Kedvezmeny', module=True)
 
     # passed
+    @unittest.skip
     def testTake(self):
         self.restaurantseed.createTable('Elvitel', 'Kör', 'Elvitel', '10', module=True)
 
@@ -857,6 +566,7 @@ class Restaurant(BaseTestCase):
         # self.restaurantseed.deleteTable('Elvitel', module=True)
 
     # passed
+    @unittest.skip
     def testPartPrice(self):
         self.menu.openFinance()
         try:
@@ -904,6 +614,7 @@ class Restaurant(BaseTestCase):
         self.assertEqual(expected, actInt)
 
     # passed
+    @unittest.skip
     def testDynamic1(self):
         self.menu.openFinance()
         try:
@@ -934,12 +645,18 @@ class Restaurant(BaseTestCase):
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
         self.html.clickElement('Válassz...')
+        firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
+        warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
+        #self.html.wait(2)
+        wait = WebDriverWait(self.driver, 5000)
+        wait.until(ec.element_to_be_clickable(
+            (By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
         self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
-                            options=Options(htmlAttribute='placeholder'))
+                            options=Options(htmlAttribute='placeholder', element=warehouse[2]))
+        self.html.wait(2)
         self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
-
 
         self.html.clickElement('Rögzít')
 
@@ -1006,6 +723,7 @@ class Restaurant(BaseTestCase):
         self.assertEqual(expected, actInt)
 
     # passed
+    #@unittest.skip
     def testOrderStorno(self):
         self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'], module=True)
 
@@ -1027,6 +745,15 @@ class Restaurant(BaseTestCase):
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
         self.html.clickElement('Válassz...')
+        firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
+        warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
+        #self.html.wait(2)
+        wait = WebDriverWait(self.driver, 5000)
+        wait.until(ec.element_to_be_clickable(
+            (By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
+        self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
+                            options=Options(htmlAttribute='placeholder', element=warehouse[2]))
+        self.html.wait(2)
         self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
@@ -1070,6 +797,7 @@ class Restaurant(BaseTestCase):
         #self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
     # passed
+    @unittest.skip
     def testWrongorderStorno(self):
         self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'],
                                          module=True)
@@ -1091,6 +819,15 @@ class Restaurant(BaseTestCase):
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
         self.html.clickElement('Válassz...')
+        firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
+        warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
+        #self.html.wait(2)
+        wait = WebDriverWait(self.driver, 5000)
+        wait.until(ec.element_to_be_clickable(
+            (By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
+        self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
+                            options=Options(htmlAttribute='placeholder', element=warehouse[2]))
+        self.html.wait(2)
         self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
@@ -1138,6 +875,7 @@ class Restaurant(BaseTestCase):
         #self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
     # passed
+    @unittest.skip
     def testQualityStorno(self):
         self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'],
                                          module=True)
@@ -1159,6 +897,15 @@ class Restaurant(BaseTestCase):
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
         self.html.clickElement('Válassz...')
+        firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
+        warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
+        #self.html.wait(2)
+        wait = WebDriverWait(self.driver, 5000)
+        wait.until(ec.element_to_be_clickable(
+            (By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
+        self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
+                            options=Options(htmlAttribute='placeholder', element=warehouse[2]))
+        self.html.wait(2)
         self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
@@ -1217,6 +964,7 @@ class Restaurant(BaseTestCase):
         #self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
     # passed
+    @unittest.skip
     def testMove(self):
         inputName = data.Product['Sonka']['Name']
 
@@ -1254,6 +1002,7 @@ class Restaurant(BaseTestCase):
         self.html.clickElement('1', 'a')
 
     # passed
+    @unittest.skip
     def testMoveToTable(self):
 
         inputName = data.Product['Sonka']['Name']
@@ -1298,6 +1047,7 @@ class Restaurant(BaseTestCase):
         self.restaurantAssert.assertStornoSucces(inputName2)
 
     # passed
+    @unittest.skip
     def testMoveToReservedTable(self):
         inputName = data.Product['Sonka']['Name']
         inputName2 = data.Product['Paradicsomszósz']['Name']
@@ -1366,6 +1116,7 @@ class Restaurant(BaseTestCase):
         self.restaurantAssert.assertStornoSucces(inputName)
 
     # passed
+    @unittest.skip
     def testUnfold(self):
         self.html.wait(10)
         inputName = data.Product['Sonka']['Name']
@@ -1401,6 +1152,7 @@ class Restaurant(BaseTestCase):
         self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
 
     # passed
+    @unittest.skip
     def testUnion(self):
         inputName = data.Product['Sonka']['Name']
 
@@ -1437,6 +1189,7 @@ class Restaurant(BaseTestCase):
         self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
 
     # passed
+    @unittest.skip
     def testUnionAll(self):
         inputName = data.Product['Sonka']['Name']
         inputName2 = data.Product['Paradicsomszósz']['Name']
@@ -1470,6 +1223,7 @@ class Restaurant(BaseTestCase):
         self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
 
     # passed
+    @unittest.skip
     def testDynamic2(self):
         self.menu.openFinance()
         try:
@@ -1498,6 +1252,15 @@ class Restaurant(BaseTestCase):
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
         self.html.clickElement('Válassz...')
+        firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
+        warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
+        #self.html.wait(2)
+        wait = WebDriverWait(self.driver, 5000)
+        wait.until(ec.element_to_be_clickable(
+            (By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
+        self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
+                            options=Options(htmlAttribute='placeholder', element=warehouse[2]))
+        self.html.wait(2)
         self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
         self.html.clickElement('Hozzáad')
         self.html.wait(2)

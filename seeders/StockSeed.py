@@ -72,7 +72,7 @@ class StockSeed:
         self.html.clickElement('Rögzít')
         self.html.switchFrame()
 
-    def deleteWarehouse(self, warehouseName, module=False, tab = False):
+    def deleteWarehouse(self, warehouseName, module=False, tab=False):
 
         if module:
             self.menu.openStocks()
