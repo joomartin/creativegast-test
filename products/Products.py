@@ -70,6 +70,10 @@ class Products(BaseTestCase):
         except Exception:
             pass
         try:
+            self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+        except Exception:
+            pass
+        try:
             self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
         except Exception:
             pass

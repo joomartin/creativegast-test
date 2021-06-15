@@ -3,6 +3,9 @@ from mainMenu.MainMenuProxy import MainMenuProxy
 from core.Options import Options
 from receiving.ReceivingAssert import ReceivingAssert
 from shared.TestData import TestData as data
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.common.by import By
 
 
 class ReceivingSeed:
@@ -70,12 +73,15 @@ class ReceivingSeed:
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '1000', 'data-title')
         self.html.clickElement('Válassz...')
-        '''firstrow = self.html.getElement('', 'div')
-        self.html.wait(2)
+        firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
+        warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
+        #self.html.wait(2)
+        wait = WebDriverWait(self.driver, 10000)
+        wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
         self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
-                            options=Options(htmlAttribute='placeholder', element=warehouselement))
+                            options=Options(htmlAttribute='placeholder', element=warehouse[2]))
         self.html.wait(2)
-        '''
+
         self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
         self.html.wait(2)
         self.html.clickElement('Hozzáad')
@@ -87,6 +93,13 @@ class ReceivingSeed:
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '150', 'data-title')
         self.html.clickElement('Válassz...')
+        firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
+        warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
+        #self.html.wait(2)
+        wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
+        self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
+                            options=Options(htmlAttribute='placeholder', element=warehouse[2]))
+        self.html.wait(2)
         self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
@@ -97,6 +110,14 @@ class ReceivingSeed:
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '300', 'data-title')
         self.html.clickElement('Válassz...')
+        firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
+        warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
+        #self.html.wait(2)
+        wait.until(ec.element_to_be_clickable(
+            (By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
+        self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
+                            options=Options(htmlAttribute='placeholder', element=warehouse[2]))
+        self.html.wait(2)
         self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
@@ -107,6 +128,14 @@ class ReceivingSeed:
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
         self.html.clickElement('Válassz...')
+        firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
+        warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
+        #self.html.wait(2)
+        wait.until(ec.element_to_be_clickable(
+            (By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
+        self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
+                            options=Options(htmlAttribute='placeholder', element=warehouse[2]))
+        self.html.wait(2)
         self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
@@ -117,6 +146,14 @@ class ReceivingSeed:
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '1800', 'data-title')
         self.html.clickElement('Válassz...')
+        firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
+        warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
+        #self.html.wait(2)
+        wait.until(ec.element_to_be_clickable(
+            (By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
+        self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
+                            options=Options(htmlAttribute='placeholder', element=warehouse[2]))
+        self.html.wait(2)
         self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
@@ -127,6 +164,14 @@ class ReceivingSeed:
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '2000', 'data-title')
         self.html.clickElement('Válassz...')
+        firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
+        warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
+        #self.html.wait(2)
+        wait.until(ec.element_to_be_clickable(
+            (By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
+        self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
+                            options=Options(htmlAttribute='placeholder', element=warehouse[2]))
+        self.html.wait(2)
         self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
         self.html.clickElement('Hozzáad')
         self.html.wait(2)
@@ -136,6 +181,14 @@ class ReceivingSeed:
         self.html.fillInput('Mennyiség', '10', 'data-title')
         self.html.fillInput('Bruttó egységár (Ft)', '200', 'data-title')
         self.html.clickElement('Válassz...')
+        firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
+        warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
+        #self.html.wait(2)
+        wait.until(ec.element_to_be_clickable(
+            (By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
+        self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
+                            options=Options(htmlAttribute='placeholder', element=warehouse[2]))
+        self.html.wait(2)
         self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
         self.html.clickElement('Hozzáad')
         self.html.wait(2)

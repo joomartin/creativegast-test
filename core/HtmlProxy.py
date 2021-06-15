@@ -12,7 +12,7 @@ class HtmlProxy:
     def __init__(self, driver):
         self.driver = driver
 
-    def clickElement(self, target, tag='button', options=Options(), waitSeconds=0,):
+    def clickElement(self, target, tag='button', options=Options(), waitSeconds=0):
         self.getElement(target, tag, options).click()
         self.wait(waitSeconds)
 
@@ -221,7 +221,7 @@ class HtmlProxy:
 
     def fillAutocomplete(self, target, tag, value, selectValue, selectTag, options):
         self.getElement(target, tag, options).send_keys(value)
-        self.wait(5)
+        self.wait(10) # ide is johetne explicit wait
         self.clickElement(selectValue, selectTag)
 
     def clickTableElement(self, atrName, atrType, tdText, followingType, targetText, tab=None):
