@@ -3,6 +3,9 @@ from core.HtmlProxy import HtmlProxy
 from mainMenu.MainMenuProxy import MainMenuProxy
 from core.Options import Options
 from stock.StockAssert import StockAssert
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.common.by import By
 
 
 class StockSeed:
@@ -32,6 +35,10 @@ class StockSeed:
     def createRawMaterialWithOpening(self, testName, grossPrice, openingQty, whName, me='liter', module=False):
         if module:
             self.menu.openStocks()
+
+        wait = WebDriverWait(self.driver, 500)
+        wait.until(ec.element_to_be_clickable(
+            (By.XPATH, '//*[@id="newComponent"]')))
         self.html.clickElement('Új nyersanyag felvitele', 'a')
         self.html.switchFrame('iframe')
 

@@ -177,7 +177,7 @@ class ProductSeed:
         self.html.clickElement('p_counters', 'input', Options(htmlAttribute='id'), waitSeconds=1)
         self.html.switchFrame('iframe')
 
-        wait = WebDriverWait(self.driver, 10000)
+        wait = WebDriverWait(self.driver, 1000)
         wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id = "fix"]')))
         self.html.clickElement(counter, 'td')
         self.html.clickElement('Rögzít')

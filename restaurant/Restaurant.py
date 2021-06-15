@@ -229,7 +229,7 @@ class Restaurant(BaseTestCase):
 
 
     # passed
-    #@unittest.skip
+    ##@unittest.skip
     def testMultipleOrders(self):
         self.menu.openFinance()
         try:
@@ -373,7 +373,7 @@ class Restaurant(BaseTestCase):
         #self.html.switchFrame('iframe')
 
     # passed
-    @unittest.skip
+    #@unittest.skip
     def testInstantPayment(self):
         self.menu.openFinance()
         try:
@@ -433,7 +433,7 @@ class Restaurant(BaseTestCase):
         self.assertEqual(expected, actInt)
 
     # passed
-    @unittest.skip
+    #@unittest.skip
     def testDiscountedTable(self):
         self.restaurantseed.createTable('Kedvezmeny', 'Kör', 'Személyzeti', '10', module=True)
 
@@ -502,7 +502,7 @@ class Restaurant(BaseTestCase):
         # self.restaurantseed.deleteTable('Kedvezmeny', module=True)
 
     # passed
-    @unittest.skip
+    #@unittest.skip
     def testTake(self):
         self.restaurantseed.createTable('Elvitel', 'Kör', 'Elvitel', '10', module=True)
 
@@ -566,7 +566,7 @@ class Restaurant(BaseTestCase):
         # self.restaurantseed.deleteTable('Elvitel', module=True)
 
     # passed
-    @unittest.skip
+    #@unittest.skip
     def testPartPrice(self):
         self.menu.openFinance()
         try:
@@ -614,7 +614,7 @@ class Restaurant(BaseTestCase):
         self.assertEqual(expected, actInt)
 
     # passed
-    @unittest.skip
+    ##@unittest.skip
     def testDynamic1(self):
         self.menu.openFinance()
         try:
@@ -723,7 +723,7 @@ class Restaurant(BaseTestCase):
         self.assertEqual(expected, actInt)
 
     # passed
-    #@unittest.skip
+    ##@unittest.skip
     def testOrderStorno(self):
         self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'], module=True)
 
@@ -797,7 +797,7 @@ class Restaurant(BaseTestCase):
         #self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
     # passed
-    @unittest.skip
+    #@unittest.skip
     def testWrongorderStorno(self):
         self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'],
                                          module=True)
@@ -875,7 +875,7 @@ class Restaurant(BaseTestCase):
         #self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
     # passed
-    @unittest.skip
+    #@unittest.skip
     def testQualityStorno(self):
         self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Name'],
                                          module=True)
@@ -964,7 +964,7 @@ class Restaurant(BaseTestCase):
         #self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
     # passed
-    @unittest.skip
+    #@unittest.skip
     def testMove(self):
         inputName = data.Product['Sonka']['Name']
 
@@ -1002,7 +1002,7 @@ class Restaurant(BaseTestCase):
         self.html.clickElement('1', 'a')
 
     # passed
-    @unittest.skip
+    ##@unittest.skip
     def testMoveToTable(self):
 
         inputName = data.Product['Sonka']['Name']
@@ -1047,7 +1047,7 @@ class Restaurant(BaseTestCase):
         self.restaurantAssert.assertStornoSucces(inputName2)
 
     # passed
-    @unittest.skip
+    #@unittest.skip
     def testMoveToReservedTable(self):
         inputName = data.Product['Sonka']['Name']
         inputName2 = data.Product['Paradicsomszósz']['Name']
@@ -1116,7 +1116,7 @@ class Restaurant(BaseTestCase):
         self.restaurantAssert.assertStornoSucces(inputName)
 
     # passed
-    @unittest.skip
+    #@unittest.skip
     def testUnfold(self):
         self.html.wait(10)
         inputName = data.Product['Sonka']['Name']
@@ -1152,7 +1152,7 @@ class Restaurant(BaseTestCase):
         self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
 
     # passed
-    @unittest.skip
+    #@unittest.skip
     def testUnion(self):
         inputName = data.Product['Sonka']['Name']
 
@@ -1189,7 +1189,7 @@ class Restaurant(BaseTestCase):
         self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
 
     # passed
-    @unittest.skip
+    #@unittest.skip
     def testUnionAll(self):
         inputName = data.Product['Sonka']['Name']
         inputName2 = data.Product['Paradicsomszósz']['Name']
@@ -1223,7 +1223,7 @@ class Restaurant(BaseTestCase):
         self.assertFalse(self.html.getElement('Rendelés beküldése', 'button').is_displayed())
 
     # passed
-    @unittest.skip
+    #@unittest.skip
     def testDynamic2(self):
         self.menu.openFinance()
         try:
