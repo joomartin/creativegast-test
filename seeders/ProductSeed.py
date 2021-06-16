@@ -190,7 +190,8 @@ class ProductSeed:
         self.html.clickElement('taxPriceSave', 'a', options=Options(htmlAttribute='id'))
         self.html.wait(2)
 
-        self.html.fillAutocomplete('componentName', 'input', component, component, 'li', Options(htmlAttribute='id'))
+        #self.html.fillAutocomplete('componentName', 'input', component, component, 'li', Options(htmlAttribute='id'))
+        self.html.fillAutocompleteProduct('componentName', 'input', component, component, 'a', Options(htmlAttribute='id'))
         self.html.fillInput('componentQty', compQty, 'input', options=Options(htmlAttribute='id'))
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
@@ -222,7 +223,9 @@ class ProductSeed:
         self.html.clickElement(None, './/label[contains(.,"Gyártás termék") and @class="radio formStyle"]', options=Options(uniqueSelector=True))
         self.html.fillInput('Recept adag', '1')
 
-        self.html.fillAutocomplete('componentName', 'input', component, component, 'li', Options(htmlAttribute='id'))
+        #self.html.fillAutocomplete('componentName', 'input', component, component, 'li', Options(htmlAttribute='id'))
+        self.html.fillAutocompleteProduct('componentName', 'input', component, component, 'a',
+                                          Options(htmlAttribute='id'))
         self.html.fillInput('componentQty', compQty, 'input', options=Options(htmlAttribute='id'))
         self.html.clickElement('Hozzáad')
         self.html.clickElement('Rögzít')
