@@ -566,7 +566,7 @@ class Restaurant(BaseTestCase):
         # self.restaurantseed.deleteTable('Elvitel', module=True)
 
     # passed
-    #@unittest.skip
+    @unittest.skip
     def testPartPrice(self):
         self.menu.openFinance()
         try:
@@ -614,7 +614,7 @@ class Restaurant(BaseTestCase):
         self.assertEqual(expected, actInt)
 
     # passed
-    ##@unittest.skip
+    #@unittest.skip
     def testDynamic1(self):
         self.menu.openFinance()
         try:
@@ -1058,6 +1058,7 @@ class Restaurant(BaseTestCase):
         # elso asztalra rendeles bekuldese
         self.addProductToList(inputName, '1.00')
         self.html.refresh()
+        self.html.wait(2)
         self.html.clickElement('Rendelés beküldése', waitSeconds=3)
         self.html.clickElement(data.Table['Courier']['Name'], tag='i')
 
@@ -1065,6 +1066,7 @@ class Restaurant(BaseTestCase):
         self.addProductToList(inputName, '1.00')
         self.addProductToList(inputName2, '1.00')
         self.html.refresh()
+        self.html.wait(2)
         self.html.clickElement('Rendelés beküldése', waitSeconds=3)
         self.html.clickElement(data.Table['Courier']['Name'], tag='i')
 

@@ -13,7 +13,7 @@ cm = ClientManagementController()
 us = UsersController()
 
 #sc.run()
-pc.run() # works
+#pc.run() # works
 #rc.run() # amig egy bug meg nincs javitva addig failol
 resc.run() # 4 futott rendes modban(works),
 #cm.run() # works

@@ -224,6 +224,12 @@ class HtmlProxy:
         self.wait(10) # ide is johetne explicit wait
         self.clickElement(selectValue, selectTag)
 
+    def fillAutocompleteProduct(self, target, tag, value, selectValue, selectTag, options):
+        self.getElement(target, tag, options).send_keys(value)
+        self.wait(10) # ide is johetne explicit wait
+        ulList = self.getElement('ui-id-1', 'ul', options=Options(htmlAttribute='id'))
+        self.clickElement(selectValue, selectTag, options=Options(element=ulList))
+
     def clickTableElement(self, atrName, atrType, tdText, followingType, targetText, tab=None):
         if tab != None:
             self.search(tdText, tab)
