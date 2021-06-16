@@ -586,7 +586,7 @@ class Restaurant(BaseTestCase):
 
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
         self.html.clickElement('Fizetendő részösszeg')
-        self.html.fillInput('Részösszeg', '10000')
+        self.html.fillInput('Részösszeg', '12000')
         self.html.getElements(None, '//button[contains(.,"OK")]', Options(uniqueSelector='True'))[1].click()
         self.html.wait(2)
         self.html.clickElement('Kijelöltek fizetése')

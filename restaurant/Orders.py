@@ -675,7 +675,7 @@ class Orders(BaseTestCase):
 
         self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
-        for i in range(10):
+        for i in range(12):
             self.addProductToList('Rántott csirkemell', '1.00')
             self.html.wait(3)
 
