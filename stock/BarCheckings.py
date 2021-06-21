@@ -31,7 +31,8 @@ class BarCheckings(BaseTestCase):
         self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
 
     def deleteChecking(self):
-        self.html.clickTableElement('barchecking', 'id', data.WareHouses['Szeszraktár']['Name'], 'a', 'Törlés', 'Standellenőrzések')
+        self.html.clickTableElement('barchecking', 'id', data.WareHouses['Szeszraktár']['Name'], 'a', 'Törlés',
+                                    'Standellenőrzések')
         self.html.clickElement('Igen')
         self.html.refresh()
 
@@ -46,7 +47,8 @@ class BarCheckings(BaseTestCase):
         #self.html.scrollToElement(content)
         self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label', Options(following='label'))
         self.html.clickElement('Indít', waitSeconds=3)
-        qty = int(self.html.getElement(data.RawMaterial['Bundas_kenyer']['Name'], 'td', Options(following='td[3]//input')).get_attribute('value'))
+        qty = int(self.html.getElement(data.RawMaterial['Bundas_kenyer']['Name'], 'td',
+                                       Options(following='td[3]//input')).get_attribute('value'))
         modqty= qty - 5
         self.html.getElement(data.RawMaterial['Bundas_kenyer']['Name'], 'td', Options(following='td[3]//input')).clear()
         self.html.getElement(data.RawMaterial['Bundas_kenyer']['Name'], 'td', Options(following='td[3]//input')).send_keys(str(modqty))
@@ -54,8 +56,10 @@ class BarCheckings(BaseTestCase):
 
         self.html.clickElement('Lezárás', 'a')
         self.html.refresh()
+        self.html.wait(3)
 
-        self.html.clickTableElement('barchecking', 'id', data.WareHouses['Szeszraktár']['Name'], 'a', 'Megtekintés', 'Standellenőrzések')
+        self.html.clickTableElement('barchecking', 'id', data.WareHouses['Szeszraktár']['Name'], 'a', 'Megtekintés',
+                                    'Standellenőrzések')
 
         self.html.switchFrame('iframe')
 
@@ -68,10 +72,12 @@ class BarCheckings(BaseTestCase):
         self.html.clickElement('Mégsem')
         self.html.switchFrame()
 
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'], str(modqty))
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'],
+                                     str(modqty))
         self.html.clickElement('Standellenőrzések', 'a')
 
         self.deleteChecking()
 
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'], str(qty))
+        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'],
+                                     str(qty))
 

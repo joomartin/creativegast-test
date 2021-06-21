@@ -294,14 +294,12 @@ class Restaurant(BaseTestCase):
         prc = price.split(' ')
         prcInt = int(prc[0] + prc[1])
         expected = int(stvalue[0] + stvalue[1]) + prcInt
-        # print('ex '+ str(expected))
         self.html.wait(5)
         self.menu.openFinance()
         self.html.refresh()
         self.html.wait()
         actual = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2].split(' ')
         actInt = int(actual[0] + actual[1])
-        # print('act ' + str(actInt))
 
         self.assertEqual(expected, actInt)
 
@@ -566,7 +564,7 @@ class Restaurant(BaseTestCase):
         # self.restaurantseed.deleteTable('Elvitel', module=True)
 
     # passed
-    @unittest.skip
+    #@unittest.skip
     def testPartPrice(self):
         self.menu.openFinance()
         try:
@@ -604,14 +602,30 @@ class Restaurant(BaseTestCase):
         print('prcInt:')
         print(prcInt)
         expected = int(stvalue[0] + stvalue[1]) + prcInt
+        print('startValue:')
+        print(stvalue)
+        print('expected:')
+        print(expected)
         self.html.wait(5)
         self.menu.openFinance()
         self.html.refresh()
         self.html.wait()
         actual = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2].split(' ')
         actInt = int(actual[0] + actual[1])
+        print()
+        print(actual)
+        print(actInt)
+
+        # maradekok eltuntetese
+        self.menu.openRestaurant()
+        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+        self.html.clickElement('Fizetés')
+        self.html.clickElement('Kitölt')
+        self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
 
         self.assertEqual(expected, actInt)
+
+
 
     # passed
     #@unittest.skip
@@ -1204,6 +1218,7 @@ class Restaurant(BaseTestCase):
         self.addProductToList(inputName2, '1.00')
         self.addProductToList(inputName2, '1.00')
 
+        self.html.wait(2)
         self.html.clickElement('Minden összevonása', waitSeconds=4)
 
         name = self.html.getTxtFromListTable2('2', '3')

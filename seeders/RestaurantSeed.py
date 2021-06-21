@@ -19,6 +19,7 @@ class RestaurantSeed:
 
         self.html.clickElement(tableShape + ' asztal hozzáadása', 'a', Options(htmlAttribute='title'))
         self.html.refresh()
+        self.html.wait(3)
 
         self.html.clickElement('Étterem', 'i')
         self.html.fillInput('Asztal neve', tableName)
