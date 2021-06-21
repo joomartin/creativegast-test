@@ -18,7 +18,8 @@ class ReceivingController(Controller):
         receiving = unittest.TestLoader().loadTestsFromTestCase(Receiving)
 
         # create a test suite combining search_text and home_page_test
-        test_suite = unittest.TestSuite([partners, receiving])
+        #test_suite = unittest.TestSuite([partners, receiving])
+        test_suite = unittest.TestSuite([partners])
 
 
         # open the report file

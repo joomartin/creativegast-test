@@ -35,7 +35,8 @@ class ReceivingSeed:
 
         self.html.switchFrame()
 
-        self.receivingAssert.assertPartnerExist(name, 'Beszállítók')
+        #self.receivingAssert.assertPartnerExist(name, 'Beszállítók')
+        self.receivingAssert.assertPartnerExist('asdasd', 'Beszállítók')
 
     def deleteParter(self, partnerName,  module=False, tab=False):
         if module:
@@ -76,7 +77,7 @@ class ReceivingSeed:
         firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
         warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
         #self.html.wait(2)
-        wait = WebDriverWait(self.driver, 10000)
+        wait = WebDriverWait(self.driver, 10)
         wait.until(ec.element_to_be_clickable((By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
         self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
                             options=Options(htmlAttribute='placeholder', element=warehouse[2]))

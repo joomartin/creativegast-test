@@ -586,6 +586,7 @@ class _TestResult(TestResult):
         TestResult.addError(self, test, err)
         _, _exc_str = self.errors[-1]
         output = self.complete_output()
+        print('screenshot')
         self.result.append((2, test, output, _exc_str, self.generateTestScreenshot(test)))
         if self.verbosity > 1:
             sys.stderr.write('E  ')
@@ -617,7 +618,7 @@ class _TestResult(TestResult):
             x = str(test).split()
             tf = x[0]
             tc = x[1].split('.')[1][:-1]
-            imgpath = os.path.join(imgdir, "%s-%s-%s.png" % (tc, tf,stamp))
+            imgpath = os.path.join(imgdir, "%s-%s-%s.png" % (tc, tf, stamp))
             myScreenshot = pyautogui.screenshot()
             myScreenshot.save(imgpath)
         return imgpath
@@ -640,7 +641,6 @@ class HTMLTestRunner(Template_mixin):
 
         self.startTime = datetime.datetime.now()
 
-
     def run(self, test):
         "Run the given test case or test suite."
         result = _TestResult(self.verbosity)
@@ -649,7 +649,6 @@ class HTMLTestRunner(Template_mixin):
         self.generateReport(test, result)
         print(sys.stderr, '\nTime Elapsed: %s' % (self.stopTime-self.startTime))
         return result
-
 
     def sortResult(self, result_list):
         # unittest does not seems to run in any particular order.
@@ -664,8 +663,6 @@ class HTMLTestRunner(Template_mixin):
             rmap[cls].append((n,t,o,e,i))
         r = [(cls, rmap[cls]) for cls in classes]
         return r
-
-
 
     def getReportAttributes(self, result):
         """

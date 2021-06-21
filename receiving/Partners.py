@@ -1,3 +1,5 @@
+import sys
+from datetime import datetime
 
 from shared.TestData import TestData as data
 from shared.BaseTestCase import BaseTestCase
@@ -18,6 +20,10 @@ class Partners(BaseTestCase):
     def tearDownClass(self):
         super().tearDownClass()
 
+    def list2reason(self, exc_list):
+        if exc_list and exc_list[-1][0] is self:
+            return exc_list[-1][1]
+
     def tearDown(self):
         try:
             self.receivingseed.deleteParter(self.partnerName, module=True)
@@ -25,6 +31,12 @@ class Partners(BaseTestCase):
             pass
 
     def testCreate(self):
-        self.receivingseed.createPartner(self.partnerName, self.partnerId)
+        try:
+            self.receivingseed.createPartner(self.partnerName, self.partnerId)
+        except Exception as e:
+            now = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+            self.driver.get_screenshot_as_file('.//screenShots/screenshot-%s.png' % now)
+            raise e
+
 
 
