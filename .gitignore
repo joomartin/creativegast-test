@@ -6,3 +6,4 @@ debug.log
 stock/geckodriver.log
 /screenShots/
 .env
+*.env
