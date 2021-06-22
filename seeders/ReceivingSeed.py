@@ -35,8 +35,8 @@ class ReceivingSeed:
 
         self.html.switchFrame()
 
-        #self.receivingAssert.assertPartnerExist(name, 'Beszállítók')
-        self.receivingAssert.assertPartnerExist('asdasd', 'Beszállítók')
+        self.receivingAssert.assertPartnerExist(name, 'Beszállítók')
+
 
     def deleteParter(self, partnerName,  module=False, tab=False):
         if module:
