@@ -20,10 +20,6 @@ class Partners(BaseTestCase):
     def tearDownClass(self):
         super().tearDownClass()
 
-    def list2reason(self, exc_list):
-        if exc_list and exc_list[-1][0] is self:
-            return exc_list[-1][1]
-
     def tearDown(self):
         try:
             self.receivingseed.deleteParter(self.partnerName, module=True)

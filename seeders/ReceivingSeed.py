@@ -37,7 +37,6 @@ class ReceivingSeed:
 
         self.receivingAssert.assertPartnerExist(name, 'Beszállítók')
 
-
     def deleteParter(self, partnerName,  module=False, tab=False):
         if module:
             self.menu.openReceiving()

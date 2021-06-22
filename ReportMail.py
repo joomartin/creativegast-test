@@ -1,4 +1,6 @@
+import os
 from email.mime.application import MIMEApplication
+from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib
@@ -27,6 +29,15 @@ def sendReport(filePath,):
         part['Content-Disposition'] = 'attachment; filename="%s"' % basename(filePath)
         msg.attach(part)
 
+    for filename in os.listdir('.//screenShots'):
+        if filename.endswith('.png'):
+            with open(os.path.join('.//screenShots//', filename), 'rb') as f:
+                img_data = f.read()
+                image = MIMEImage(img_data)
+                image.add_header('Content-Disposition', 'attachment',
+                                 filename=filename)
+                msg.attach(image)
+
     debug = False
     if debug:
         print(msg.as_string())
@@ -35,6 +46,7 @@ def sendReport(filePath,):
         server.starttls()
         server.login('dev.gr33nt3ch@gmail.com', 'ucepkwvwjkipford')
         text = msg.as_string('html')
+
         server.sendmail(fromAddr, toAddr.split(','), text)
         server.quit()
 
