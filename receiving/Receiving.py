@@ -123,35 +123,36 @@ class Receiving(BaseTestCase):
 
     # ez igy fos, at kell majd irni de mukodik
     def testReceiving(self):
-        self.productseed.createProductAsRawMaterial(module=True)
+        def wrapper():
+            self.productseed.createProductAsRawMaterial(module=True)
 
-        self.receivingseed.createReceiving()
+            self.receivingseed.createReceiving()
 
-        self.stockAssert.assertStock(data.RawMaterial['Csirkemell']['Name'], data.WareHouses['Szeszraktár']['Name'],
-                                     '20')
-        self.html.wait(2)
+            self.stockAssert.assertStock(data.RawMaterial['Csirkemell']['Name'], data.WareHouses['Szeszraktár']['Name'],
+                                         '20')
+            self.html.wait(2)
 
-        self.stockAssert.assertStock(data.RawMaterial['Finomliszt']['Name'], data.WareHouses['Szeszraktár']['Name'],
-                                     '20')
-        self.html.wait(2)
+            self.stockAssert.assertStock(data.RawMaterial['Finomliszt']['Name'], data.WareHouses['Szeszraktár']['Name'],
+                                         '20')
+            self.html.wait(2)
 
-        self.stockAssert.assertStock(data.RawMaterial['Almalé']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
-        self.html.wait(2)
+            self.stockAssert.assertStock(data.RawMaterial['Almalé']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
+            self.html.wait(2)
 
-        self.stockAssert.assertStock(data.RawMaterial['Hasábburgonya']['Name'], data.WareHouses['Szeszraktár']['Name'],
-                                     '20')
-        self.html.wait(2)
+            self.stockAssert.assertStock(data.RawMaterial['Hasábburgonya']['Name'], data.WareHouses['Szeszraktár']['Name'],
+                                         '20')
+            self.html.wait(2)
 
-        self.stockAssert.assertStock(data.RawMaterial['Sonka']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
-        self.html.wait(2)
+            self.stockAssert.assertStock(data.RawMaterial['Sonka']['Name'], data.WareHouses['Szeszraktár']['Name'], '20')
+            self.html.wait(2)
 
-        self.stockAssert.assertStock(data.RawMaterial['Paradicsomszósz']['Name'],
-                                     data.WareHouses['Szeszraktár']['Name'], '20')
-        self.html.wait(2)
+            self.stockAssert.assertStock(data.RawMaterial['Paradicsomszósz']['Name'],
+                                         data.WareHouses['Szeszraktár']['Name'], '20')
+            self.html.wait(2)
 
-        self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
-        self.html.wait(2)
+            self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
+            self.html.wait(2)
 
-
+        super(Receiving, self).runTest(wrapper, 'receiving-testReceiving')
 
 

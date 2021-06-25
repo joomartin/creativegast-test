@@ -23,6 +23,7 @@ class StockController(Controller):
 
         # create a test suite combining search_text and home_page_test
         test_suite = unittest.TestSuite([warehouses, rawMaterial, stockMovement, barCheckings])
+        #test_suite = unittest.TestSuite([warehouses])
 
 
         # open the report file

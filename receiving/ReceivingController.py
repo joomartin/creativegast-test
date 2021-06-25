@@ -30,4 +30,10 @@ class ReceivingController(Controller):
 
         # run the suite using HTMLTestRunner
         runner.run(test_suite)
+
+        '''
+        # alternativ megoldas
+        runner = unittest.TextTestRunner()
+        runner.run(test_suite)
+        '''
         mail.sendReport(dir + '\\reports\ReceivingTestReport.html')

@@ -34,12 +34,13 @@ class Regulars(BaseTestCase):
             pass
 
     def testCreateRegular(self):
+        def wrapper():
+            address = self.clientseed.createRegular(self.name, self.code, self.phone, self.discount, self.taxnumber,
+                                                    self.country, self.postalCode, self.city, self.street, self.housenumber)
 
-        address = self.clientseed.createRegular(self.name, self.code, self.phone, self.discount, self.taxnumber,
-                                                self.country, self.postalCode, self.city, self.street, self.housenumber)
+            self.clientAssert.assertRegularExist(self.name, address, self.phone, self.discount, self.code)
 
-        self.clientAssert.assertRegularExist(self.name, address, self.phone, self.discount, self.code)
-
+        super(Regulars, self).runTest(wrapper, 'regulars-testCreateRegular')
 
 
 

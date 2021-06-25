@@ -64,144 +64,130 @@ class DiscountCards(BaseTestCase):
             pass
 
     def testCreateCardDrink(self):
+        def wrapper():
+            self.html.clickElement('Új kedvezménykártya', 'a')
+            self.html.switchFrame('iframe')
 
-        self.html.clickElement('Új kedvezménykártya', 'a')
-        self.html.switchFrame('iframe')
+            self.html.fillInput('Megnevezés', self.nameWhite)
+            self.html.fillInput('Kód', self.codeWhite)
 
-        self.html.fillInput('Megnevezés', self.nameWhite)
-        self.html.fillInput('Kód', self.codeWhite)
+            self.html.clickDropdown('Kategóriák', self.categoryWhite)
+            self.html.clickElement('Kategóriák', 'label')
+            self.html.clickElement('dc_is_percent', 'label', options=Options(htmlAttribute='data-name'))
 
-        self.html.clickDropdown('Kategóriák', self.categoryWhite)
-        self.html.clickElement('Kategóriák', 'label')
-        self.html.clickElement('dc_is_percent', 'label', options=Options(htmlAttribute='data-name'))
+            for day in self.days:
+                self.html.fillInput(day, self.discountWhite, 'input', options=Options(htmlAttribute='data-title'))
 
-        for day in self.days:
-            self.html.fillInput(day, self.discountWhite, 'input', options=Options(htmlAttribute='data-title'))
+            self.html.clickElement('Rögzít')
 
-        self.html.clickElement('Rögzít')
+            self.clientAssert.assertDiscountCardExist(self.nameWhite, self.codeWhite, self.discountWhite, category='Ital')
+            # self.clientseed.deleteCard(data.DiscountCard['White Friday']['Name'])
 
-        self.clientAssert.assertDiscountCardExist(self.nameWhite, self.codeWhite, self.discountWhite, category='Ital')
-        # self.clientseed.deleteCard(data.DiscountCard['White Friday']['Name'])
+        super(DiscountCards, self).runTest(wrapper, 'discountCards-testCreateCardDrink')
 
     def testCreateCardFood(self):
-        self.html.clickElement('Új kedvezménykártya', 'a')
-        self.html.switchFrame('iframe')
+        def wrapper():
+            self.html.clickElement('Új kedvezménykártya', 'a')
+            self.html.switchFrame('iframe')
 
-        self.html.fillInput('Megnevezés', self.nameBlue)
-        self.html.fillInput('Kód', self.codeBlue)
+            self.html.fillInput('Megnevezés', self.nameBlue)
+            self.html.fillInput('Kód', self.codeBlue)
 
-        self.html.clickDropdown('Kategóriák', self.categoryBlue)
-        self.html.clickElement('Kategóriák', 'label')
-        self.html.clickElement('dc_is_percent', 'label', options=Options(htmlAttribute='data-name'))
+            self.html.clickDropdown('Kategóriák', self.categoryBlue)
+            self.html.clickElement('Kategóriák', 'label')
+            self.html.clickElement('dc_is_percent', 'label', options=Options(htmlAttribute='data-name'))
 
-        for day in self.days:
-            self.html.fillInput(day, self.discountBlue, 'input', options=Options(htmlAttribute='data-title'))
+            for day in self.days:
+                self.html.fillInput(day, self.discountBlue, 'input', options=Options(htmlAttribute='data-title'))
 
-        self.html.clickElement('Rögzít')
+            self.html.clickElement('Rögzít')
 
-        self.clientAssert.assertDiscountCardExist(self.nameBlue, self.codeBlue, self.discountBlue, category='Étel')
-        # self.clientseed.deleteCard(data.DiscountCard['Blue Friday']['Name'])
+            self.clientAssert.assertDiscountCardExist(self.nameBlue, self.codeBlue, self.discountBlue, category='Étel')
+            # self.clientseed.deleteCard(data.DiscountCard['Blue Friday']['Name'])
+
+        super(DiscountCards, self).runTest(wrapper, 'discountCards-testCreateCardFood')
 
     def testCreateCardAll(self):
+        def wrapper():
+            self.html.clickElement('Új kedvezménykártya', 'a')
+            self.html.switchFrame('iframe')
 
-        self.html.clickElement('Új kedvezménykártya', 'a')
-        self.html.switchFrame('iframe')
+            self.html.fillInput('Megnevezés', self.nameBlue)
+            self.html.fillInput('Kód', self.codeBlue)
 
-        self.html.fillInput('Megnevezés', self.nameBlue)
-        self.html.fillInput('Kód', self.codeBlue)
+            self.html.getElement('Kategóriák', 'label', Options(following='button')).click()
+            self.html.clickElement('Mind', 'a')
+            #self.html.clickDropdown('Kategóriák', category)
+            self.html.clickElement('Kategóriák', 'label')
+            self.html.clickElement('dc_is_percent', 'label', options=Options(htmlAttribute='data-name'))
 
-        self.html.getElement('Kategóriák', 'label', Options(following='button')).click()
-        self.html.clickElement('Mind', 'a')
-        #self.html.clickDropdown('Kategóriák', category)
-        self.html.clickElement('Kategóriák', 'label')
-        self.html.clickElement('dc_is_percent', 'label', options=Options(htmlAttribute='data-name'))
+            for day in self.days:
+                self.html.fillInput(day, self.discountBlue, 'input', options=Options(htmlAttribute='data-title'))
 
-        for day in self.days:
-            self.html.fillInput(day, self.discountBlue, 'input', options=Options(htmlAttribute='data-title'))
+            self.html.clickElement('Rögzít')
 
-        self.html.clickElement('Rögzít')
+            self.clientAssert.assertDiscountCardExist(self.nameBlue, self.codeBlue, self.discountBlue, category='all')
+            # self.clientseed.deleteCard(data.DiscountCard['Blue Friday']['Name'])
 
-        self.clientAssert.assertDiscountCardExist(self.nameBlue, self.codeBlue, self.discountBlue, category='all')
-        # self.clientseed.deleteCard(data.DiscountCard['Blue Friday']['Name'])
+        super(DiscountCards, self).runTest(wrapper, 'discountCards-testCreateCardAll')
 
     def testCreateCardGroup(self):
+        def wrapper():
+            self.html.clickElement('Új kedvezménykártya', 'a')
+            self.html.switchFrame('iframe')
 
-        self.html.clickElement('Új kedvezménykártya', 'a')
-        self.html.switchFrame('iframe')
+            self.html.fillInput('Megnevezés', self.nameWhite)
+            self.html.fillInput('Kód', self.codeWhite)
 
-        self.html.fillInput('Megnevezés', self.nameWhite)
-        self.html.fillInput('Kód', self.codeWhite)
+            self.html.clickDropdown('Kategóriák', self.categoryWhite)
+            self.html.clickElement('Kategóriák', 'label')
+            self.html.clickElement('Termékcsoportok', 'label', options=Options(following='input'))
+            self.html.switchFrame('iframe')
+            self.html.clickElement(self.productGroupWhite, 'a')
+            self.html.clickElement('Rögzít')
+            self.html.switchFrame('iframe')
+            self.html.clickElement('dc_is_percent', 'label', options=Options(htmlAttribute='data-name'))
 
-        self.html.clickDropdown('Kategóriák', self.categoryWhite)
-        self.html.clickElement('Kategóriák', 'label')
-        self.html.clickElement('Termékcsoportok', 'label', options=Options(following='input'))
-        self.html.switchFrame('iframe')
-        self.html.clickElement(self.productGroupWhite, 'a')
-        self.html.clickElement('Rögzít')
-        self.html.switchFrame('iframe')
-        self.html.clickElement('dc_is_percent', 'label', options=Options(htmlAttribute='data-name'))
+            for day in self.days:
+                self.html.fillInput(day, self.discountWhite, 'input', options=Options(htmlAttribute='data-title'))
 
-        for day in self.days:
-            self.html.fillInput(day, self.discountWhite, 'input', options=Options(htmlAttribute='data-title'))
+            self.html.clickElement('Rögzít')
 
-        self.html.clickElement('Rögzít')
+            self.clientAssert.assertDiscountCardExist(self.nameWhite, self.codeWhite, self.discountWhite,
+                                                      group=self.productGroupWhite, category='Ital')
+            # self.clientseed.deleteCard(data.DiscountCard['White Friday']['Name'])
 
-        self.clientAssert.assertDiscountCardExist(self.nameWhite, self.codeWhite, self.discountWhite,
-                                                  group=self.productGroupWhite, category='Ital')
-        # self.clientseed.deleteCard(data.DiscountCard['White Friday']['Name'])
+        super(DiscountCards, self).runTest(wrapper, 'discountCards-testCreateCardGroup')
 
     def testCreateCardProduct(self):
-        self.html.clickElement('Új kedvezménykártya', 'a')
-        self.html.switchFrame('iframe')
+        def wrapper():
+            self.html.clickElement('Új kedvezménykártya', 'a')
+            self.html.switchFrame('iframe')
 
-        self.html.fillInput('Megnevezés', self.nameWhite)
-        self.html.fillInput('Kód', self.codeWhite)
+            self.html.fillInput('Megnevezés', self.nameWhite)
+            self.html.fillInput('Kód', self.codeWhite)
 
-        self.html.clickDropdown('Kategóriák', self.categoryWhite)
-        self.html.clickElement('Kategóriák', 'label')
-        self.html.clickElement('Termékcsoportok', 'label', options=Options(following='input'))
-        self.html.switchFrame('iframe')
-        self.html.clickElement(self.productGroupWhite, 'a')
-        self.html.clickElement('Rögzít')
-        self.html.switchFrame('iframe')
-        self.html.clickDropdown('Termékek', self.productWhite) # itt majd lehet egy keresest be kell epiteni
-        self.html.clickElement('Termékek', 'label')
-        self.html.clickElement('dc_is_percent', 'label', options=Options(htmlAttribute='data-name'))
+            self.html.clickDropdown('Kategóriák', self.categoryWhite)
+            self.html.clickElement('Kategóriák', 'label')
+            self.html.clickElement('Termékcsoportok', 'label', options=Options(following='input'))
+            self.html.switchFrame('iframe')
+            self.html.clickElement(self.productGroupWhite, 'a')
+            self.html.clickElement('Rögzít')
+            self.html.switchFrame('iframe')
+            self.html.clickDropdown('Termékek', self.productWhite) # itt majd lehet egy keresest be kell epiteni
+            self.html.clickElement('Termékek', 'label')
+            self.html.clickElement('dc_is_percent', 'label', options=Options(htmlAttribute='data-name'))
 
-        for day in self.days:
-            self.html.fillInput(day, self.discountWhite, 'input', options=Options(htmlAttribute='data-title'))
+            for day in self.days:
+                self.html.fillInput(day, self.discountWhite, 'input', options=Options(htmlAttribute='data-title'))
 
-        self.html.clickElement('Rögzít')
+            self.html.clickElement('Rögzít')
 
-        self.clientAssert.assertDiscountCardExist(self.nameWhite, self.codeWhite, self.discountWhite,
-                                                  group=self.productGroupWhite, category='Ital',
-                                                  products=self.productWhite)
-        # self.clientseed.deleteCard(data.DiscountCard['White Friday']['Name'])
+            self.clientAssert.assertDiscountCardExist(self.nameWhite, self.codeWhite, self.discountWhite,
+                                                      group=self.productGroupWhite, category='Ital',
+                                                      products=self.productWhite)
+            # self.clientseed.deleteCard(data.DiscountCard['White Friday']['Name'])
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        super(DiscountCards, self).runTest(wrapper, 'discountCards-testCreateCardProduct')
 
 

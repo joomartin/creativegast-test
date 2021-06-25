@@ -33,22 +33,24 @@ class Users(BaseTestCase):
             pass
 
     def testCreateUser(self):
-        self.usersSeed.createUser(self.surname, self.firstName, self.userName, self.password, self.position, self.group)
-        self.usersAssert.assertUserExist(self.surname, self.firstName, self.position, self.rights, group=self.group)
+        def wrapper():
+            self.usersSeed.createUser(self.surname, self.firstName, self.userName, self.password, self.position, self.group)
+            self.usersAssert.assertUserExist(self.surname, self.firstName, self.position, self.rights, group=self.group)
 
-        self.html.clickElement('Kilépés a rendszerből', 'a')
-        self.html.fillInput('Felhasználónév', self.userName, selector='placeholder')
-        self.html.fillInput('Jelszó', self.password, selector='placeholder')
-        self.html.clickElement('Belépés')
-        self.html.fillInput('Belépési kód', self.password, selector='placeholder')
-        self.html.clickElement('Belépés')
-        self.setUp()
+            self.html.clickElement('Kilépés a rendszerből', 'a')
+            self.html.fillInput('Felhasználónév', self.userName, selector='placeholder')
+            self.html.fillInput('Jelszó', self.password, selector='placeholder')
+            self.html.clickElement('Belépés')
+            self.html.fillInput('Belépési kód', self.password, selector='placeholder')
+            self.html.clickElement('Belépés')
+            self.setUp()
 
-        self.html.clickElement('Kilépés a rendszerből', 'a')
-        self.tearDownClass()
-        self.setUpClass()
-        self.setUp()
+            self.html.clickElement('Kilépés a rendszerből', 'a')
+            self.tearDownClass()
+            self.setUpClass()
+            self.setUp()
 
+        super(Users, self).runTest(wrapper, 'users-testCreateUser')
 
 
 

@@ -5,13 +5,14 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib
 from os.path import basename
+from shared.TestData import TestData as data
 
 fromAddr = 'dev.gr33nt3ch@gmail.com'
-toAddr = 'ricsi.sikulitest@gmail.com, tamas.horvath@prosupport.io, ban.adrian.gt@gmail.com'
-#toAddr = 'ricsi.sikulitest@gmail.com, ban.adrian.gt@gmail.com'
-#ide tömb megy majd a cél email címekkel
+#toAddr = 'ricsi.sikulitest@gmail.com, tamas.horvath@prosupport.io, ban.adrian.gt@gmail.com'
+toAddr = 'ricsi.sikulitest@gmail.com, ban.adrian.gt@gmail.com'
 
-def sendReport(filePath,):
+
+def sendReport(filePath):
     html = open(filePath)
     msg = msg = MIMEMultipart()
     msg['From'] = fromAddr
@@ -29,9 +30,10 @@ def sendReport(filePath,):
         part['Content-Disposition'] = 'attachment; filename="%s"' % basename(filePath)
         msg.attach(part)
 
-    for filename in os.listdir('.//screenShots'):
+    path = './/screenShots//' + data.Screenshot['Name']
+    for filename in os.listdir(path):
         if filename.endswith('.png'):
-            with open(os.path.join('.//screenShots//', filename), 'rb') as f:
+            with open(os.path.join(path, filename), 'rb') as f:
                 img_data = f.read()
                 image = MIMEImage(img_data)
                 image.add_header('Content-Disposition', 'attachment',

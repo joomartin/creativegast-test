@@ -138,39 +138,41 @@ class RawMaterial(BaseTestCase):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
     def testWastingRawMaterial(self):
+        def wrapper():
+            self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
+            # self.html.search(testName, 'Raktárkészlet')
+            # self.html.clickElement(testName, 'td',  Options(following='a'))
+            self.html.clickTableDropdown(data.RawMaterial['Bundas_kenyer']['Name'], 'Szerkeszt', 'Raktárkészlet')
+            self.html.switchFrame('iframe')
 
-        self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
-        # self.html.search(testName, 'Raktárkészlet')
-        # self.html.clickElement(testName, 'td',  Options(following='a'))
-        self.html.clickTableDropdown(data.RawMaterial['Bundas_kenyer']['Name'], 'Szerkeszt', 'Raktárkészlet')
-        self.html.switchFrame('iframe')
+            self.html.fillInput('Nyitó mennyiség', data.RawMaterial['Bundas_kenyer']['Quantity'])
+            self.html.clickDropdown('Raktár', data.WareHouses['Szeszraktár']['Name'])
+            self.html.clickElement('Rögzít')
+            self.html.switchFrame()
 
-        self.html.fillInput('Nyitó mennyiség', data.RawMaterial['Bundas_kenyer']['Quantity'])
-        self.html.clickDropdown('Raktár', data.WareHouses['Szeszraktár']['Name'])
-        self.html.clickElement('Rögzít')
-        self.html.switchFrame()
+            self.html.clickTableDropdown(data.RawMaterial['Bundas_kenyer']['Name'], 'Selejt', 'Raktárkészlet')
+            self.html.wait(2)
+            self.html.switchFrame('iframe')
 
-        self.html.clickTableDropdown(data.RawMaterial['Bundas_kenyer']['Name'], 'Selejt', 'Raktárkészlet')
-        self.html.wait(2)
-        self.html.switchFrame('iframe')
+            self.html.clickDropdown('Raktár', data.WareHouses['Szeszraktár']['Name'])
+            self.html.fillInput('Mennyiség', data.RawMaterial['Bundas_kenyer']['Waste'])
+            self.html.clickElement('Üveg összetört')
+            self.html.switchFrame()
+            self.html.refresh()
 
-        self.html.clickDropdown('Raktár', data.WareHouses['Szeszraktár']['Name'])
-        self.html.fillInput('Mennyiség', data.RawMaterial['Bundas_kenyer']['Waste'])
-        self.html.clickElement('Üveg összetört')
-        self.html.switchFrame()
-        self.html.refresh()
+            self.html.search(data.RawMaterial['Bundas_kenyer']['Name'], 'Raktárkészlet')
+            qty = self.html.getTxtFromTable(1, 3, 'components')
+            self.assertEqual(qty, data.RawMaterial['Bundas_kenyer']['Waste'])
 
-        self.html.search(data.RawMaterial['Bundas_kenyer']['Name'], 'Raktárkészlet')
-        qty = self.html.getTxtFromTable(1, 3, 'components')
-        self.assertEqual(qty, data.RawMaterial['Bundas_kenyer']['Waste'])
+            self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
+                                         data.WareHouses['Szeszraktár']['Name'],
+                                         str(int(float(data.RawMaterial['Bundas_kenyer']['Waste']))))
 
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
-                                     data.WareHouses['Szeszraktár']['Name'],
-                                     str(int(float(data.RawMaterial['Bundas_kenyer']['Waste']))))
+            self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
-        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
+            self.stockAssert.assertDeletedMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'])
 
-        self.stockAssert.assertDeletedMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Szeszraktár']['Name'])
+        super(RawMaterial, self).runTest(wrapper, 'rawMaterial-testWastingRawMaterial')
 
     @unittest.skip
     def testOpeningButton(self):
@@ -199,19 +201,21 @@ class RawMaterial(BaseTestCase):
         self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
     def testCreateRawMaterialWithOpening(self):
-        rawMaterials = ['Csirkemell', 'Finomliszt', 'Almalé', 'Hasábburgonya', 'Sonka', 'Paradicsomszósz']
+        def wrapper():
+            rawMaterials = ['Csirkemell', 'Finomliszt', 'Almalé', 'Hasábburgonya', 'Sonka', 'Paradicsomszósz']
 
-        for material in rawMaterials:
-            self.stockseed.createRawMaterialWithOpening(data.RawMaterial[material]['Name'],
-                                                        data.RawMaterial[material]['GrosPrice'],
-                                                        data.RawMaterial[material]['Quantity'],
-                                                        data.RawMaterial[material]['Warehouse'],
-                                                        data.RawMaterial[material]['ME'],
-                                                        module=True)
+            for material in rawMaterials:
+                self.stockseed.createRawMaterialWithOpening(data.RawMaterial[material]['Name'],
+                                                            data.RawMaterial[material]['GrosPrice'],
+                                                            data.RawMaterial[material]['Quantity'],
+                                                            data.RawMaterial[material]['Warehouse'],
+                                                            data.RawMaterial[material]['ME'],
+                                                            module=True)
 
-        for material in rawMaterials:
-            self.stockAssert.assertMaterialExist(data.RawMaterial[material]['Name'], 'Raktárkészlet')
+            for material in rawMaterials:
+                self.stockAssert.assertMaterialExist(data.RawMaterial[material]['Name'], 'Raktárkészlet')
 
-        for material in rawMaterials:
-            self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True)
+            for material in rawMaterials:
+                self.stockseed.deleteRawMaterial(data.RawMaterial[material]['Name'], module=True)
 
+        super(RawMaterial, self).runTest(wrapper, 'rawMaterial-testCreateRawMaterialWithOpening')

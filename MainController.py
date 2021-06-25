@@ -4,6 +4,14 @@ from receiving.ReceivingController import ReceivingController
 from restaurant.RestaurantController import RestaurantController
 from clientManagement.ClientManagementController import ClientManagementController
 from users.UsersController import UsersController
+import os
+from shared.TestData import TestData as data
+
+
+try:
+    os.mkdir('.//screenShots//' + data.Screenshot['Name'])
+except FileExistsError:
+    print('Folder exists.')
 
 sc = StockController()
 pc = ProductController()

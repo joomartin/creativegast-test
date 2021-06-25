@@ -172,117 +172,126 @@ class Products(BaseTestCase):
         self.productseed.deleteProduct(editedName)
 
     def testCreateProductAsRawMaterial(self):
-        self.productseed.createProductAsRawMaterial(module=True)
+        def wrapper():
+            self.productseed.createProductAsRawMaterial(module=True)
 
-        self.productAssert.assertProductExist('Kóla', 'Termékek')
-        self.html.search('Kóla', 'Termékek')
-        self.html.clickTableElement('products', 'id', 'Kóla', 'a', 'Részletek', 'Termékek')
-        self.html.switchFrame('iframe')
+            self.productAssert.assertProductExist('Kóla', 'Termékek')
+            self.html.search('Kóla', 'Termékek')
+            self.html.clickTableElement('products', 'id', 'Kóla', 'a', 'Részletek', 'Termékek')
+            self.html.switchFrame('iframe')
 
-        dName = self.html.getElementTxtInTable('Kóla', 'details', 'Termékek', attribute='class')
-        self.assertEqual(dName, 'Kóla')
-        self.assertTrue(self.html.getRowExist(['Termék neve:', 'Kóla']))
-        self.assertTrue(self.html.getRowExist(['Nyomtatási részleg:', 'Pult']))
-        self.assertTrue(self.html.getRowExist(['Termékcsoport:', 'Üdítők']))
-        self.assertTrue(self.html.getRowExist(['Eladási ár', '300']))
-        # csekkoljuk, hogy a nyersanyag megvan e
-        self.assertTrue(self.html.getRowExist(['Kóla', '1', 'kg', '0']))
+            dName = self.html.getElementTxtInTable('Kóla', 'details', 'Termékek', attribute='class')
+            self.assertEqual(dName, 'Kóla')
+            self.assertTrue(self.html.getRowExist(['Termék neve:', 'Kóla']))
+            self.assertTrue(self.html.getRowExist(['Nyomtatási részleg:', 'Pult']))
+            self.assertTrue(self.html.getRowExist(['Termékcsoport:', 'Üdítők']))
+            self.assertTrue(self.html.getRowExist(['Eladási ár', '300']))
+            # csekkoljuk, hogy a nyersanyag megvan e
+            self.assertTrue(self.html.getRowExist(['Kóla', '1', 'kg', '0']))
 
-        self.html.switchFrame()
-        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
-        self.html.search('', 'Termékek')
+            self.html.switchFrame()
+            self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+            self.html.search('', 'Termékek')
 
-        self.stockAssert.assertMaterialExist('Kóla', 'Raktárkészlet', module=True)
+            self.stockAssert.assertMaterialExist('Kóla', 'Raktárkészlet', module=True)
+
+        super(Products, self).runTest(wrapper, 'products-testCreateProductAsRawMaterial')
 
     def testPotato(self):
-        self.productseed.createProduct(data.Product['Hasábburgonya']['Name'], 'Köretek',
-                                       data.Product['Hasábburgonya']['Code'], data.Counter['TestCounter']['Name'],
-                                       data.RawMaterial['Hasábburgonya']['Name'],
-                                       data.Product['Hasábburgonya']['Quantity'],
-                                       data.Product['Hasábburgonya']['NetPrice'], module=True)
+        def wrapper():
+            self.productseed.createProduct(data.Product['Hasábburgonya']['Name'], 'Köretek',
+                                           data.Product['Hasábburgonya']['Code'], data.Counter['TestCounter']['Name'],
+                                           data.RawMaterial['Hasábburgonya']['Name'],
+                                           data.Product['Hasábburgonya']['Quantity'],
+                                           data.Product['Hasábburgonya']['NetPrice'], module=True)
 
-        self.productAssert.assertProductExist(data.Product['Hasábburgonya']['Name'], 'Termékek')
-        self.html.search(data.Product['Hasábburgonya']['Name'], 'Termékek')
-        self.html.clickTableElement('products', 'id', data.Product['Hasábburgonya']['Name'], 'a', 'Részletek',
-                                    'Termékek')
-        self.html.switchFrame('iframe')
+            self.productAssert.assertProductExist(data.Product['Hasábburgonya']['Name'], 'Termékek')
+            self.html.search(data.Product['Hasábburgonya']['Name'], 'Termékek')
+            self.html.clickTableElement('products', 'id', data.Product['Hasábburgonya']['Name'], 'a', 'Részletek',
+                                        'Termékek')
+            self.html.switchFrame('iframe')
 
-        dName = self.html.getElementTxtInTable(data.Product['Hasábburgonya']['Name'], 'details', 'Termékek',
-                                               attribute='class')
-        self.assertEqual(dName, data.Product['Hasábburgonya']['Name'])
-        self.assertTrue(self.html.getRowExist(['Termék neve:', data.Product['Hasábburgonya']['Name']]))
-        self.assertTrue(self.html.getRowExist(['Nyomtatási részleg:', 'Pult']))
-        self.assertTrue(self.html.getRowExist(['Termékcsoport:', 'Köretek']))
-        self.assertTrue(self.html.getRowExist(['Eladási ár', data.Product['Hasábburgonya']['NetPrice']]))
-        # csekkoljuk, hogy a nyersanyag megvan e
-        self.assertTrue(self.html.getRowExist([data.RawMaterial['Hasábburgonya']['Name'], '0.18', 'kg', '90']))
+            dName = self.html.getElementTxtInTable(data.Product['Hasábburgonya']['Name'], 'details', 'Termékek',
+                                                   attribute='class')
+            self.assertEqual(dName, data.Product['Hasábburgonya']['Name'])
+            self.assertTrue(self.html.getRowExist(['Termék neve:', data.Product['Hasábburgonya']['Name']]))
+            self.assertTrue(self.html.getRowExist(['Nyomtatási részleg:', 'Pult']))
+            self.assertTrue(self.html.getRowExist(['Termékcsoport:', 'Köretek']))
+            self.assertTrue(self.html.getRowExist(['Eladási ár', data.Product['Hasábburgonya']['NetPrice']]))
+            # csekkoljuk, hogy a nyersanyag megvan e
+            self.assertTrue(self.html.getRowExist([data.RawMaterial['Hasábburgonya']['Name'], '0.18', 'kg', '90']))
 
-        self.html.switchFrame()
-        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
-        self.html.search('', 'Termékek')
+            self.html.switchFrame()
+            self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+            self.html.search('', 'Termékek')
+
+        super(Products, self).runTest(wrapper, 'products-testPotato')
 
     def testCreateProductChose(self):
-        self.productseed.createProductChose('Roston csirkemell')
+        def wrapper():
+            self.productseed.createProductChose('Roston csirkemell')
 
-        # assert
-        self.productAssert.assertProductExist('Roston csirkemell', 'Termékek')
-        self.html.search('Roston csirkemell', 'Termékek')
-        self.html.clickTableElement('products', 'id', 'Roston csirkemell', 'a', 'Részletek',
-                                    'Termékek')
-        self.html.switchFrame('iframe')
+            # assert
+            self.productAssert.assertProductExist('Roston csirkemell', 'Termékek')
+            self.html.search('Roston csirkemell', 'Termékek')
+            self.html.clickTableElement('products', 'id', 'Roston csirkemell', 'a', 'Részletek',
+                                        'Termékek')
+            self.html.switchFrame('iframe')
 
-        dName = self.html.getElementTxtInTable('Roston csirkemell', 'details', 'Termékek',
-                                               attribute='class')
-        self.assertEqual(dName, 'Roston csirkemell')
-        self.assertTrue(self.html.getRowExist(['Termék neve:', 'Roston csirkemell']))
-        self.assertTrue(self.html.getRowExist(['Nyomtatási részleg:', 'Pult']))
-        self.assertTrue(self.html.getRowExist(['Termékcsoport:', 'Ételek']))
-        self.assertTrue(self.html.getRowExist(['Eladási ár', '1 800']))
-        # csekkoljuk, hogy a nyersanyag megvan e
-        self.assertTrue(self.html.getRowExist([data.RawMaterial['Csirkemell']['Name'], '0.2', 'kg', '100']))
+            dName = self.html.getElementTxtInTable('Roston csirkemell', 'details', 'Termékek',
+                                                   attribute='class')
+            self.assertEqual(dName, 'Roston csirkemell')
+            self.assertTrue(self.html.getRowExist(['Termék neve:', 'Roston csirkemell']))
+            self.assertTrue(self.html.getRowExist(['Nyomtatási részleg:', 'Pult']))
+            self.assertTrue(self.html.getRowExist(['Termékcsoport:', 'Ételek']))
+            self.assertTrue(self.html.getRowExist(['Eladási ár', '1 800']))
+            # csekkoljuk, hogy a nyersanyag megvan e
+            self.assertTrue(self.html.getRowExist([data.RawMaterial['Csirkemell']['Name'], '0.2', 'kg', '100']))
 
-        self.html.switchFrame()
-        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
-        self.html.search('', 'Termékek')
+            self.html.switchFrame()
+            self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+            self.html.search('', 'Termékek')
+
+        super(Products, self).runTest(wrapper, 'products-testCreateProductChose')
 
     def testCreateProductFix(self):
-        self.productseed.createProduct(data.Product['Hasábburgonya']['Name'], 'Köretek',
-                                       data.Product['Hasábburgonya']['Code'], data.Counter['TestCounter']['Name'],
-                                       data.RawMaterial['Hasábburgonya']['Name'],
-                                       data.Product['Hasábburgonya']['Quantity'],
-                                       data.Product['Hasábburgonya']['NetPrice'], module=True)
+        def wrapper():
+            self.productseed.createProduct(data.Product['Hasábburgonya']['Name'], 'Köretek',
+                                           data.Product['Hasábburgonya']['Code'], data.Counter['TestCounter']['Name'],
+                                           data.RawMaterial['Hasábburgonya']['Name'],
+                                           data.Product['Hasábburgonya']['Quantity'],
+                                           data.Product['Hasábburgonya']['NetPrice'], module=True)
 
-        self.productseed.createProductFix('Rántott csirkemell', 'Hasábburgonya', module=True)
-        # assert
-        self.productAssert.assertProductExist('Rántott csirkemell', 'Termékek')
-        self.html.search('Rántott csirkemell', 'Termékek')
-        self.html.clickTableElement('products', 'id', 'Rántott csirkemell', 'a', 'Részletek',
-                                    'Termékek')
-        self.html.switchFrame('iframe')
+            self.productseed.createProductFix('Rántott csirkemell', 'Hasábburgonya', module=True)
+            # assert
+            self.productAssert.assertProductExist('Rántott csirkemell', 'Termékek')
+            self.html.search('Rántott csirkemell', 'Termékek')
+            self.html.clickTableElement('products', 'id', 'Rántott csirkemell', 'a', 'Részletek',
+                                        'Termékek')
+            self.html.switchFrame('iframe')
 
-        dName = self.html.getElementTxtInTable('Rántott csirkemell', 'details', 'Termékek',
-                                               attribute='class')
-        self.assertEqual(dName, 'Rántott csirkemell')
-        self.assertTrue(self.html.getRowExist(['Termék neve:', 'Rántott csirkemell']))
-        self.assertTrue(self.html.getRowExist(['Nyomtatási részleg:', 'Pult']))
-        self.assertTrue(self.html.getRowExist(['Termékcsoport:', 'Ételek']))
-        self.assertTrue(self.html.getRowExist(['Eladási ár', '2 200']))
-        # csekkoljuk, hogy a nyersanyag megvan e
-        self.assertTrue(self.html.getRowExist([data.RawMaterial['Csirkemell']['Name'], '0.2', 'kg', '100']))
-        self.html.switchFrame()
-        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
-        self.html.clickTableElement('products', 'id', 'Rántott csirkemell', 'a', 'Szerkeszt',
-                                    'Termékek')
-        self.html.switchFrame('iframe')
-        self.assertTrue(self.html.getElement('Hasábburgonya', 'button').is_displayed())
-        self.html.switchFrame()
-        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
-        self.html.search('', 'Termékek')
+            dName = self.html.getElementTxtInTable('Rántott csirkemell', 'details', 'Termékek',
+                                                   attribute='class')
+            self.assertEqual(dName, 'Rántott csirkemell')
+            self.assertTrue(self.html.getRowExist(['Termék neve:', 'Rántott csirkemell']))
+            self.assertTrue(self.html.getRowExist(['Nyomtatási részleg:', 'Pult']))
+            self.assertTrue(self.html.getRowExist(['Termékcsoport:', 'Ételek']))
+            self.assertTrue(self.html.getRowExist(['Eladási ár', '2 200']))
+            # csekkoljuk, hogy a nyersanyag megvan e
+            self.assertTrue(self.html.getRowExist([data.RawMaterial['Csirkemell']['Name'], '0.2', 'kg', '100']))
+            self.html.switchFrame()
+            self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+            self.html.clickTableElement('products', 'id', 'Rántott csirkemell', 'a', 'Szerkeszt',
+                                        'Termékek')
+            self.html.switchFrame('iframe')
+            self.assertTrue(self.html.getElement('Hasábburgonya', 'button').is_displayed())
+            self.html.switchFrame()
+            self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+            self.html.search('', 'Termékek')
 
+            self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
 
-        self.productseed.deleteProduct(data.Product['Hasábburgonya']['Name'], module=True)
-
-
+        super(Products, self).runTest(wrapper, 'products-testCreateProductFix')
 
 
 

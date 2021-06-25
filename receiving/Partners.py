@@ -27,12 +27,8 @@ class Partners(BaseTestCase):
             pass
 
     def testCreate(self):
-        try:
-            self.receivingseed.createPartner(self.partnerName, self.partnerId)
-        except Exception as e:
-            now = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-            self.driver.get_screenshot_as_file('.//screenShots/screenshot-%s.png' % now)
-            raise e
+        super(Partners, self).runTest(lambda: self.receivingseed.createPartner(self.partnerName, self.partnerId), 'partners-testCreate')
+
 
 
 

@@ -1,9 +1,11 @@
+from datetime import datetime
 from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.common.keys import Keys
 from core.Options import Options
+from shared.TestData import TestData as data
 
 
 class HtmlProxy:
@@ -333,4 +335,7 @@ class HtmlProxy:
 
         return element.find_elements_by_xpath(xpath)
 
-
+    def screenshot(self, name):
+        now = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        self.driver.get_screenshot_as_file(
+            './/screenShots//' + data.Screenshot['Name'] + '//' + name + '-%s.png' % now)

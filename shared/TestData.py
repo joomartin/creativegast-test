@@ -1,5 +1,5 @@
 from datetime import datetime
-
+stamp = datetime.now().strftime('%m.%d.%Y_%H_%M_%S')
 
 class TestData:
     RawMaterial = {
@@ -313,5 +313,7 @@ class TestData:
             }
     }
 
-
+    Screenshot = {
+        'Name': str(stamp)
+    }
 

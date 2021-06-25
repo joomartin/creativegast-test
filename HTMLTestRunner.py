@@ -537,7 +537,6 @@ class _TestResult(TestResult):
         self.result = []
         self.outputBuffer = StringIO()
 
-
     def startTest(self, test):
         TestResult.startTest(self, test)
         # just one buffer for both stdout and stderr
@@ -587,7 +586,6 @@ class _TestResult(TestResult):
         TestResult.addError(self, test, err)
         _, _exc_str = self.errors[-1]
         output = self.complete_output()
-        print('screenshot')
         self.result.append((2, test, output, _exc_str, self.generateTestScreenshot(test)))
         if self.verbosity > 1:
             sys.stderr.write('E  ')

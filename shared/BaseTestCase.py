@@ -24,12 +24,25 @@ load_dotenv()
 
 class BaseTestCase(unittest.TestCase):
 
+    '''def run(self, result=None):
+        super(BaseTestCase, self).run(result)
+        if result.failures or result.errors:
+            print('asdasdasdasdasdasdasdasdasdasdasd')
+            self.html.screenshot('screenshot')'''
+
+    def runTest(self, callback, name='screenshot'):
+        try:
+            callback()
+        except Exception as e:
+            self.html.screenshot(name)
+            raise e
+
     @classmethod
     def setUpClass(self):
         chrome_options = Options()
         #chrome_options.add_argument('--headless')
         #chrome_options.add_argument('--window-size=1920,1080')
-        # chrome_options.add_argument("--auto-open-devtools-for-tabs")
+        #chrome_options.add_argument("--auto-open-devtools-for-tabs")
         #chrome_options.add_argument('--disable-gpu')
         #chrome_options.headless = True
         self.driver = webdriver.Chrome(executable_path=os.environ.get('DRIVER'), options=chrome_options)

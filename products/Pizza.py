@@ -135,23 +135,25 @@ class Pizza(BaseTestCase):
         self.productseed.deletePizza(data.Pizza['Sonkas_pizza']['Name'])
 
     def testCreatePizza(self):
-        self.productseed.createProduct(data.Product['Sonka']['Name'], data.Product['Sonka']['ProductGroup'],
-                                       data.Product['Sonka']['Code'], data.Counter['TestCounter']['Name'],
-                                       data.RawMaterial['Sonka']['Name'], data.Product['Sonka']['Quantity'],
-                                       data.Product['Sonka']['NetPrice'],
-                                       module=True)
+        def wrapper():
+            self.productseed.createProduct(data.Product['Sonka']['Name'], data.Product['Sonka']['ProductGroup'],
+                                           data.Product['Sonka']['Code'], data.Counter['TestCounter']['Name'],
+                                           data.RawMaterial['Sonka']['Name'], data.Product['Sonka']['Quantity'],
+                                           data.Product['Sonka']['NetPrice'],
+                                           module=True)
 
-        self.productseed.createProduct(data.Product['Paradicsomszósz']['Name'],
-                                       data.Product['Paradicsomszósz']['ProductGroup'],
-                                       data.Product['Paradicsomszósz']['Code'], data.Counter['TestCounter']['Name'],
-                                       data.RawMaterial['Paradicsomszósz']['Name'],
-                                       data.Product['Paradicsomszósz']['Quantity'], '0',
-                                       module=True)
-        self.productseed.createSpecialPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'],
-                                            data.Product['Sonka']['Name'], module=True)
+            self.productseed.createProduct(data.Product['Paradicsomszósz']['Name'],
+                                           data.Product['Paradicsomszósz']['ProductGroup'],
+                                           data.Product['Paradicsomszósz']['Code'], data.Counter['TestCounter']['Name'],
+                                           data.RawMaterial['Paradicsomszósz']['Name'],
+                                           data.Product['Paradicsomszósz']['Quantity'], '0',
+                                           module=True)
+            self.productseed.createSpecialPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'],
+                                                data.Product['Sonka']['Name'], module=True)
 
-        self.productAssert.assertPizzaExists('Sonkás pizza', '1400.00')
+            self.productAssert.assertPizzaExists('Sonkás pizza', '1400.00')
 
+        super(Pizza, self).runTest(wrapper, 'pizza-testCreatePizza')
 
 
 

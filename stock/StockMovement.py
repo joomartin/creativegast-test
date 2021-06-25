@@ -56,32 +56,41 @@ class StockMovement(BaseTestCase):
         self.html.clickElement('Igen')
 
     def testCreate(self):
-        self.createNewMovement()
-        self.deleteMovement(data.WareHouses['Szeszraktár']['Name'])
+        def wrapper():
+            self.createNewMovement()
+            self.deleteMovement(data.WareHouses['Szeszraktár']['Name'])
+
+        super(StockMovement, self).runTest(wrapper, 'stockMovement-testCreate')
 
     def testView(self):
-        self.createNewMovement()
+        def wrapper():
+            self.createNewMovement()
 
-        self.html.clickTableElement('storagemove', 'id', data.WareHouses['Szeszraktár']['Name'], 'span', 'Megtekintés', 'Raktármozgás')
+            self.html.clickTableElement('storagemove', 'id', data.WareHouses['Szeszraktár']['Name'], 'span',
+                                        'Megtekintés', 'Raktármozgás')
 
-        self.html.switchFrame('iframe')
+            self.html.switchFrame('iframe')
 
-        materialName = self.html.getTxtFromTable(2, 1)
-        self.assertEqual(materialName, data.RawMaterial['Bundas_kenyer']['Name'])
+            materialName = self.html.getTxtFromTable(2, 1)
+            self.assertEqual(materialName, data.RawMaterial['Bundas_kenyer']['Name'])
 
-        qty = self.html.getTxtFromTable(2, 2)
-        self.assertEqual(qty, str(self.moveQuantity))
+            qty = self.html.getTxtFromTable(2, 2)
+            self.assertEqual(qty, str(self.moveQuantity))
 
-        me = self.html.getTxtFromTable(2, 3)
-        self.assertEqual(me, data.RawMaterial['Bundas_kenyer']['ME'])
+            me = self.html.getTxtFromTable(2, 3)
+            self.assertEqual(me, data.RawMaterial['Bundas_kenyer']['ME'])
 
-        self.html.switchFrame()
-        self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
-        qty = str(int(float(data.RawMaterial['Bundas_kenyer']['Quantity'])) - self.moveQuantity)
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Tartalékraktár']['Name'], qty)
-        self.html.clickElement('Raktármozgás', 'a')
+            self.html.switchFrame()
+            self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))
+            qty = str(int(float(data.RawMaterial['Bundas_kenyer']['Quantity'])) - self.moveQuantity)
+            self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
+                                         data.WareHouses['Tartalékraktár']['Name'], qty)
+            self.html.clickElement('Raktármozgás', 'a')
 
-        self.deleteMovement(data.WareHouses['Szeszraktár']['Name'])
+            self.deleteMovement(data.WareHouses['Szeszraktár']['Name'])
 
-        qty2 = str(int(float(data.RawMaterial['Bundas_kenyer']['Quantity'])) - self.moveQuantity * 2)
-        self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'], data.WareHouses['Tartalékraktár']['Name'], qty2)
+            qty2 = str(int(float(data.RawMaterial['Bundas_kenyer']['Quantity'])) - self.moveQuantity * 2)
+            self.stockAssert.assertStock(data.RawMaterial['Bundas_kenyer']['Name'],
+                                         data.WareHouses['Tartalékraktár']['Name'], qty2)
+
+        super(StockMovement, self).runTest(wrapper, 'stockMovement-testView')
