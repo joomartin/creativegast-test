@@ -27,12 +27,12 @@ class ProductController(Controller):
 
 
         # open the report file
-        outfile = open(dir + "\\reports\ProductsTestReport.html", "w")
+        #outfile = open(dir + "\\reports\ProductsTestReport.html", "w")
+        with open(dir + "\\reports\ProductsTestReport.html", "w") as outfile:
+            # configure HTMLTestRunner options
+            runner = HTMLTestRunner.HTMLTestRunner(stream=outfile, title='Product Test Report', description='Acceptance Tests')
 
-        # configure HTMLTestRunner options
-        runner = HTMLTestRunner.HTMLTestRunner(stream=outfile, title='Product Test Report', description='Acceptance Tests')
-
-        # run the suite using HTMLTestRunner
-        runner.run(test_suite)
+            # run the suite using HTMLTestRunner
+            runner.run(test_suite)
         mail.sendReport(dir + '\\reports\ProductsTestReport.html')
 

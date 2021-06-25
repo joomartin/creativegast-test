@@ -237,7 +237,6 @@ class Restaurant(BaseTestCase):
                 startValue = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2]
             except Exception as e:
                 startValue = '0 0'
-            # print(startValue)
 
             self.menu.openRestaurant()
             self.html.clickElement(data.Table['Normal']['Name'], tag='i')
@@ -245,11 +244,6 @@ class Restaurant(BaseTestCase):
             self.html.wait(1)
             self.html.clickElement('Sonkás pizza', 'span')
             self.html.wait(1)
-            # self.html.clickElement(None,
-            #                       '//div[@id="pizzaCustomizeDialog"]//span',
-            #                      Options(uniqueSelector=True))
-            # self.html.clickElement('pizzaCustomizeDialog', 'div', Options(htmlAttribute='id', following='span/span/span'))
-            # self.html.clickElement('Rögzít')
             self.html.refresh()
             self.addProductToList('Rántott csirkemell', '1.00')
 
@@ -257,25 +251,11 @@ class Restaurant(BaseTestCase):
             self.html.wait(2)
             self.html.clickElement('Üdítők', 'a')
             self.html.wait(2)
-            # self.html.clickElement('Kóla', 'span')
             self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
             self.html.wait(2)
 
-            # self.html.clickElement('Kiszereléses', 'a')
-            # self.html.wait(2)
-            # self.html.clickElement('Almalé', 'a')
-            # self.html.switchFrame('iframe')
-            # ActionChains(self.driver).move_by_offset(400, 130).click().perform()
-            # self.html.switchFrame()
-            # self.html.wait(2)
-
             self.addProductToList('Roston csirkemell', '1.00')
-            self.html.wait(2)
-            self.html.wait(2)
-            # self.html.clickElement('Hasábburgonya','label')
-            # self.html.clickElement('sideDishSaveButton', 'button', Options(htmlAttribute='id'))
-            # self.html.switchFrame('iframe')
-
+            self.html.wait(4)
             self.menu.openRestaurant()
             self.html.clickElement(data.Table['Normal']['Name'], tag='i')
             self.html.wait(2)
@@ -284,25 +264,22 @@ class Restaurant(BaseTestCase):
             self.html.clickElement(data.Table['Normal']['Name'], tag='i')
             self.html.clickElement('Fizetés')
 
-            # self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
-            price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
-            # print(price)
+            payPriceInRestaurant = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
 
             self.html.clickElement('Kitölt')
-
             self.html.clickElement('payDialogButton', 'button', Options(htmlAttribute='id'))
-            stvalue = startValue.split(' ')
-            prc = price.split(' ')
-            prcInt = int(prc[0] + prc[1])
-            expected = int(stvalue[0] + stvalue[1]) + prcInt
+            expectedCash = int(startValue.replace(' ', '')) + int(payPriceInRestaurant.replace(' ', ''))
+
             self.html.wait(5)
             self.menu.openFinance()
             self.html.refresh()
             self.html.wait()
-            actual = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2].split(' ')
-            actInt = int(actual[0] + actual[1])
 
-            self.assertEqual(expected, actInt)
+            actualCashStr = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2]
+            actualCash = int(actualCashStr.repalce(' ', ''))
+
+            #self.assertEqual(expectedCash, actualCash)
+            self.assertRange(expectedCash, actualCash)
 
         super(Restaurant, self).runTest(wrapper, 'restaurant-testMultipleOrders')
 

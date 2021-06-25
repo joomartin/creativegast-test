@@ -27,11 +27,11 @@ class RestaurantController(Controller):
 
 
         # open the report file
-        outfile = open(dir + "\\reports\RestaurantTestReport.html", "w")
+        #outfile = open(dir + "\\reports\RestaurantTestReport.html", "w")
+        with open(dir + '\\reports\\restaurantTestReport.html', 'w') as outfile:
+            # configure HTMLTestRunner options
+            runner = HTMLTestRunner.HTMLTestRunner(stream=outfile, title='Restaurant Test Report', description='Acceptance Tests')
 
-        # configure HTMLTestRunner options
-        runner = HTMLTestRunner.HTMLTestRunner(stream=outfile, title='Restaurant Test Report', description='Acceptance Tests')
-
-        # run the suite using HTMLTestRunner
-        runner.run(test_suite)
+            # run the suite using HTMLTestRunner
+            runner.run(test_suite)
         mail.sendReport(dir + '\\reports\RestaurantTestReport.html')

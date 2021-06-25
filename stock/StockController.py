@@ -27,12 +27,13 @@ class StockController(Controller):
 
 
         # open the report file
-        outfile = open(dir + "\\reports\StocksTestReport.html", "w")
+        #outfile = open(dir + "\\reports\StocksTestReport.html", "w")
+        with open(dir + "\\reports\StocksTestReport.html", "w") as outfile:
+            # configure HTMLTestRunner options
+            runner = HTMLTestRunner.HTMLTestRunner(stream=outfile, title='Stock Test Report', description='Acceptance Tests')
 
-        # configure HTMLTestRunner options
-        runner = HTMLTestRunner.HTMLTestRunner(stream=outfile, title='Stock Test Report', description='Acceptance Tests')
+            # run the suite using HTMLTestRunner
+            runner.run(test_suite)
 
-        # run the suite using HTMLTestRunner
-        runner.run(test_suite)
         mail.sendReport(dir + '\\reports\StocksTestReport.html')
 

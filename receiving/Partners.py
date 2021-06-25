@@ -29,6 +29,3 @@ class Partners(BaseTestCase):
     def testCreate(self):
         super(Partners, self).runTest(lambda: self.receivingseed.createPartner(self.partnerName, self.partnerId), 'partners-testCreate')
 
-
-
-

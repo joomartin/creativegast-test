@@ -518,7 +518,7 @@ class _TestResult(TestResult):
     # note: _TestResult is a pure representation of results.
     # It lacks the output and reporting ability compares to unittest._TextTestResult.
 
-    def __init__(self, verbosity=1):
+    def __init__(self, verbosity=2):
         TestResult.__init__(self)
         self.stdout0 = None
         self.stderr0 = None
@@ -568,12 +568,11 @@ class _TestResult(TestResult):
         # We must disconnect stdout in stopTest(), which is guaranteed to be called.
         self.complete_output()
 
-
     def addSuccess(self, test):
         self.success_count += 1
         TestResult.addSuccess(self, test)
         output = self.complete_output()
-        self.result.append((0, test, output, '', ''))
+        self.result.append((0, test, output, ''))
         if self.verbosity > 1:
             sys.stderr.write('ok ')
             sys.stderr.write(str(test))
@@ -586,7 +585,8 @@ class _TestResult(TestResult):
         TestResult.addError(self, test, err)
         _, _exc_str = self.errors[-1]
         output = self.complete_output()
-        self.result.append((2, test, output, _exc_str, self.generateTestScreenshot(test)))
+        #self.result.append((2, test, output, _exc_str, self.generateTestScreenshot(test)))
+        self.result.append((2, test, output, _exc_str))
         if self.verbosity > 1:
             sys.stderr.write('E  ')
             sys.stderr.write(str(test))
@@ -599,7 +599,8 @@ class _TestResult(TestResult):
         TestResult.addFailure(self, test, err)
         _, _exc_str = self.failures[-1]
         output = self.complete_output()
-        self.result.append((1, test, output, _exc_str, self.generateTestScreenshot(test)))
+        #self.result.append((1, test, output, _exc_str, self.generateTestScreenshot(test)))
+        self.result.append((1, test, output, _exc_str))
         if self.verbosity > 1:
             sys.stderr.write('F  ')
             sys.stderr.write(str(test))
@@ -626,7 +627,7 @@ class _TestResult(TestResult):
 class HTMLTestRunner(Template_mixin):
     """
     """
-    def __init__(self, stream=sys.stdout, verbosity=1, title=None, description=None):
+    def __init__(self, stream=sys.stdout, verbosity=2, title=None, description=None):
         self.stream = stream
         self.verbosity = verbosity
         if title is None:
@@ -654,12 +655,12 @@ class HTMLTestRunner(Template_mixin):
         # Here at least we want to group them together by class.
         rmap = {}
         classes = []
-        for n,t,o,e, i in result_list:
+        for n, t, o, e in result_list:
             cls = t.__class__
             if cls not in rmap:
                 rmap[cls] = []
                 classes.append(cls)
-            rmap[cls].append((n,t,o,e,i))
+            rmap[cls].append((n, t, o, e))
         r = [(cls, rmap[cls]) for cls in classes]
         return r
 
@@ -729,7 +730,7 @@ class HTMLTestRunner(Template_mixin):
         for cid, (cls, cls_results) in enumerate(sortedResult):
             # subtotal for a class
             np = nf = ne = 0
-            for n,t,o,e,i in cls_results:
+            for n,t,o,e in cls_results:
                 if n == 0: np += 1
                 elif n == 1: nf += 1
                 else: ne += 1
@@ -753,7 +754,7 @@ class HTMLTestRunner(Template_mixin):
             )
             rows.append(row)
 
-            for tid, (n,t,o,e,i) in enumerate(cls_results):
+            for tid, (n,t,o,e) in enumerate(cls_results):
                 self._generate_report_test(rows, cid, tid, n, t, o, e)
 
         report = self.REPORT_TMPL % dict(

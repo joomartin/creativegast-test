@@ -20,12 +20,13 @@ class UsersController(Controller):
         test_suite = unittest.TestSuite([users, groups])
 
         # open the report file
-        outfile = open(dir + "\\reports\\UsersTestReport.html", "w")
+        #outfile = open(dir + "\\reports\\UsersTestReport.html", "w")
+        with open(dir + '\\reports\\UsersTestReport.html', 'w') as outfile:
+            # configure HTMLTestRunner options
+            runner = HTMLTestRunner.HTMLTestRunner(stream=outfile, title='Users Test Report', description='Acceptance Tests')
 
-        # configure HTMLTestRunner options
-        runner = HTMLTestRunner.HTMLTestRunner(stream=outfile, title='Users Test Report', description='Acceptance Tests')
+            # run the suite using HTMLTestRunner
+            runner.run(test_suite)
 
-        # run the suite using HTMLTestRunner
-        runner.run(test_suite)
         mail.sendReport(dir + '\\reports\\UsersTestReport.html')
 

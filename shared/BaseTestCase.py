@@ -24,18 +24,15 @@ load_dotenv()
 
 class BaseTestCase(unittest.TestCase):
 
-    '''def run(self, result=None):
-        super(BaseTestCase, self).run(result)
-        if result.failures or result.errors:
-            print('asdasdasdasdasdasdasdasdasdasdasd')
-            self.html.screenshot('screenshot')'''
-
     def runTest(self, callback, name='screenshot'):
         try:
             callback()
         except Exception as e:
             self.html.screenshot(name)
             raise e
+
+    def assertRange(self, expected, actual):
+        self.assertTrue(expected-1 <= actual <= expected+1)
 
     @classmethod
     def setUpClass(self):

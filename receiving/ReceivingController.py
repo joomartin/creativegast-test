@@ -23,17 +23,18 @@ class ReceivingController(Controller):
 
 
         # open the report file
-        outfile = open(dir + "\\reports\ReceivingTestReport.html", "w")
+        # outfile = open(dir + "\\reports\ReceivingTestReport.html", "w")
+        with open(dir + "\\reports\ReceivingTestReport.html", "w") as outfile:
+            # configure HTMLTestRunner options
+            runner = HTMLTestRunner.HTMLTestRunner(stream=outfile, title='Receiving Test Report', description='Acceptance Tests')
 
-        # configure HTMLTestRunner options
-        runner = HTMLTestRunner.HTMLTestRunner(stream=outfile, title='Receiving Test Report', description='Acceptance Tests')
-
-        # run the suite using HTMLTestRunner
-        runner.run(test_suite)
+            # run the suite using HTMLTestRunner
+            runner.run(test_suite)
 
         '''
         # alternativ megoldas
         runner = unittest.TextTestRunner()
         runner.run(test_suite)
         '''
+        #outfile.close()
         mail.sendReport(dir + '\\reports\ReceivingTestReport.html')

@@ -23,7 +23,6 @@ class ReceivingSeed:
         if tab:
             self.html.clickElement('Beszállítók', 'a')
 
-
         self.html.clickElement('Új beszállító', 'a')
 
         self.html.switchFrame('iframe')
