@@ -19,6 +19,7 @@ from seeders.RestaurantSeed import RestaurantSeed
 from selenium.webdriver.chrome.options import Options
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
 
@@ -32,20 +33,24 @@ class BaseTestCase(unittest.TestCase):
             raise e
 
     def assertRange(self, expected, actual):
-        self.assertTrue(expected-1 <= actual <= expected+1)
+        self.assertTrue(expected - 1 <= actual <= expected + 1)
 
     @classmethod
     def setUpClass(self):
         chrome_options = Options()
         #chrome_options.add_argument('--headless')
         #chrome_options.add_argument('--window-size=1920,1080')
-        #chrome_options.add_argument("--auto-open-devtools-for-tabs")
-        #chrome_options.add_argument('--disable-gpu')
-        #chrome_options.headless = True
+        # chrome_options.add_argument("--auto-open-devtools-for-tabs")
+        # chrome_options.add_argument('--disable-gpu')
+        # chrome_options.headless = True
         self.driver = webdriver.Chrome(executable_path=os.environ.get('DRIVER'), options=chrome_options)
 
         self.driver.delete_all_cookies()
         self.driver.maximize_window()
+
+        hosts = os.environ.get('ALLOWED_HOSTS')
+        if os.environ.get('URL') not in hosts:
+            raise Exception('A host nem engedélyezett!')
 
         self.driver.get(os.environ.get('URL'))
 
@@ -94,11 +99,3 @@ class BaseTestCase(unittest.TestCase):
         self.html.clickElement('Belépés')
         self.html.fillInput('Belépési kód', os.environ.get('CODE'), selector='placeholder')
         self.html.clickElement('Belépés')
-
-
-
-
-
-
-
-

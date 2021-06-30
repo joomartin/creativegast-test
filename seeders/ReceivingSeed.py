@@ -66,7 +66,9 @@ class ReceivingSeed:
 
         self.html.fillInput('Számla azonosító', 'KomplexTest')
         self.html.clickDropdown('Fizetési mód', 'Készpénz')
+        self.html.wait(1)
         self.html.clickDropdown('Beszállító', data.Partner['Szallito']['Name'])
+        self.html.wait(1)
 
         self.html.fillAutocomplete('Nyersanyag neve', 'input', data.RawMaterial['Csirkemell']['Name'],
                                    data.RawMaterial['Csirkemell']['Name'], 'li', Options(htmlAttribute='data-title'))

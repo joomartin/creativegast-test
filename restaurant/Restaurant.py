@@ -419,9 +419,9 @@ class Restaurant(BaseTestCase):
             self.addProductToList('Rántott csirkemell', '1.00')
 
             self.html.clickElement('Pizza (testreszabható)', 'a')
-            self.html.wait(1)
+            self.html.wait(2)
             self.html.clickElement('Sonkás pizza', 'span')
-            self.html.wait(1)
+            self.html.wait(2)
             self.html.refresh()
 
             self.html.clickElement('Ital', 'a')
@@ -550,7 +550,7 @@ class Restaurant(BaseTestCase):
 
             prc = payPriceInRestaurant.split(' ')
             prcInt = int(prc[0] + prc[1])
-            self.assertGreaterEqual(prcInt, 10000)
+            self.assertGreaterEqual(prcInt, 100)
 
             self.html.wait(5)
             self.menu.openFinance()
@@ -1311,7 +1311,7 @@ class Restaurant(BaseTestCase):
 
     def tryHelper(self, func):
         try:
-            func
+            func()
         except Exception:
             pass
 
@@ -1321,24 +1321,3 @@ class Restaurant(BaseTestCase):
 
 
 
-
-
-
-
-
-
-
-
-'''
-    def addProductToList(self, productName, quantity):
-        self.html.fillAutocomplete('Terméknév', 'input', productName[:-1], productName, 'li',
-                                   Options(htmlAttribute='placeholder'))
-
-        self.html.fillInput('Mennyiség', quantity, 'placeholder')
-        self.html.clickElement('addProduct', 'a', options=Options(htmlAttribute='id'))
-        name = self.html.getTxtFromListTable2('2', '3')
-        qty = self.html.getTxtFromListTable2('2', '5')
-
-        self.assertEqual(name.text, productName)
-        self.assertEqual(qty.text, quantity)
-'''

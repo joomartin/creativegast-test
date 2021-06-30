@@ -58,10 +58,12 @@ class HtmlProxy:
         if self.getOption(options, 'element') is not None:
             self.getElement(target, selector, Options(following='button', element=self.getOption(options, 'element'))).click()
             element = self.getElement(target, selector, Options(following='ul', element=self.getOption(options, 'element')))
+            self.wait(1)
             element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
         else:
             self.getElement(target, selector, Options(following='button')).click()
             element = self.getElement(target, selector, Options(following='ul', element=self.getOption(options, 'element')))
+            self.wait(1)
             element.find_element_by_xpath('.//label[contains(.,"' + selectValue + '")]').click()
 
     def switchFrame(self, tagName=None):
