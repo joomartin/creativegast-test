@@ -1,6 +1,10 @@
 import unittest
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
+
 from core.Options import Options
 from mainMenu.MainMenuProxy import MainMenuProxy
 from core.CGSpecific import CGSpecific as cg
@@ -12,6 +16,7 @@ class RestaurantAssert(unittest.TestCase):
         super().__init__()
         self.html = htmlProxy
         self.menu = MainMenuProxy(driver)
+        self.driver = driver
         self.cg = cg()
 
     def assertTableExists(self, tableName):
@@ -21,8 +26,12 @@ class RestaurantAssert(unittest.TestCase):
         self.assertFalse(self.html.getElement('Fizetés', 'button').is_displayed())
 
     def assertStornoSucces(self, name):
-        self.html.wait(5)
-        self.assertTrue(self.html.getElement(name + ' nevű termék a felszolgáló által sztornózva lett! ', 'li').is_displayed())
+        wait = WebDriverWait(self.driver, 100)
+        wait.until(ec.visibility_of_element_located(
+            (By.XPATH, './/li[contains(., "' + name + ' nevű termék a felszolgáló által sztornózva lett!")]')))
+
+        #self.html.wait(5)
+        #self.assertTrue(self.html.getElement(name + ' nevű termék a felszolgáló által sztornózva lett! ', 'li').is_displayed())
         self.html.clickElement('Rendben', 'a')
 
     def assertProductInList(self):

@@ -341,3 +341,5 @@ class HtmlProxy:
         now = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
         self.driver.get_screenshot_as_file(
             './/screenShots//' + data.Screenshot['Name'] + '//' + name + '-%s.png' % now)
+
+    

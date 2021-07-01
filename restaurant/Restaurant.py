@@ -34,7 +34,6 @@ class Restaurant(BaseTestCase):
         self.restaurantseed.createTable(data.Table['Courier']['Name'], module=True)
 
     def setUp(self):
-
         self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
         self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
                                                     data.RawMaterial['Bundas_kenyer']['GrossPrice'],
@@ -724,6 +723,9 @@ class Restaurant(BaseTestCase):
 
             self.addProductToList('Kóla', '1.00')
             self.html.refresh()
+            wait = WebDriverWait(self.driver, 60)
+            wait.until(ec.element_to_be_clickable(
+                (By.XPATH, './/button[contains(., "Rendelés beküldése")]')))
             self.html.clickElement('Rendelés beküldése', waitSeconds=3)
             self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
