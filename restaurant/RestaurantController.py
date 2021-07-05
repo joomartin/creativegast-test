@@ -16,15 +16,12 @@ class RestaurantController(Controller):
         dir = os.getcwd()
         driver = webdriver
         # get all tests from SearchText and HomePageTest class
-        #tableMap = unittest.TestLoader().loadTestsFromTestCase(TableMapEdit)
+        tableMap = unittest.TestLoader().loadTestsFromTestCase(TableMapEdit)
         restaurant = unittest.TestLoader().loadTestsFromTestCase(Restaurant)
-        #order = unittest.TestLoader().loadTestsFromTestCase(Orders)
 
         # create a test suite combining search_text and home_page_test
-        #test_suite = unittest.TestSuite([tableMap, restaurant])
-        test_suite = unittest.TestSuite([restaurant])
-        #test_suite = unittest.TestSuite([order])
-
+        test_suite = unittest.TestSuite([tableMap, restaurant])
+        #test_suite = unittest.TestSuite([restaurant])
 
         # open the report file
         #outfile = open(dir + "\\reports\RestaurantTestReport.html", "w")

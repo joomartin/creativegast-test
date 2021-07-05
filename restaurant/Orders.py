@@ -386,7 +386,6 @@ class Orders(BaseTestCase):
         except:
             startValue = '0 0'
 
-        print(startValue)
         self.menu.openProducts()
         self.createProductChose()
         self.menu.openProducts()
@@ -429,7 +428,6 @@ class Orders(BaseTestCase):
 
         #self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
         price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
-        print(price)
 
         self.html.clickElement('Bankkártya', 'td', Options(following='button'))
 
@@ -454,7 +452,6 @@ class Orders(BaseTestCase):
         except:
             startValue = '0 0'
 
-        print(startValue)
         self.menu.openProducts()
         self.createProductChose()
         self.menu.openProducts()
@@ -496,7 +493,6 @@ class Orders(BaseTestCase):
 
         # self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
         price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
-        print(price)
 
         self.html.clickElement('Bankkártya', 'td', Options(following='button'))
 
@@ -522,7 +518,6 @@ class Orders(BaseTestCase):
         except:
             startValue = '0 0'
 
-        print(startValue)
         self.menu.openProducts()
         self.createProductChose()
         self.menu.openProducts()
@@ -564,7 +559,6 @@ class Orders(BaseTestCase):
 
         # self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
         price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
-        print(price)
 
         self.html.clickElement('Bankkártya', 'td', Options(following='button'))
 
@@ -593,7 +587,6 @@ class Orders(BaseTestCase):
         except:
             startValue = '0 0'
 
-        print(startValue)
         self.menu.openProducts()
         self.createProductChose()
         self.menu.openProducts()
@@ -635,7 +628,6 @@ class Orders(BaseTestCase):
 
         # self.html.getElement('sum', 'span', Options(htmlAttribute='class'))
         price = self.html.getElement('Összesen', 'h2', Options(following='span')).text.split('.')[0]
-        print(price)
 
         self.html.clickElement('Készpénz', 'td', Options(following='button'))
 
@@ -662,7 +654,6 @@ class Orders(BaseTestCase):
         except:
             startValue = '0 0'
 
-        print(startValue)
         self.menu.openProducts()
         self.createProductChose()
         self.menu.openProducts()

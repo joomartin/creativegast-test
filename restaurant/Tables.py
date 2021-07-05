@@ -292,7 +292,7 @@ class Tables(BaseTestCase):
             startValue = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2]
         except:
             startValue = '0 0'
-        print(startValue)
+
         self.menu.openProducts()
         self.createProductChose()
         self.menu.openProducts()

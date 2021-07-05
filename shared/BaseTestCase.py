@@ -3,6 +3,7 @@ import unittest
 
 from selenium import webdriver
 from core.HtmlProxy import HtmlProxy
+from core.Options import Options as op
 from mainMenu.MainMenuProxy import MainMenuProxy
 from seeders.ClientSeed import ClientSeed
 from seeders.UsersSeed import UsersSeed
@@ -74,28 +75,31 @@ class BaseTestCase(unittest.TestCase):
     def tearDownClass(self):
         self.driver.quit()
 
-    '''
-    @classmethod
-    def tearDown(self):
-        print('kint')
-        # if not unittest.TestResult.wasSuccessful(unittest.TestResult()):
-        print(self.defaultTestResult(self).errors)
-        print('error:')
-        print(len(self.result().errors))
-        print('fail:')
-        print(len(self.result().failures))
-        if not len(self.result(self).errors) == 0:
-            print('bent')
-            now = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-            name = 'screenshot-%s.png' % now
-            self.driver.save_screenshot(name)
-            print(name)
-    '''
-
     def login(self):
         self.html.fillInput('Felhasználónév', os.environ.get('USER_NAME'), selector='placeholder')
         self.html.fillInput('Jelszó', os.environ.get('USER_PASS'), selector='placeholder')
 
         self.html.clickElement('Belépés')
         self.html.fillInput('Belépési kód', os.environ.get('CODE'), selector='placeholder')
-        self.html.clickElement('Belépés')
+        self.html.clickElement('Belépés', waitSeconds=2)
+
+        # napnyitas
+        try:
+            self.html.getElement('Kérjük zárjon napot!', 'span')
+            self.menu.openFinance()
+            self.html.clickElement('Helyiségek zárása', waitSeconds=2)
+            self.html.clickElement('Igen')
+            self.html.fillInput('Belépő kód:', os.environ.get('USER_PASS'))
+            self.html.wait(1)
+            self.html.clickElement('sendClosePasswordBtn', 'button', options=op(htmlAttribute='id'))
+            self.html.explicitWaitXpath('/html/body/section/div/a[1]')
+            self.menu.openRestaurant()
+            self.html.clickElement('Étterem nyitása', waitSeconds=2)
+            self.menu.openRestaurant()
+            self.html.clickElement('Dinamikus futár asztalok', 'a')
+            self.html.clickElement('Dinamikus futár asztalok nyitása', waitSeconds=2)
+            self.menu.openRestaurant()
+            self.html.clickElement('Törzsvendégek', 'a')
+            self.html.clickElement('Törzsvendégek nyitása', waitSeconds=2)
+        except Exception as e:
+            pass

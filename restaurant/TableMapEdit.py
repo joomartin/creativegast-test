@@ -36,27 +36,35 @@ class TableMapEdit(BaseTestCase):
             pass
 
     def testCreateTable(self):
-        self.restaurantseed.createTable(data.Table['Normal']['Name'])
-        self.restaurantAssert.assertTableExists(data.Table['Normal']['Name'])
+        def wrapper():
+            self.restaurantseed.createTable(data.Table['Normal']['Name'])
+            self.restaurantAssert.assertTableExists(data.Table['Normal']['Name'])
+
+        super(TableMapEdit, self).runTest(wrapper, 'tablemapedit-testCreateTable')
 
     def testEdit(self):
+        def wrapper():
+            self.restaurantseed.createTable(data.Table['Normal']['Name'])
+            self.restaurantAssert.assertTableExists(data.Table['Normal']['Name'])
 
-        self.restaurantseed.createTable(data.Table['Normal']['Name'])
-        self.restaurantAssert.assertTableExists(data.Table['Normal']['Name'])
+            self.html.clickElement(data.Table['Normal']['Name'], 'i')
+            self.html.fillInput('Asztal neve', self.modifiedName)
+            self.html.clickElement('Rögzít', 'span')
+            self.restaurantAssert.assertTableExists(self.modifiedName)
 
-        self.html.clickElement(data.Table['Normal']['Name'], 'i')
-        self.html.fillInput('Asztal neve', self.modifiedName)
-        self.html.clickElement('Rögzít', 'span')
-        self.restaurantAssert.assertTableExists(self.modifiedName)
-
-        # self.restaurantseed.deleteTable(modifiedName)
+        super(TableMapEdit, self).runTest(wrapper, 'tablemapedit-testEdit')
 
     def testCreateCourier(self):
-        self.restaurantseed.createTable(data.Table['Courier']['Name'], tableType='Futár')
-        self.restaurantAssert.assertTableExists(data.Table['Courier']['Name'])
-        # self.restaurantseed.deleteTable(data.Table['Courier']['Name'])
+        def wrapper():
+            self.restaurantseed.createTable(data.Table['Courier']['Name'], tableType='Futár')
+            self.restaurantAssert.assertTableExists(data.Table['Courier']['Name'])
+
+        super(TableMapEdit, self).runTest(wrapper, 'tablemapedit-testCreateCourier')
 
     def testCreateBossTable(self):
-        self.restaurantseed.createTable(data.Table['Boss']['Name'], tableShape='Téglalap', tableType='Főnöki')
-        self.restaurantAssert.assertTableExists(data.Table['Boss']['Name'])
-        # self.restaurantseed.deleteTable(data.Table['Boss']['Name'])
+        def wrapper():
+            self.restaurantseed.createTable(data.Table['Boss']['Name'], tableShape='Téglalap', tableType='Főnöki')
+            self.restaurantAssert.assertTableExists(data.Table['Boss']['Name'])
+
+        super(TableMapEdit, self).runTest(wrapper, 'tablemapedit-testCreateBossTable')
+
