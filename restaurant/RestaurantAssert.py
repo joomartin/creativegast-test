@@ -26,12 +26,8 @@ class RestaurantAssert(unittest.TestCase):
         self.assertFalse(self.html.getElement('Fizetés', 'button').is_displayed())
 
     def assertStornoSucces(self, name):
-        wait = WebDriverWait(self.driver, 100)
-        wait.until(ec.visibility_of_element_located(
-            (By.XPATH, './/li[contains(., "' + name + ' nevű termék a felszolgáló által sztornózva lett!")]')))
-
-        #self.html.wait(5)
-        #self.assertTrue(self.html.getElement(name + ' nevű termék a felszolgáló által sztornózva lett! ', 'li').is_displayed())
+        self.html.explicitWaitXpath(
+            './/li[contains(., "' + name + ' nevű termék a felszolgáló által sztornózva lett!")]', mode='visible')
         self.html.clickElement('Rendben', 'a')
 
     def assertProductInList(self):

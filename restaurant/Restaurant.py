@@ -277,7 +277,6 @@ class Restaurant(BaseTestCase):
             actualCashStr = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2]
             actualCash = int(actualCashStr.replace(' ', ''))
 
-            #self.assertEqual(expectedCash, actualCash)
             self.assertRange(expectedCash, actualCash)
 
         super(Restaurant, self).runTest(wrapper, 'restaurant-testMultipleOrders')
@@ -313,7 +312,6 @@ class Restaurant(BaseTestCase):
             self.html.wait(2)
             self.html.clickElement('Üdítők', 'a')
             self.html.wait(10)
-            #self.html.clickElement('Kóla', 'span')
             self.html.clickElement('Kóla', 'span', options=Options(exactMatch=True))
 
             self.addProductToList('Roston csirkemell', '1.00')
@@ -345,7 +343,6 @@ class Restaurant(BaseTestCase):
             actualCash = int(actualCashStr.replace(' ', ''))
 
             self.assertRange(expectedCash, actualCash)
-            #self.html.switchFrame('iframe')
 
         super(Restaurant, self).runTest(wrapper, 'restaurant-testMultipleOrdersCredit')
 
@@ -454,7 +451,6 @@ class Restaurant(BaseTestCase):
             actualCash = int(actualCashStr.replace(' ', ''))
 
             self.assertRange(expectedCash, actualCash)
-            # self.restaurantseed.deleteTable('Kedvezmeny', module=True)
 
         super(Restaurant, self).runTest(wrapper, 'restaurant-testDiscountedTable')
 
@@ -559,7 +555,6 @@ class Restaurant(BaseTestCase):
             actualCashStr = self.html.getElement('Készpénz', 'td', Options(following='td')).text[:-2]
             actualCash = int(actualCashStr.replace(' ', ''))
 
-
             # maradekok eltuntetese
             self.menu.openRestaurant()
             self.html.clickElement(data.Table['Normal']['Name'], tag='i')
@@ -606,9 +601,7 @@ class Restaurant(BaseTestCase):
             firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
             warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
 
-            wait = WebDriverWait(self.driver, 5000)
-            wait.until(ec.element_to_be_clickable(
-                (By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
+            self.html.explicitWaitXpath('.//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')
             self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
                                 options=Options(htmlAttribute='placeholder', element=warehouse[2]))
             self.html.wait(2)
@@ -699,19 +692,14 @@ class Restaurant(BaseTestCase):
             self.html.clickElement('Válassz...')
             firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
             warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
-            #self.html.wait(2)
-            wait = WebDriverWait(self.driver, 5000)
-            wait.until(ec.element_to_be_clickable(
-                (By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
+            self.html.explicitWaitXpath('.//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input', time=100)
             self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
                                 options=Options(htmlAttribute='placeholder', element=warehouse[2]))
             self.html.wait(2)
             self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
             self.html.clickElement('Hozzáad')
             self.html.wait(2)
-
             self.html.clickElement('Rögzít')
-
             self.html.switchFrame()
 
             self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
@@ -723,9 +711,7 @@ class Restaurant(BaseTestCase):
 
             self.addProductToList('Kóla', '1.00')
             self.html.refresh()
-            wait = WebDriverWait(self.driver, 60)
-            wait.until(ec.element_to_be_clickable(
-                (By.XPATH, './/button[contains(., "Rendelés beküldése")]')))
+            self.html.explicitWaitXpath('.//button[contains(., "Rendelés beküldése")]')
             self.html.clickElement('Rendelés beküldése', waitSeconds=3)
             self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
@@ -749,7 +735,6 @@ class Restaurant(BaseTestCase):
             self.restaurantAssert.assertStornoSucces('Kóla')
 
             self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
-            #self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
         super(Restaurant, self).runTest(wrapper, 'restaurant-testOrderStorno')
 
@@ -779,19 +764,15 @@ class Restaurant(BaseTestCase):
             self.html.clickElement('Válassz...')
             firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
             warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
-            #self.html.wait(2)
-            wait = WebDriverWait(self.driver, 5000)
-            wait.until(ec.element_to_be_clickable(
-                (By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
+            self.html.explicitWaitXpath('.//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')
+
             self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
                                 options=Options(htmlAttribute='placeholder', element=warehouse[2]))
             self.html.wait(2)
             self.html.clickElement(data.WareHouses['Szeszraktár']['Name'], 'label')
             self.html.clickElement('Hozzáad')
             self.html.wait(2)
-
             self.html.clickElement('Rögzít')
-
             self.html.switchFrame()
 
             self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
@@ -830,7 +811,6 @@ class Restaurant(BaseTestCase):
 
             # mennyiseg ellenorzese
             self.stockAssert.assertStock('Kóla', data.WareHouses['Szeszraktár']['Name'], '10')
-            #self.receivingseed.deleteParter(data.Partner['Szallito']['Name'], module=True)
 
         super(Restaurant, self).runTest(wrapper, 'restaurant-testWrongOrderStorno')
 
@@ -860,10 +840,7 @@ class Restaurant(BaseTestCase):
             self.html.clickElement('Válassz...')
             firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
             warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
-            #self.html.wait(2)
-            wait = WebDriverWait(self.driver, 5000)
-            wait.until(ec.element_to_be_clickable(
-                (By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
+            self.html.explicitWaitXpath('.//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')
             self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
                                 options=Options(htmlAttribute='placeholder', element=warehouse[2]))
             self.html.wait(2)
@@ -1237,10 +1214,8 @@ class Restaurant(BaseTestCase):
             self.html.clickElement('Válassz...')
             firstrow = self.html.getElement('firstrow', 'tr', options=Options(htmlAttribute='class'))
             warehouse = self.html.getElements('search', 'div', options=Options(htmlAttribute='class', element=firstrow))
-            #self.html.wait(2)
-            wait = WebDriverWait(self.driver, 5000)
-            wait.until(ec.element_to_be_clickable(
-                (By.XPATH, '//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')))
+
+            self.html.explicitWaitXpath('.//*[@id="dialogtabs-base"]/div/div[2]/table/tbody/tr/td[6]/div/div/div/input')
             self.html.fillInput('Keresett kifejezés', data.WareHouses['Szeszraktár']['Name'], 'input',
                                 options=Options(htmlAttribute='placeholder', element=warehouse[2]))
             self.html.wait(2)

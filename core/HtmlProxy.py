@@ -3,7 +3,11 @@ from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.alert import Alert
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
+
 from core.Options import Options
 from shared.TestData import TestData as data
 
@@ -342,4 +346,10 @@ class HtmlProxy:
         self.driver.get_screenshot_as_file(
             './/screenShots//' + data.Screenshot['Name'] + '//' + name + '-%s.png' % now)
 
-    
+    def explicitWaitXpath(self, xpath, time=60, mode='clickable'):
+        wait = WebDriverWait(self.driver, time)
+        if mode == 'clickable':
+            wait.until(ec.element_to_be_clickable((By.XPATH, xpath)))
+        elif mode == 'visible':
+            wait.until(ec.visibility_of_element_located((By.XPATH, xpath)))
+
