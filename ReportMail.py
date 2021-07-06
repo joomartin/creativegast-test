@@ -8,8 +8,8 @@ from os.path import basename
 from shared.TestData import TestData as data
 
 fromAddr = 'dev.gr33nt3ch@gmail.com'
-#toAddr = 'ricsi.sikulitest@gmail.com, tamas.horvath@prosupport.io, ban.adrian.gt@gmail.com'
-toAddr = 'ricsi.sikulitest@gmail.com, ban.adrian.gt@gmail.com'
+toAddr = 'ricsi.sikulitest@gmail.com, tamas.horvath@prosupport.io, ban.adrian.gt@gmail.com'
+#toAddr = 'ricsi.sikulitest@gmail.com, ban.adrian.gt@gmail.com'
 
 
 def sendReport(filePath):
@@ -52,23 +52,3 @@ def sendReport(filePath):
         server.sendmail(fromAddr, toAddr.split(','), text)
         server.quit()
 
-
-        '''
-         msg = MIMEMultipart()
-    msg['From'] = send_from
-    msg['To'] = COMMASPACE.join(send_to)
-    msg['Date'] = formatdate(localtime=True)
-    msg['Subject'] = subject
-
-    msg.attach(MIMEText(text))
-
-    for f in files or []:
-        with open(f, "rb") as fil:
-            part = MIMEApplication(
-                fil.read(),
-                Name=basename(f)
-            )
-        # After the file is closed
-        part['Content-Disposition'] = 'attachment; filename="%s"' % basename(f)
-        msg.attach(part)
-        '''
