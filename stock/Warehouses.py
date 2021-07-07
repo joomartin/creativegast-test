@@ -83,5 +83,3 @@ class Test(BaseTestCase):
             self.html.search('', 'Raktárak')
 
         super(Test, self).runTest(wrapper, 'warehouse-testDelete')
-
-

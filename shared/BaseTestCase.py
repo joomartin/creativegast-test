@@ -1,7 +1,8 @@
 from datetime import datetime
 import unittest
 
-from selenium import webdriver
+#from selenium import webdriver
+from seleniumwire import webdriver
 from core.HtmlProxy import HtmlProxy
 from core.Options import Options as op
 from mainMenu.MainMenuProxy import MainMenuProxy
@@ -18,10 +19,17 @@ from seeders.ProductSeed import ProductSeed
 from seeders.ReceivingSeed import ReceivingSeed
 from seeders.RestaurantSeed import RestaurantSeed
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import os
 from dotenv import load_dotenv
-
+import pprint
 load_dotenv()
+import json
+
+
+def process_browser_log_entry(entry):
+    response = json.loads(entry['message'])['message']
+    return response
 
 
 class BaseTestCase(unittest.TestCase):
@@ -31,6 +39,18 @@ class BaseTestCase(unittest.TestCase):
             callback()
         except Exception as e:
             self.html.screenshot(name)
+            # TODO: ide akar mehetne a network figyeles
+            with open("log_entries.txt", "wt") as out:
+                pprint.pprint(self.driver.current_url, stream=out)
+                for request in self.driver.requests:
+                    if request.response.status_code >= 300:
+                        pprint.pprint('method: %s' % request.method, stream=out)
+                        pprint.pprint('code: %s' % request.response.status_code, stream=out)
+                        pprint.pprint('date: %s' % request.date, stream=out)
+                        pprint.pprint('headers: %s' % request.response.headers, stream=out)
+                        pprint.pprint('body: %s' % request.body, stream=out)
+                        pprint.pprint('url: %s' % request.url, stream=out)
+                pprint.pprint('\n', stream=out)
             raise e
 
     def assertRange(self, expected, actual):
@@ -38,6 +58,7 @@ class BaseTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
+
         chrome_options = Options()
         #chrome_options.add_argument('--headless')
         #chrome_options.add_argument('--window-size=1920,1080')
@@ -51,9 +72,30 @@ class BaseTestCase(unittest.TestCase):
 
         hosts = os.environ.get('ALLOWED_HOSTS')
         if os.environ.get('URL') not in hosts:
+            print('asd')
             raise Exception('A host nem engedélyezett!')
 
         self.driver.get(os.environ.get('URL'))
+        counter = 0
+        '''for request in self.driver.requests:
+            if request.response:
+                print()
+                print('method: ', request.method)
+                print('code: ', request.response.status_code)
+                print('method: ', request.date)
+                print('headers: ', request.response.headers)
+                print('body: ', request.body)
+                print('url: ', request.url)
+                print(
+                    request.url,
+                    request.response.status_code,
+                    request.response.headers['Content-Type']
+                )
+                print(request.date)
+                print(request.method)
+                print(request.body)
+                counter = counter+1
+        print(counter)'''
 
         self.html = HtmlProxy(self.driver)
         self.menu = MainMenuProxy(self.driver)

@@ -19,6 +19,7 @@ class UsersController(Controller):
         # create a test suite combining search_text and home_page_test
         test_suite = unittest.TestSuite([users, groups])
 
+
         # open the report file
         #outfile = open(dir + "\\reports\\UsersTestReport.html", "w")
         with open(dir + '\\reports\\UsersTestReport.html', 'w') as outfile:

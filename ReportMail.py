@@ -6,17 +6,19 @@ from email.mime.text import MIMEText
 import smtplib
 from os.path import basename
 from shared.TestData import TestData as data
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-fromAddr = 'dev.gr33nt3ch@gmail.com'
-toAddr = 'ricsi.sikulitest@gmail.com, tamas.horvath@prosupport.io, ban.adrian.gt@gmail.com'
-#toAddr = 'ricsi.sikulitest@gmail.com, ban.adrian.gt@gmail.com'
 
+separator = ', '
 
 def sendReport(filePath):
     html = open(filePath)
     msg = msg = MIMEMultipart()
-    msg['From'] = fromAddr
-    msg['To'] = toAddr
+    #msg['From'] = os.environ.get('FROMADDRESS')
+    #msg['To'] = separator.join(os.environ.get('TOADDRESSES'))
+    #msg['To'] = toAddresses
     msg['Subject'] = "CG Teszt Report"
 
     msg.attach(MIMEText(html.read(), 'html'))
@@ -46,9 +48,9 @@ def sendReport(filePath):
     else:
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
-        server.login('dev.gr33nt3ch@gmail.com', 'ucepkwvwjkipford')
+        server.login(os.environ.get('FROMADDRESS'), os.environ.get('FROMADDRESSPASS'))
         text = msg.as_string('html')
 
-        server.sendmail(fromAddr, toAddr.split(','), text)
+        server.sendmail(os.environ.get('FROMADDRESS'), os.environ.get('TOADDRESSES').split(','), text)
         server.quit()
 
