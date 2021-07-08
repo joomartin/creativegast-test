@@ -7,28 +7,39 @@ class BarCheckings(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
+        def wrapper():
+            super().setUpClass()
+            super().login(self)
 
-        super().setUpClass()
-        super().login(self)
+        super(BarCheckings, self).runTest(wrapper, 'barCheckings-setUpClass')
 
     @classmethod
     def tearDownClass(self):
-        super().tearDownClass()
+        def wrapper():
+            super().tearDownClass()
+
+        super(BarCheckings, self).runTest(wrapper, 'barCheckings-tearDownClass')
 
     def setUp(self):
-        self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
-                                                    data.RawMaterial['Bundas_kenyer']['GrossPrice'],
-                                                    data.RawMaterial['Bundas_kenyer']['Quantity'],
-                                                    data.WareHouses['Szeszraktár']['Name'], module=True)
+        def wrapper():
+            self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
+            self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
+                                                        data.RawMaterial['Bundas_kenyer']['GrossPrice'],
+                                                        data.RawMaterial['Bundas_kenyer']['Quantity'],
+                                                        data.WareHouses['Szeszraktár']['Name'], module=True)
 
-        self.menu.openStocks()
+            self.menu.openStocks()
 
-        self.html.clickElement('Standellenőrzések', 'a')
+            self.html.clickElement('Standellenőrzések', 'a')
+
+        super(BarCheckings, self).runTest(wrapper, 'barCheckings-setUp')
 
     def tearDown(self):
-        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
-        self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
+        def wrapper():
+            self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+            self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
+
+        super(BarCheckings, self).runTest(wrapper, 'barCheckings-tearDown')
 
     def deleteChecking(self):
         self.html.clickTableElement('barchecking', 'id', data.WareHouses['Szeszraktár']['Name'], 'a', 'Törlés',

@@ -9,16 +9,25 @@ class Groups(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        super().setUpClass()
-        super().login(self)
+        def wrapper():
+            super().setUpClass()
+            super().login(self)
+
+        super(Groups, self).runTest(wrapper, 'groups-setUpClass')
 
     def setUp(self):
-        self.menu.openUsers()
-        self.html.clickElement('Csoportok', 'a')
+        def wrapper():
+            self.menu.openUsers()
+            self.html.clickElement('Csoportok', 'a')
+
+        super(Groups, self).runTest(wrapper, 'groups-setUp')
 
     @classmethod
     def tearDownClass(self):
-        super().tearDownClass()
+        def wrapper():
+            super().tearDownClass()
+
+        super(Groups, self).runTest(wrapper, 'groups-tearDownClass')
 
     def tearDown(self):
         pass

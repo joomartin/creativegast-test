@@ -9,27 +9,39 @@ class StockMovement(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        super().setUpClass()
-        super().login(self)
+        def wrapper():
+            super().setUpClass()
+            super().login(self)
+
+        super(StockMovement, self).runTest(wrapper, 'stockMovement-setUpClass')
 
     @classmethod
     def tearDownClass(self):
-        super().tearDownClass()
+        def wrapper():
+            super().tearDownClass()
+
+        super(StockMovement, self).runTest(wrapper, 'stockMovement-tearDownClass')
 
     def setUp(self):
-        self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createWarehouse(data.WareHouses['Tartalékraktár']['Name'])
-        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
-                                                    data.RawMaterial['Bundas_kenyer']['GrossPrice'],
-                                                    data.RawMaterial['Bundas_kenyer']['Quantity'],
-                                                    data.WareHouses['Szeszraktár']['Name'], module=True)
+        def wrapper():
+            self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
+            self.stockseed.createWarehouse(data.WareHouses['Tartalékraktár']['Name'])
+            self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
+                                                        data.RawMaterial['Bundas_kenyer']['GrossPrice'],
+                                                        data.RawMaterial['Bundas_kenyer']['Quantity'],
+                                                        data.WareHouses['Szeszraktár']['Name'], module=True)
 
-        self.html.clickElement('Raktármozgás', 'a')
+            self.html.clickElement('Raktármozgás', 'a')
+
+        super(StockMovement, self).runTest(wrapper, 'stockMovement-setUp')
 
     def tearDown(self):
-        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
-        self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
-        self.stockseed.deleteWarehouse(data.WareHouses['Tartalékraktár']['Name'])
+        def wrapper():
+            self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+            self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
+            self.stockseed.deleteWarehouse(data.WareHouses['Tartalékraktár']['Name'])
+
+        super(StockMovement, self).runTest(wrapper, 'stockMovement-tearDown')
 
     def createNewMovement(self):
         self.html.wait()

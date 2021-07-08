@@ -76,6 +76,7 @@ class ProductSeed:
 
         self.html.fillInput('Fogás neve', 'Előétel')
         self.html.clickDropdown('Termékcsoport:', data.ProductGroup['Egyeb']['Name'])
+        self.html.wait(2)
         self.html.clickElement(data.ProductGroup['Egyeb']['Name'])
         self.html.fillInput('Mennyiség', '1')
         self.html.getInput('Mennyiség', 'label').click()
@@ -166,6 +167,7 @@ class ProductSeed:
         self.html.clickDropdown('Nyomtatási részleg', 'Pult')
         self.html.switchFrame('iframe')
 
+        self.html.wait(2)
         self.html.clickElement(group, 'a')
         self.html.wait(2)
         self.html.clickElement('Rögzít')

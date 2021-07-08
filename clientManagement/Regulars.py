@@ -16,16 +16,25 @@ class Regulars(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        super().setUpClass()
-        super().login(self)
+        def wrapper():
+            super().setUpClass()
+            super().login(self)
+
+        super(Regulars, self).runTest(wrapper, 'regulars-setUpClass')
 
     def setUp(self):
-        self.menu.openClientManagement()
-        self.html.clickElement('Törzsvendégek', 'a')
+        def wrapper():
+            self.menu.openClientManagement()
+            self.html.clickElement('Törzsvendégek', 'a')
+
+        super(Regulars, self).runTest(wrapper, 'regulars-setUp')
 
     @classmethod
     def tearDownClass(self):
-        super().tearDownClass()
+        def wrapper():
+            super().tearDownClass()
+
+        super(Regulars, self).runTest(wrapper, 'regulars-tearDownClass')
 
     def tearDown(self):
         try:

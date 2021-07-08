@@ -11,32 +11,41 @@ class Pizza(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        super().setUpClass()
-        super().login(self)
+        def wrapper():
+            super().setUpClass()
+            super().login(self)
+
+        super(Pizza, self).runTest(wrapper, 'pizza-setUpClass')
 
     @classmethod
     def tearDownClass(self):
-        super().tearDownClass()
+        def wrapper():
+            super().tearDownClass()
+
+        super(Pizza, self).runTest(wrapper, 'pizza-tearDownClass')
 
     def setUp(self):
-        self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
-                                                    data.RawMaterial['Bundas_kenyer']['GrossPrice'],
-                                                    data.RawMaterial['Bundas_kenyer']['Quantity'],
-                                                    data.WareHouses['Szeszraktár']['Name'],
-                                                    data.RawMaterial['Bundas_kenyer']['ME'], module=True)
-        for material in self.rawMaterials:
-            self.stockseed.createRawMaterialWithOpening(data.RawMaterial[material]['Name'],
-                                                        data.RawMaterial[material]['GrosPrice'],
-                                                        data.RawMaterial[material]['Quantity'],
-                                                        data.RawMaterial[material]['Warehouse'],
-                                                        data.RawMaterial[material]['ME'],
-                                                        module=True)
-        self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'],
-                                       module=True)
+        def wrapper():
+            self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
+            self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
+                                                        data.RawMaterial['Bundas_kenyer']['GrossPrice'],
+                                                        data.RawMaterial['Bundas_kenyer']['Quantity'],
+                                                        data.WareHouses['Szeszraktár']['Name'],
+                                                        data.RawMaterial['Bundas_kenyer']['ME'], module=True)
+            for material in self.rawMaterials:
+                self.stockseed.createRawMaterialWithOpening(data.RawMaterial[material]['Name'],
+                                                            data.RawMaterial[material]['GrosPrice'],
+                                                            data.RawMaterial[material]['Quantity'],
+                                                            data.RawMaterial[material]['Warehouse'],
+                                                            data.RawMaterial[material]['ME'],
+                                                            module=True)
+            self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'],
+                                           module=True)
 
-        self.menu.openProducts()
-        self.html.clickElement('Pizza (testreszabható)', 'a')
+            self.menu.openProducts()
+            self.html.clickElement('Pizza (testreszabható)', 'a')
+
+        super(Pizza, self).runTest(wrapper, 'pizza-setUp')
 
     def tearDown(self):
         try:

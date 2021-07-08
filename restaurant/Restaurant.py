@@ -27,82 +27,91 @@ class Restaurant(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        super().setUpClass()
-        super().login(self)
+        def wrapper():
+            super().setUpClass()
+            super().login(self)
 
-        self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
-        self.restaurantseed.createTable(data.Table['Courier']['Name'], module=True)
+            self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
+            self.restaurantseed.createTable(data.Table['Courier']['Name'], module=True)
+
+        super(Restaurant, self).runTest(wrapper, 'restaurant-tearDownClass')
 
     def setUp(self):
-        self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
-                                                    data.RawMaterial['Bundas_kenyer']['GrossPrice'],
-                                                    data.RawMaterial['Bundas_kenyer']['Quantity'],
-                                                    data.RawMaterial['Bundas_kenyer']['Warehouse'], me='db',
-                                                    module=True)
-
-        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Alma']['Name'],
-                                                    data.RawMaterial['Alma']['GrosPrice'],
-                                                    data.RawMaterial['Alma']['Quantity'],
-                                                    data.RawMaterial['Alma']['Warehouse'], me='db')
-        for material in self.rawMaterials:
-            self.stockseed.createRawMaterialWithOpening(data.RawMaterial[material]['Name'],
-                                                        data.RawMaterial[material]['GrosPrice'],
-                                                        data.RawMaterial[material]['Quantity'],
-                                                        data.RawMaterial[material]['Warehouse'],
-                                                        data.RawMaterial[material]['ME'],
+        def wrapper():
+            self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
+            self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
+                                                        data.RawMaterial['Bundas_kenyer']['GrossPrice'],
+                                                        data.RawMaterial['Bundas_kenyer']['Quantity'],
+                                                        data.RawMaterial['Bundas_kenyer']['Warehouse'], me='db',
                                                         module=True)
 
-        self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'],
-                                       module=True)
-        #self.productseed.createProductGroup(data.ProductGroup['Egyeb']['Name'], tab=True)
-        #self.html.wait(5)
-        # self.productseed.createProductGroup(data.ProductGroup['Öntetek']['Name'])
-        self.productseed.createProduct(data.Product['Babgulyás']['Name'], data.ProductGroup['Egyeb']['Name'],
-                                       data.Product['Babgulyás']['Code'], data.Counter['TestCounter']['Name'],
-                                       data.RawMaterial['Bundas_kenyer']['Name'], module=True)
-        self.productseed.createProduct(data.Product['Palacsinta']['Name'], data.ProductGroup['Egyeb']['Name'],
-                                       data.Product['Palacsinta']['Code'], data.Counter['TestCounter']['Name'],
-                                       data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+            self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Alma']['Name'],
+                                                        data.RawMaterial['Alma']['GrosPrice'],
+                                                        data.RawMaterial['Alma']['Quantity'],
+                                                        data.RawMaterial['Alma']['Warehouse'], me='db')
+            for material in self.rawMaterials:
+                self.stockseed.createRawMaterialWithOpening(data.RawMaterial[material]['Name'],
+                                                            data.RawMaterial[material]['GrosPrice'],
+                                                            data.RawMaterial[material]['Quantity'],
+                                                            data.RawMaterial[material]['Warehouse'],
+                                                            data.RawMaterial[material]['ME'],
+                                                            module=True)
 
-        self.productseed.createProduct(data.Product['Hasábburgonya']['Name'], 'Köretek',
-                                       data.Product['Hasábburgonya']['Code'], data.Counter['TestCounter']['Name'],
-                                       data.RawMaterial['Hasábburgonya']['Name'],
-                                       data.Product['Hasábburgonya']['Quantity'],
-                                       data.Product['Hasábburgonya']['NetPrice'], module=True)
+            self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'],
+                                           module=True)
+            #self.productseed.createProductGroup(data.ProductGroup['Egyeb']['Name'], tab=True)
+            #self.html.wait(5)
+            # self.productseed.createProductGroup(data.ProductGroup['Öntetek']['Name'])
+            self.productseed.createProduct(data.Product['Babgulyás']['Name'], data.ProductGroup['Egyeb']['Name'],
+                                           data.Product['Babgulyás']['Code'], data.Counter['TestCounter']['Name'],
+                                           data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+            self.productseed.createProduct(data.Product['Palacsinta']['Name'], data.ProductGroup['Egyeb']['Name'],
+                                           data.Product['Palacsinta']['Code'], data.Counter['TestCounter']['Name'],
+                                           data.RawMaterial['Bundas_kenyer']['Name'], module=True)
 
-        self.productseed.createProduct('Almalé', 'Kiszereléses',
-                                       '9999', data.Counter['TestCounter']['Name'], data.RawMaterial['Almalé']['Name'],
-                                       '1', '2200',
-                                       module=True)
+            self.productseed.createProduct(data.Product['Hasábburgonya']['Name'], 'Köretek',
+                                           data.Product['Hasábburgonya']['Code'], data.Counter['TestCounter']['Name'],
+                                           data.RawMaterial['Hasábburgonya']['Name'],
+                                           data.Product['Hasábburgonya']['Quantity'],
+                                           data.Product['Hasábburgonya']['NetPrice'], module=True)
 
-        self.productseed.createProduct(data.Product['Sonka']['Name'], data.Product['Sonka']['ProductGroup'],
-                                       data.Product['Sonka']['Code'], data.Counter['TestCounter']['Name'],
-                                       data.RawMaterial['Sonka']['Name'], data.Product['Sonka']['Quantity'],
-                                       data.Product['Sonka']['NetPrice'],
-                                       module=True)
+            self.productseed.createProduct('Almalé', 'Kiszereléses',
+                                           '9999', data.Counter['TestCounter']['Name'], data.RawMaterial['Almalé']['Name'],
+                                           '1', '2200',
+                                           module=True)
 
-        self.productseed.createProduct(data.Product['Paradicsomszósz']['Name'],
-                                       data.Product['Paradicsomszósz']['ProductGroup'],
-                                       data.Product['Paradicsomszósz']['Code'], data.Counter['TestCounter']['Name'],
-                                       data.RawMaterial['Paradicsomszósz']['Name'],
-                                       data.Product['Paradicsomszósz']['Quantity'], '0',
-                                       module=True)
-        self.menu.openProducts()
-        self.productseed.createProductChose('Roston csirkemell')
-        self.productseed.createProductFix('Rántott csirkemell', 'Hasábburgonya', module=True)
-        self.productseed.createProductAsRawMaterial(module=True)
-        self.productseed.createSpecialPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'],
-                                            data.Product['Sonka']['Name'], module=True)
+            self.productseed.createProduct(data.Product['Sonka']['Name'], data.Product['Sonka']['ProductGroup'],
+                                           data.Product['Sonka']['Code'], data.Counter['TestCounter']['Name'],
+                                           data.RawMaterial['Sonka']['Name'], data.Product['Sonka']['Quantity'],
+                                           data.Product['Sonka']['NetPrice'],
+                                           module=True)
 
-        self.menu.openRestaurant()
-        self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+            self.productseed.createProduct(data.Product['Paradicsomszósz']['Name'],
+                                           data.Product['Paradicsomszósz']['ProductGroup'],
+                                           data.Product['Paradicsomszósz']['Code'], data.Counter['TestCounter']['Name'],
+                                           data.RawMaterial['Paradicsomszósz']['Name'],
+                                           data.Product['Paradicsomszósz']['Quantity'], '0',
+                                           module=True)
+            self.menu.openProducts()
+            self.productseed.createProductChose('Roston csirkemell')
+            self.productseed.createProductFix('Rántott csirkemell', 'Hasábburgonya', module=True)
+            self.productseed.createProductAsRawMaterial(module=True)
+            self.productseed.createSpecialPizza('Sonkás pizza', data.RawMaterial['Finomliszt']['Name'],
+                                                data.Product['Sonka']['Name'], module=True)
+
+            self.menu.openRestaurant()
+            self.html.clickElement(data.Table['Normal']['Name'], tag='i')
+
+        super(Restaurant, self).runTest(wrapper, 'restaurant-tearDownClass')
 
     @classmethod
     def tearDownClass(self):
-        self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
-        self.restaurantseed.deleteTable(data.Table['Courier']['Name'], module=True)
-        super().tearDownClass()
+        def wrapper():
+            self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
+            self.restaurantseed.deleteTable(data.Table['Courier']['Name'], module=True)
+            super().tearDownClass()
+
+        super(Restaurant, self).runTest(wrapper, 'restaurant-tearDownClass')
 
     def tearDown(self):
         try:

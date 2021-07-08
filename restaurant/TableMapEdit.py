@@ -8,14 +8,20 @@ class TableMapEdit(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        super().setUpClass()
-        super().login(self)
-
-        self.menu.openTableMapEditor()
+        def wrapper():
+            super().setUpClass()
+            super().login(self)
+    
+            self.menu.openTableMapEditor()
+            
+        super(TableMapEdit, self).runTest(wrapper, 'tableMapEdit-setUp')
 
     @classmethod
     def tearDownClass(self):
-        super().tearDownClass()
+        def wrapper():
+            super().tearDownClass()
+
+        super(TableMapEdit, self).runTest(wrapper, 'tableMapEdit-setUp')
 
     def tearDown(self):
         try:

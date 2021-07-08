@@ -10,27 +10,36 @@ class Receiving(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        super().setUpClass()
-        super().login(self)
+        def wrapper():
+            super().setUpClass()
+            super().login(self)
+
+        super(Receiving, self).runTest(wrapper, 'receiving-setUpClass')
 
     @classmethod
     def tearDownClass(self):
-        super().tearDownClass()
+        def wrapper():
+            super().tearDownClass()
+
+        super(Receiving, self).runTest(wrapper, 'receiving-tearDownClass')
 
     def setUp(self):
-        self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
-                                                    data.RawMaterial['Bundas_kenyer']['GrossPrice'],
-                                                    data.RawMaterial['Bundas_kenyer']['Quantity'],
-                                                    data.WareHouses['Szeszraktár']['Name'], module=True)
-        for material in self.rawMaterials:
-            self.stockseed.createRawMaterialWithOpening(data.RawMaterial[material]['Name'],
-                                                        data.RawMaterial[material]['GrosPrice'],
-                                                        data.RawMaterial[material]['Quantity'],
-                                                        data.RawMaterial[material]['Warehouse'],
-                                                        data.RawMaterial[material]['ME'],
-                                                        module=True)
-        self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Id'], module=True)
+        def wrapper():
+            self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
+            self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
+                                                        data.RawMaterial['Bundas_kenyer']['GrossPrice'],
+                                                        data.RawMaterial['Bundas_kenyer']['Quantity'],
+                                                        data.WareHouses['Szeszraktár']['Name'], module=True)
+            for material in self.rawMaterials:
+                self.stockseed.createRawMaterialWithOpening(data.RawMaterial[material]['Name'],
+                                                            data.RawMaterial[material]['GrosPrice'],
+                                                            data.RawMaterial[material]['Quantity'],
+                                                            data.RawMaterial[material]['Warehouse'],
+                                                            data.RawMaterial[material]['ME'],
+                                                            module=True)
+            self.receivingseed.createPartner(data.Partner['Szallito']['Name'], data.Partner['Szallito']['Id'], module=True)
+
+        super(Receiving, self).runTest(wrapper, 'receiving-setUp')
 
     def tearDown(self):
         try:

@@ -12,31 +12,40 @@ class Menus(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        super().setUpClass()
-        super().login(self)
-        self.modifiedGrossPrice = self.html.extendedRound(int(self.modifiedPrice) * 1.27, 2)
+        def wrapper():
+            super().setUpClass()
+            super().login(self)
+            self.modifiedGrossPrice = self.html.extendedRound(int(self.modifiedPrice) * 1.27, 2)
+
+        super(Menus, self).runTest(wrapper, 'menus-setUpClass')
         
     @classmethod
     def tearDownClass(self):
-        super().tearDownClass()
+        def wrapper():
+            super().tearDownClass()
+
+        super(Menus, self).runTest(wrapper, 'menus-tearDownClass')
 
     def setUp(self):
-        self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
-                                                    data.RawMaterial['Bundas_kenyer']['GrossPrice'],
-                                                    data.RawMaterial['Bundas_kenyer']['Quantity'],
-                                                    data.WareHouses['Szeszraktár']['Name'],
-                                                    data.RawMaterial['Bundas_kenyer']['ME'], module=True)
-        self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'],
-                                       module=True)
-        self.productseed.createProduct(data.Product['Babgulyás']['Name'], data.ProductGroup['Egyeb']['Name'],
-                                       data.Product['Babgulyás']['Code'], data.Counter['TestCounter']['Name'],
-                                       data.RawMaterial['Bundas_kenyer']['Name'], module=True)
-        self.productseed.createProduct(data.Product['Palacsinta']['Name'], data.ProductGroup['Egyeb']['Name'],
-                                       data.Product['Palacsinta']['Code'], data.Counter['TestCounter']['Name'],
-                                       data.RawMaterial['Bundas_kenyer']['Name'], module=True)
-        self.html.refresh()
-        self.html.clickElement('Menü', 'a')
+        def wrapper():
+            self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
+            self.stockseed.createRawMaterialWithOpening(data.RawMaterial['Bundas_kenyer']['Name'],
+                                                        data.RawMaterial['Bundas_kenyer']['GrossPrice'],
+                                                        data.RawMaterial['Bundas_kenyer']['Quantity'],
+                                                        data.WareHouses['Szeszraktár']['Name'],
+                                                        data.RawMaterial['Bundas_kenyer']['ME'], module=True)
+            self.productseed.createCounter(data.Counter['TestCounter']['Name'], data.Counter['TestCounter']['Position'],
+                                           module=True)
+            self.productseed.createProduct(data.Product['Babgulyás']['Name'], data.ProductGroup['Egyeb']['Name'],
+                                           data.Product['Babgulyás']['Code'], data.Counter['TestCounter']['Name'],
+                                           data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+            self.productseed.createProduct(data.Product['Palacsinta']['Name'], data.ProductGroup['Egyeb']['Name'],
+                                           data.Product['Palacsinta']['Code'], data.Counter['TestCounter']['Name'],
+                                           data.RawMaterial['Bundas_kenyer']['Name'], module=True)
+            self.html.refresh()
+            self.html.clickElement('Menü', 'a')
+
+        super(Menus, self).runTest(wrapper, 'menus-setUp')
 
     def tearDown(self):
         try:

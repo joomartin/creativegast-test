@@ -18,20 +18,28 @@ class DiscountCards(BaseTestCase):
     discountBlue = data.DiscountCard['Blue Friday']['Discount']
     categoryBlue = data.DiscountCard['Blue Friday']['Category']
 
-
     @classmethod
     def setUpClass(self):
-        super().setUpClass()
-        super().login(self)
+        def wrapper():
+            super().setUpClass()
+            super().login(self)
+
+        super(DiscountCards, self).runTest(wrapper, 'discountCards-setUpClass')
 
     def setUp(self):
-        self.productseed.createProductAsRawMaterial(module=True)
-        self.menu.openClientManagement()
-        self.html.clickElement('Kedvezménykártyák', 'a')
+        def wrapper():
+            self.productseed.createProductAsRawMaterial(module=True)
+            self.menu.openClientManagement()
+            self.html.clickElement('Kedvezménykártyák', 'a')
+
+        super(DiscountCards, self).runTest(wrapper, 'discountCards-setUp')
 
     @classmethod
     def tearDownClass(self):
-        super().tearDownClass()
+        def wrapper():
+            super().tearDownClass()
+
+        super(DiscountCards, self).runTest(wrapper, 'discountCards-tearDownClass')
 
     def tearDown(self):
         try:

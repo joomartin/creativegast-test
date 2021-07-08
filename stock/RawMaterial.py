@@ -9,41 +9,58 @@ class RawMaterial(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        super().setUpClass()
-        super().login(self)
+        def wrapper():
+            super().setUpClass()
+            super().login(self)
+
+        super(RawMaterial, self).runTest(wrapper, 'rawMaterial-setUpClass')
 
     @classmethod
     def tearDownClass(self):
-        super().tearDownClass()
+        def wrapper():
+            super().tearDownClass()
+
+        super(RawMaterial, self).runTest(wrapper, 'rawMaterial-tearDownClass')
 
     def setUp(self):
-        self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
+        def wrapper():
+            self.stockseed.createWarehouse(data.WareHouses['Szeszraktár']['Name'], module=True)
+
+        super(RawMaterial, self).runTest(wrapper, 'rawMaterial-setUp')
 
     def tearDown(self):
-        self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
+        def wrapper():
+            self.stockseed.deleteWarehouse(data.WareHouses['Szeszraktár']['Name'], tab=True)
+
+        super(RawMaterial, self).runTest(wrapper, 'rawMaterial-tearDown')
 
     def testCreate(self):
-        self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'],
-                                         data.RawMaterial['Bundas_kenyer']['ME'],
-                                         data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
+        def wrapper():
+            self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'],
+                                             data.RawMaterial['Bundas_kenyer']['ME'],
+                                             data.WareHouses['Szeszraktár']['Name'], module=True)
+            self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
+
+        super(RawMaterial, self).runTest(wrapper, 'rawMaterial-testCreate')
 
     def testUpdate(self):
+        def wrapper():
+            self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
+            self.html.clickTableDropdown(data.RawMaterial['Bundas_kenyer']['Name'], 'Szerkeszt', 'Raktárkészlet')
+            self.html.switchFrame('iframe')
 
-        self.stockseed.createRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'], data.RawMaterial['Bundas_kenyer']['ME'], data.WareHouses['Szeszraktár']['Name'], module=True)
-        self.html.clickTableDropdown(data.RawMaterial['Bundas_kenyer']['Name'], 'Szerkeszt', 'Raktárkészlet')
-        self.html.switchFrame('iframe')
+            self.html.fillInput('Bruttó beszerzési egységár', data.RawMaterial['Bundas_kenyer']['GrossPrice'])
+            self.html.clickElement('Rögzít')
+            self.html.switchFrame()
+            self.html.refresh()
 
-        self.html.fillInput('Bruttó beszerzési egységár', data.RawMaterial['Bundas_kenyer']['GrossPrice'])
-        self.html.clickElement('Rögzít')
-        self.html.switchFrame()
-        self.html.refresh()
+            self.html.search(data.RawMaterial['Bundas_kenyer']['Name'], 'Raktárkészlet')
+            new = self.html.getTxtFromTable('1', '6', 'components')
+            self.assertEqual(data.RawMaterial['Bundas_kenyer']['GrossPrice'], new)
 
-        self.html.search(data.RawMaterial['Bundas_kenyer']['Name'], 'Raktárkészlet')
-        new = self.html.getTxtFromTable('1', '6', 'components')
-        self.assertEqual(data.RawMaterial['Bundas_kenyer']['GrossPrice'], new)
+            self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
 
-        self.stockseed.deleteRawMaterial(data.RawMaterial['Bundas_kenyer']['Name'])
+        super(RawMaterial, self).runTest(wrapper, 'rawMaterial-testUpdate')
 
     @unittest.skip
     def testOpening(self):
