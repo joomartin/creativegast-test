@@ -10,18 +10,12 @@ class Products(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        def wrapper():
-            super().setUpClass()
-            super().login(self)
-
-        super(Products, self).runTest(wrapper, 'products-setUpClass')
+        super().setUpClass()
+        super().login(self)
 
     @classmethod
     def tearDownClass(self):
-        def wrapper():
-            super().tearDownClass()
-
-        super(Products, self).runTest(wrapper, 'products-tearDownClass')
+        super().tearDownClass()
 
     def setUp(self):
         def wrapper():

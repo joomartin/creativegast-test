@@ -7,21 +7,14 @@ class Test(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        def wrapper():
-            super().setUpClass()
-            super().login(self)
-
-            self.menu.openStocks()
-            self.html.clickElement('Raktárak', 'a')
-
-        super(Test, self).runTest(wrapper, 'warehouse-setUpClass')
+        super().setUpClass()
+        super().login(self)
+        self.menu.openStocks()
+        self.html.clickElement('Raktárak', 'a')
 
     @classmethod
     def tearDownClass(self):
-        def wrapper():
-            super().tearDownClass()
-
-        super(Test, self).runTest(wrapper, 'warehouse-tearDownClass')
+        super().tearDownClass()
 
     def testCreateWarehouse(self):
         def wrapper():

@@ -9,18 +9,12 @@ class RawMaterial(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        def wrapper():
-            super().setUpClass()
-            super().login(self)
-
-        super(RawMaterial, self).runTest(wrapper, 'rawMaterial-setUpClass')
+        super().setUpClass()
+        super().login(self)
 
     @classmethod
     def tearDownClass(self):
-        def wrapper():
-            super().tearDownClass()
-
-        super(RawMaterial, self).runTest(wrapper, 'rawMaterial-tearDownClass')
+        super().tearDownClass()
 
     def setUp(self):
         def wrapper():

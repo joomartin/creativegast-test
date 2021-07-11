@@ -12,19 +12,13 @@ class Menus(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        def wrapper():
-            super().setUpClass()
-            super().login(self)
-            self.modifiedGrossPrice = self.html.extendedRound(int(self.modifiedPrice) * 1.27, 2)
-
-        super(Menus, self).runTest(wrapper, 'menus-setUpClass')
+        super().setUpClass()
+        super().login(self)
+        self.modifiedGrossPrice = self.html.extendedRound(int(self.modifiedPrice) * 1.27, 2)
         
     @classmethod
     def tearDownClass(self):
-        def wrapper():
-            super().tearDownClass()
-
-        super(Menus, self).runTest(wrapper, 'menus-tearDownClass')
+        super().tearDownClass()
 
     def setUp(self):
         def wrapper():

@@ -7,18 +7,12 @@ class BarCheckings(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        def wrapper():
-            super().setUpClass()
-            super().login(self)
-
-        super(BarCheckings, self).runTest(wrapper, 'barCheckings-setUpClass')
+        super().setUpClass()
+        super().login(self)
 
     @classmethod
     def tearDownClass(self):
-        def wrapper():
-            super().tearDownClass()
-
-        super(BarCheckings, self).runTest(wrapper, 'barCheckings-tearDownClass')
+        super().tearDownClass()
 
     def setUp(self):
         def wrapper():

@@ -9,18 +9,12 @@ class StockMovement(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        def wrapper():
-            super().setUpClass()
-            super().login(self)
-
-        super(StockMovement, self).runTest(wrapper, 'stockMovement-setUpClass')
+        super().setUpClass()
+        super().login(self)
 
     @classmethod
     def tearDownClass(self):
-        def wrapper():
-            super().tearDownClass()
-
-        super(StockMovement, self).runTest(wrapper, 'stockMovement-tearDownClass')
+        super().tearDownClass()
 
     def setUp(self):
         def wrapper():

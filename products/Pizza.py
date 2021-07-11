@@ -11,18 +11,12 @@ class Pizza(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        def wrapper():
-            super().setUpClass()
-            super().login(self)
-
-        super(Pizza, self).runTest(wrapper, 'pizza-setUpClass')
+        super().setUpClass()
+        super().login(self)
 
     @classmethod
     def tearDownClass(self):
-        def wrapper():
-            super().tearDownClass()
-
-        super(Pizza, self).runTest(wrapper, 'pizza-tearDownClass')
+        super().tearDownClass()
 
     def setUp(self):
         def wrapper():

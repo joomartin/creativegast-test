@@ -19,16 +19,9 @@ from seeders.ProductSeed import ProductSeed
 from seeders.ReceivingSeed import ReceivingSeed
 from seeders.RestaurantSeed import RestaurantSeed
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import os
 from dotenv import load_dotenv
 load_dotenv()
-import json
-
-
-def process_browser_log_entry(entry):
-    response = json.loads(entry['message'])['message']
-    return response
 
 
 class BaseTestCase(unittest.TestCase):
@@ -38,12 +31,10 @@ class BaseTestCase(unittest.TestCase):
             callback()
         except Exception as e:
             self.html.screenshot(name)
-            # TODO: ide akar mehetne a network figyeles
             with open("log_entries.txt", "wt") as out:
                 out.write(self.driver.current_url + '\n')
-                #pprint.pprint(self.driver.current_url, stream=out)
                 for request in self.driver.requests:
-                    if request.response.status_code >= 300:
+                    if request.response.status_code >= 400:
                         out.write('\ndate: %s \n' % request.date)
                         out.write('\nmethod: %s \n' % request.method)
                         out.write('\ncode: %s \n' % request.response.status_code)
@@ -54,7 +45,6 @@ class BaseTestCase(unittest.TestCase):
                         out.write('\n\n')
                         out.write('___________________________________________________________________________________________')
                         out.write('\n\n\n')
-
             raise e
 
     def assertRange(self, expected, actual):
@@ -62,10 +52,10 @@ class BaseTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-
         chrome_options = Options()
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--window-size=1920,1080')
+        #chrome_options.add_argument('--headless')
+        #chrome_options.add_argument('--window-size=1920,1080')
+        chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
         # chrome_options.add_argument("--auto-open-devtools-for-tabs")
         # chrome_options.add_argument('--disable-gpu')
         # chrome_options.headless = True
