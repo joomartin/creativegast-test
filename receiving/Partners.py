@@ -11,20 +11,14 @@ class Partners(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        def wrapper():
-            super().setUpClass()
-            super().login(self)
-            self.menu.openReceiving()
-            self.html.clickElement('Beszállítók', 'a')
-
-        super(Partners, self).runTest(wrapper, 'partners-setUpClass')
+        super().setUpClass()
+        super().login(self)
+        self.menu.openReceiving()
+        self.html.clickElement('Beszállítók', 'a')
 
     @classmethod
     def tearDownClass(self):
-        def wrapper():
-            super().tearDownClass()
-
-        super(Partners, self).runTest(wrapper, 'partners-tearDownClass')
+        super().tearDownClass()
 
     def tearDown(self):
         try:

@@ -34,7 +34,7 @@ class BaseTestCase(unittest.TestCase):
             with open("log_entries.txt", "wt") as out:
                 out.write(self.driver.current_url + '\n')
                 for request in self.driver.requests:
-                    if request.response.status_code >= 400:
+                    if request.response and request.response.status_code >= 400:
                         out.write('\ndate: %s \n' % request.date)
                         out.write('\nmethod: %s \n' % request.method)
                         out.write('\ncode: %s \n' % request.response.status_code)

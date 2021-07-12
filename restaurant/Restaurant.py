@@ -27,14 +27,11 @@ class Restaurant(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        def wrapper():
-            super().setUpClass()
-            super().login(self)
+        super().setUpClass()
+        super().login(self)
 
-            self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
-            self.restaurantseed.createTable(data.Table['Courier']['Name'], module=True)
-
-        super(Restaurant, self).runTest(wrapper, 'restaurant-tearDownClass')
+        self.restaurantseed.createTable(data.Table['Normal']['Name'], module=True)
+        self.restaurantseed.createTable(data.Table['Courier']['Name'], module=True)
 
     def setUp(self):
         def wrapper():
@@ -106,12 +103,9 @@ class Restaurant(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
-        def wrapper():
-            self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
-            self.restaurantseed.deleteTable(data.Table['Courier']['Name'], module=True)
-            super().tearDownClass()
-
-        super(Restaurant, self).runTest(wrapper, 'restaurant-tearDownClass')
+        self.restaurantseed.deleteTable(data.Table['Normal']['Name'], module=True)
+        self.restaurantseed.deleteTable(data.Table['Courier']['Name'], module=True)
+        super().tearDownClass()
 
     def tearDown(self):
         try:

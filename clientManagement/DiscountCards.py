@@ -20,11 +20,8 @@ class DiscountCards(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        def wrapper():
-            super().setUpClass()
-            super().login(self)
-
-        super(DiscountCards, self).runTest(wrapper, 'discountCards-setUpClass')
+        super().setUpClass()
+        super().login(self)
 
     def setUp(self):
         def wrapper():
@@ -36,10 +33,7 @@ class DiscountCards(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
-        def wrapper():
-            super().tearDownClass()
-
-        super(DiscountCards, self).runTest(wrapper, 'discountCards-tearDownClass')
+        super().tearDownClass()
 
     def tearDown(self):
         try:

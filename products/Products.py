@@ -287,6 +287,8 @@ class Products(BaseTestCase):
             self.html.clickTableElement('products', 'id', 'Rántott csirkemell', 'a', 'Szerkeszt',
                                         'Termékek')
             self.html.switchFrame('iframe')
+
+            self.html.explicitWaitXpath('.//button[contains(., "Hasábburgonya")]', time=300)
             self.assertTrue(self.html.getElement('Hasábburgonya', 'button').is_displayed())
             self.html.switchFrame()
             self.html.clickElement('Close', 'a', Options(htmlAttribute='title'))

@@ -10,18 +10,12 @@ class Receiving(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        def wrapper():
-            super().setUpClass()
-            super().login(self)
-
-        super(Receiving, self).runTest(wrapper, 'receiving-setUpClass')
+        super().setUpClass()
+        super().login(self)
 
     @classmethod
     def tearDownClass(self):
-        def wrapper():
-            super().tearDownClass()
-
-        super(Receiving, self).runTest(wrapper, 'receiving-tearDownClass')
+        super().tearDownClass()
 
     def setUp(self):
         def wrapper():

@@ -16,11 +16,8 @@ class Users(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        def wrapper():
-            super().setUpClass()
-            super().login(self)
-
-        super(Users, self).runTest(wrapper, 'users-setUpClass')
+        super().setUpClass()
+        super().login(self)
 
     def setUp(self):
         def wrapper():
@@ -30,10 +27,7 @@ class Users(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
-        def wrapper():
-            super().tearDownClass()
-
-        super(Users, self).runTest(wrapper, 'users-tearDownClass')
+        super().tearDownClass()
 
     def tearDown(self):
         try:

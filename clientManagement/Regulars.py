@@ -16,11 +16,8 @@ class Regulars(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        def wrapper():
-            super().setUpClass()
-            super().login(self)
-
-        super(Regulars, self).runTest(wrapper, 'regulars-setUpClass')
+        super().setUpClass()
+        super().login(self)
 
     def setUp(self):
         def wrapper():
@@ -31,10 +28,7 @@ class Regulars(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
-        def wrapper():
-            super().tearDownClass()
-
-        super(Regulars, self).runTest(wrapper, 'regulars-tearDownClass')
+        super().tearDownClass()
 
     def tearDown(self):
         try:
