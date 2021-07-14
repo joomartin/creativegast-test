@@ -1,5 +1,7 @@
 import os
+from email import encoders
 from email.mime.application import MIMEApplication
+from email.mime.base import MIMEBase
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -41,6 +43,16 @@ def sendReport(filePath):
                 image.add_header('Content-Disposition', 'attachment',
                                  filename=filename)
                 msg.attach(image)
+
+    attach_file_name = './/screenShots//' + data.Screenshot['Name'] + '//log_entries.txt'
+    with open(attach_file_name, "rb") as fil:
+        part = MIMEApplication(
+            fil.read(),
+            Name=basename(attach_file_name)
+        )
+
+        part['Content-Disposition'] = 'attachment; filename="%s"' % basename(attach_file_name)
+        msg.attach(part)
 
     debug = False
     if debug:

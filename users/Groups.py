@@ -9,11 +9,8 @@ class Groups(BaseTestCase):
 
     @classmethod
     def setUpClass(self):
-        def wrapper():
-            super().setUpClass()
-            super().login(self)
-
-        super(Groups, self).runTest(wrapper, 'groups-setUpClass')
+        super().setUpClass()
+        super().login(self)
 
     def setUp(self):
         def wrapper():
@@ -24,10 +21,7 @@ class Groups(BaseTestCase):
 
     @classmethod
     def tearDownClass(self):
-        def wrapper():
-            super().tearDownClass()
-
-        super(Groups, self).runTest(wrapper, 'groups-tearDownClass')
+        super().tearDownClass()
 
     def tearDown(self):
         pass

@@ -19,6 +19,7 @@ from seeders.ProductSeed import ProductSeed
 from seeders.ReceivingSeed import ReceivingSeed
 from seeders.RestaurantSeed import RestaurantSeed
 from selenium.webdriver.chrome.options import Options
+from shared.TestData import TestData as data
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -31,20 +32,24 @@ class BaseTestCase(unittest.TestCase):
             callback()
         except Exception as e:
             self.html.screenshot(name)
-            with open("log_entries.txt", "wt") as out:
-                out.write(self.driver.current_url + '\n')
-                for request in self.driver.requests:
-                    if request.response and request.response.status_code >= 400:
-                        out.write('\ndate: %s \n' % request.date)
-                        out.write('\nmethod: %s \n' % request.method)
-                        out.write('\ncode: %s \n' % request.response.status_code)
-                        out.write('\nheaders: %s' % request.response.headers)
-                        out.write('\nresponse body: %s \n' % request.response.body)
-                        out.write('\nrequest body: %s \n' % request.body)
-                        out.write('\nurl: %s \n' % request.url)
-                        out.write('\n\n')
-                        out.write('___________________________________________________________________________________________')
-                        out.write('\n\n\n')
+            try:
+                with open('.//screenShots//' + data.Screenshot['Name'] + '//log_entries.txt', "wt") as out:
+                    out.write('actual page: %s \n' % self.driver.current_url)
+                    for request in self.driver.requests:
+                        if request.response and request.response.status_code >= 400:
+                            out.write('\ndate: %s \n' % request.date)
+                            out.write('\nmethod: %s \n' % request.method)
+                            out.write('\nurl: %s \n' % request.url)
+                            out.write('\nrequest headers: %s' % request.headers)
+                            out.write('\nrequest body: %s \n' % request.body)
+                            out.write('\ncode: %s \n' % request.response.status_code)
+                            out.write('\nresponse headers: %s' % request.response.headers)
+                            out.write('\nresponse body: %s \n' % request.response.body)
+                            out.write('\n\n')
+                            out.write('___________________________________________________________________________________________')
+                            out.write('\n\n\n')
+            except Exception as e:
+                pass
             raise e
 
     def assertRange(self, expected, actual):

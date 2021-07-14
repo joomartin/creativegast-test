@@ -99,7 +99,7 @@ class Restaurant(BaseTestCase):
             self.menu.openRestaurant()
             self.html.clickElement(data.Table['Normal']['Name'], tag='i')
 
-        super(Restaurant, self).runTest(wrapper, 'restaurant-tearDownClass')
+        super(Restaurant, self).runTest(wrapper, 'restaurant-setUp')
 
     @classmethod
     def tearDownClass(self):
